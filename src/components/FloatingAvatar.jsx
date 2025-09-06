@@ -42,7 +42,7 @@ export default function FloatingAvatar({ email="you@example.com", github="yourha
         >
           {/* We clip the image to its left 50% */}
           <img
-            src="/converted_1.png"
+            src={`${import.meta.env.BASE_URL}converted_1.png`}
             alt="Avatar head"
             className="h-20 w-auto [clip-path:polygon(0_0,50%_0,50%_100%,0_100%)] drop-shadow"
           />
@@ -91,7 +91,7 @@ export default function FloatingAvatar({ email="you@example.com", github="yourha
                 className="w-[120px] rounded-2xl bg-transparent"
               >
                 <img
-                  src="/converted_2.png"
+                  src={`${import.meta.env.BASE_URL}converted_2.png`}
                   alt="Avatar open"
                   className="w-full h-auto drop-shadow"
                 />
