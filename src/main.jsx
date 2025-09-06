@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import Portfolio from './portfolio.jsx'
-import './index.css'    // tailwind (make sure this file exists)
+import App from './App.jsx'
+import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Portfolio />
+    <App />
   </React.StrictMode>
 )
