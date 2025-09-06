@@ -1,13 +1,8 @@
 import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Github, Linkedin } from "lucide-react";
 
 const BASE = import.meta.env.BASE_URL; // "/Portfolio/" on GitHub Pages
-
-/** ======= ONE KNOB to size both images ======= */
-const AVATAR_W = 210;                  // full-body width in px (try 190–240)
-const HALF_W = Math.round(AVATAR_W/2); // peeking area (left half only)
-/** Fine-tune bubble vertical position relative to the avatar’s mouth (0 = center) */
-const BUBBLE_OFFSET_Y = -6;
 
 export default function FloatingAvatar({
   email = "you@example.com",
@@ -15,13 +10,12 @@ export default function FloatingAvatar({
   linkedin = "yourhandle",
 }) {
   const [open, setOpen] = React.useState(false);
-  const hostRef = React.useRef(null);
+  const rootRef = React.useRef(null);
 
-  // Close on outside click / Esc
   React.useEffect(() => {
     const onDown = (e) => {
       if (!open) return;
-      if (hostRef.current && !hostRef.current.contains(e.target)) setOpen(false);
+      if (rootRef.current && !rootRef.current.contains(e.target)) setOpen(false);
     };
     const onEsc = (e) => e.key === "Escape" && setOpen(false);
     window.addEventListener("mousedown", onDown);
@@ -32,97 +26,85 @@ export default function FloatingAvatar({
     };
   }, [open]);
 
-  const toggle = () => setOpen(v => !v);
+  const toggle = () => setOpen((v) => !v);
 
   return (
-    <div className="fixed bottom-8 right-0 z-50 select-none" ref={hostRef}>
+    <div className="fixed bottom-8 right-0 z-50 pr-1 sm:pr-2 select-none">
       <div
+        ref={rootRef}
         className="relative"
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
       >
-        {/* ===== PEEKING HALF (flush-right) — hidden when open ===== */}
-        {!open && (
-          <button
-            type="button"
-            aria-label="Open contact avatar"
-            onClick={toggle}
-            className="block"
-            style={{ padding: 0, margin: 0 }}
-          >
-            {/* Wrapper defines visible region = EXACT left half */}
-            <div
-              className="overflow-hidden"
-              style={{
-                width: HALF_W,       // show only half
-                // keep right edge perfectly flush
-                marginRight: 0,
-              }}
-            >
-              {/* Full image (same scale as expanded) */}
-              <img
-                src={`${BASE}converted_1.png`}
-                alt="Avatar peeking"
-                style={{ width: AVATAR_W, display: "block" }}
-              />
-            </div>
-          </button>
-        )}
+        {/* --- PEEKING HEAD (left half only) --- */}
+        <motion.button
+          type="button"
+          aria-label="Open contact avatar"
+          onClick={toggle}
+          className="outline-none"
+          initial={false}
+          animate={{ x: open ? 0 : 22 }}   // how far it peeks off-screen
+          transition={{ type: "spring", stiffness: 220, damping: 18 }}
+        >
+          {/* Clip to left 50% */}
+          <img
+            src={`${BASE}converted_1.png`}
+            alt="Avatar head"
+            className="h-20 w-auto [clip-path:polygon(0_0,50%_0,50%_100%,0_100%)] drop-shadow"
+          />
+        </motion.button>
 
-        {/* ===== EXPANDED: only full body + bubble ===== */}
-        {open && (
-          <div
-            className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-3"
-            // keep open on mouse within this block
-            onClick={toggle}
-          >
-            {/* Bubble to the LEFT, centered around mouth */}
-            <div
-              className="relative max-w-[320px] rounded-2xl border border-slate-200 bg-white p-4 shadow-xl"
-              style={{ transform: `translateY(${BUBBLE_OFFSET_Y}px)` }}
+        {/* --- EXPANDED: FULL BODY + BUBBLE --- */}
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ opacity: 0, x: 18 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 12 }}
+              transition={{ type: "spring", stiffness: 240, damping: 20 }}
+              className="absolute bottom-0 right-[88px] flex items-end gap-3"
             >
-              <div className="text-sm font-semibold">Let’s connect</div>
-              <ul className="mt-2 space-y-2 text-sm text-slate-700">
-                <li className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
-                  <a className="hover:underline" href={`mailto:${email}`}>{email}</a>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Github className="w-4 h-4" />
-                  <a
-                    className="hover:underline"
-                    href={`https://github.com/${github}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    github.com/{github}
-                  </a>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Linkedin className="w-4 h-4" />
-                  <a
-                    className="hover:underline"
-                    href={`https://www.linkedin.com/in/${linkedin}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    linkedin.com/in/{linkedin}
-                  </a>
-                </li>
-              </ul>
-              {/* Tail pointing at the avatar’s mouth (center) */}
-              <div className="absolute top-1/2 -translate-y-1/2 -right-2 w-0 h-0 border-y-8 border-y-transparent border-l-8 border-l-white" />
-            </div>
+              {/* Bubble (to the left) */}
+              <div className="relative max-w-[300px] rounded-2xl border border-slate-200 bg-white p-4 shadow-xl">
+                <div className="text-sm font-semibold">Let’s connect</div>
+                <ul className="mt-2 space-y-2 text-sm text-slate-700">
+                  <li className="flex items-center gap-2">
+                    <Mail className="w-4 h-4" />
+                    <a className="hover:underline" href={`mailto:${email}`}>{email}</a>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Github className="w-4 h-4" />
+                    <a className="hover:underline" href={`https://github.com/${github}`} target="_blank" rel="noreferrer">
+                      github.com/{github}
+                    </a>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Linkedin className="w-4 h-4" />
+                    <a className="hover:underline" href={`https://www.linkedin.com/in/${linkedin}`} target="_blank" rel="noreferrer">
+                      linkedin.com/in/{linkedin}
+                    </a>
+                  </li>
+                </ul>
+                <div className="absolute bottom-3 -right-2 w-0 h-0 border-y-8 border-y-transparent border-l-8 border-l-white" />
+              </div>
 
-            {/* Full body — exactly the same scale as peeking */}
-            <img
-              src={`${BASE}converted_2.png`}
-              alt="Avatar open"
-              style={{ width: AVATAR_W, display: "block" }}
-              className="drop-shadow"
-            />
-          </div>
-        )}
+              {/* Full image (swap to mouth-open) */}
+              <motion.div
+                initial={{ y: 16, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 8, opacity: 0 }}
+                transition={{ type: "spring", stiffness: 220, damping: 18 }}
+                className="w-[120px] rounded-2xl bg-transparent"
+              >
+                <img
+                  src={`${BASE}converted_2.png`}
+                  alt="Avatar open"
+                  className="w-full h-auto drop-shadow"
+                />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
