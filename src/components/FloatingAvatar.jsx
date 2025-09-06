@@ -12,6 +12,7 @@ export default function FloatingAvatar({
   const [open, setOpen] = React.useState(false);
   const rootRef = React.useRef(null);
 
+  // Close on outside click / Esc
   React.useEffect(() => {
     const onDown = (e) => {
       if (!open) return;
@@ -30,20 +31,16 @@ export default function FloatingAvatar({
 
   return (
     <div className="fixed bottom-8 right-0 z-50 pr-1 sm:pr-2 select-none">
-      <div
-        ref={rootRef}
-        className="relative"
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
-      >
+      <div ref={rootRef} className="relative">
         {/* --- PEEKING HEAD (left half only) --- */}
         <motion.button
           type="button"
           aria-label="Open contact avatar"
-          onClick={toggle}
+          onClick={toggle}                 // mobile tap
+          onMouseEnter={() => setOpen(true)} // desktop hover
           className="outline-none"
           initial={false}
-          animate={{ x: open ? 0 : 22 }}   // how far it peeks off-screen
+          animate={{ x: open ? 0 : 22, opacity: open ? 0 : 1 }} // <-- hide when open
           transition={{ type: "spring", stiffness: 220, damping: 18 }}
         >
           {/* Clip to left 50% */}
@@ -63,6 +60,7 @@ export default function FloatingAvatar({
               exit={{ opacity: 0, x: 12 }}
               transition={{ type: "spring", stiffness: 240, damping: 20 }}
               className="absolute bottom-0 right-[88px] flex items-end gap-3"
+              onMouseLeave={() => setOpen(false)}   // <-- closes when leaving expanded area
             >
               {/* Bubble (to the left) */}
               <div className="relative max-w-[300px] rounded-2xl border border-slate-200 bg-white p-4 shadow-xl">
@@ -88,7 +86,7 @@ export default function FloatingAvatar({
                 <div className="absolute bottom-3 -right-2 w-0 h-0 border-y-8 border-y-transparent border-l-8 border-l-white" />
               </div>
 
-              {/* Full image (swap to mouth-open) */}
+              {/* Full image (shown only while open) */}
               <motion.div
                 initial={{ y: 16, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
