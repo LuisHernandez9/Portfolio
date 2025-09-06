@@ -25,18 +25,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          # cache: npm   <-- REMOVE THIS LINE
 
-      - name: Install dependencies
-        run: npm install   # use install (not ci) since no lockfile yet
+      - name: Install deps
+        run: npm install
 
       - name: Build
         run: npm run build
 
-      - name: Upload artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
+          name: site-dist   # unique artifact name
 
   deploy:
     needs: build
@@ -48,3 +48,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: site-dist  # must match the upload step above
