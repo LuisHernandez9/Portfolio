@@ -39,3 +39,14 @@ export default function Portfolio() {
     </div>
   );
 }
+
+export default function Portfolio() {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 text-slate-800">
+      {/* ... all your header, hero, sections, footer ... */}
+
+      {/* Floating avatar (always visible bottom-right) */}
+      <FloatingAvatar />
+    </div>
+  )
+}
