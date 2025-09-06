@@ -2,7 +2,7 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Github, Linkedin } from "lucide-react";
 
-const BASE = import.meta.env.BASE_URL; // "/Portfolio/" on GitHub Pages
+const BASE = import.meta.env.BASE_URL; // "/Portfolio/" on Pages
 
 export default function FloatingAvatar({
   email = "you@example.com",
@@ -27,29 +27,30 @@ export default function FloatingAvatar({
     };
   }, [open]);
 
-  const toggle = () => setOpen((v) => !v);
-
   return (
-    <div className="fixed bottom-8 right-0 z-50 pr-1 sm:pr-2 select-none">
-      <div ref={rootRef} className="relative">
+    <div className="fixed bottom-8 right-0 z-50 pr-1 sm:pr-2 select-none" ref={rootRef}>
+      {/* Hover anywhere over the widget to open; leave expanded area to close */}
+      <div
+        className="relative"
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+      >
         {/* --- PEEKING HEAD (left half only) --- */}
-        <motion.button
+        <button
           type="button"
           aria-label="Open contact avatar"
-          onClick={toggle}                 // mobile tap
-          onMouseEnter={() => setOpen(true)} // desktop hover
+          onClick={() => setOpen((v) => !v)} // tap on mobile
           className="outline-none"
-          initial={false}
-          animate={{ x: open ? 0 : 22, opacity: open ? 0 : 1 }} // <-- hide when open
-          transition={{ type: "spring", stiffness: 220, damping: 18 }}
         >
-          {/* Clip to left 50% */}
+          {/* Cross-fade the head out when open */}
           <img
             src={`${BASE}converted_1.png`}
             alt="Avatar head"
-            className="h-20 w-auto [clip-path:polygon(0_0,50%_0,50%_100%,0_100%)] drop-shadow"
+            className={`h-20 w-auto drop-shadow transition-opacity duration-300 ease-out [clip-path:polygon(0_0,50%_0,50%_100%,0_100%)] ${
+              open ? "opacity-0 pointer-events-none" : "opacity-100"
+            }`}
           />
-        </motion.button>
+        </button>
 
         {/* --- EXPANDED: FULL BODY + BUBBLE --- */}
         <AnimatePresence>
@@ -60,7 +61,6 @@ export default function FloatingAvatar({
               exit={{ opacity: 0, x: 12 }}
               transition={{ type: "spring", stiffness: 240, damping: 20 }}
               className="absolute bottom-0 right-[88px] flex items-end gap-3"
-              onMouseLeave={() => setOpen(false)}   // <-- closes when leaving expanded area
             >
               {/* Bubble (to the left) */}
               <div className="relative max-w-[300px] rounded-2xl border border-slate-200 bg-white p-4 shadow-xl">
@@ -86,7 +86,7 @@ export default function FloatingAvatar({
                 <div className="absolute bottom-3 -right-2 w-0 h-0 border-y-8 border-y-transparent border-l-8 border-l-white" />
               </div>
 
-              {/* Full image (shown only while open) */}
+              {/* Full image (fades in while head fades out) */}
               <motion.div
                 initial={{ y: 16, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
