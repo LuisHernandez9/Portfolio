@@ -1,2 +1,2 @@
 # Portfolio
-My website portfolio
+My website portfolio showcasing my experience, skills, and personality.
