@@ -2,11 +2,13 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Github, Linkedin } from "lucide-react";
 
-const BASE = import.meta.env.BASE_URL; // "/Portfolio/" on GitHub Pages
+const BASE = import.meta.env.BASE_URL; // "/Portfolio/" on Pages
 
-// One knob to size BOTH images
-const FULL_W = 176;          // full-body width in px (try 160–200)
-const HEAD_W = FULL_W / 2;   // peeking container width (shows left half)
+/** ========= SIZING (change one number to scale both images) ========= */
+const AVATAR_W = 200;        // full-body width in px (try 180–240)
+const HEAD_WRAPPER_W = AVATAR_W / 2;   // width of peeking area (left half)
+/** fine-tune mouth alignment (moves bubble up/down relative to the image center) */
+const BUBBLE_OFFSET_Y = -8;  // px; negative = slightly up, positive = down
 
 export default function FloatingAvatar({
   email = "you@example.com",
@@ -14,13 +16,13 @@ export default function FloatingAvatar({
   linkedin = "yourhandle",
 }) {
   const [open, setOpen] = React.useState(false);
-  const boxRef = React.useRef(null);
+  const rootRef = React.useRef(null);
 
   // Close on outside click / Esc
   React.useEffect(() => {
     const onDown = (e) => {
       if (!open) return;
-      if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false);
+      if (rootRef.current && !rootRef.current.contains(e.target)) setOpen(false);
     };
     const onEsc = (e) => e.key === "Escape" && setOpen(false);
     window.addEventListener("mousedown", onDown);
@@ -34,35 +36,40 @@ export default function FloatingAvatar({
   const toggle = () => setOpen((v) => !v);
 
   return (
-    <div className="fixed bottom-8 right-0 z-50 select-none">
-      <div ref={boxRef} className="relative">
-        {/* ===== Peeking head (flush right, left half only). Hidden when open. ===== */}
-        {!open && (
-          <motion.button
-            type="button"
-            aria-label="Open contact avatar"
-            onClick={toggle}
-            className="outline-none"
-            initial={{ x: 0 }}
-            animate={{ x: 0 }}
+    <div className="fixed bottom-8 right-0 z-50 select-none" ref={rootRef}>
+      {/* We handle hover on the whole widget area */}
+      <div
+        className="relative"
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+      >
+        {/* ===== PEEKING HALF (flush-right) — hidden when open ===== */}
+        <button
+          type="button"
+          aria-label="Open contact avatar"
+          onClick={toggle}
+          className={open ? "hidden" : "block"}
+          style={{ padding: 0, margin: 0 }}
+        >
+          {/* Wrapper defines visible region = EXACTLY left half */}
+          <div
+            className="overflow-hidden"
+            style={{
+              width: HEAD_WRAPPER_W,
+              // keep it *flush* with the right edge, no shadow spacing
+              boxShadow: "none",
+            }}
           >
-            {/* Wrapper defines visible area = half width */}
-            <div
-              className="overflow-hidden drop-shadow"
-              style={{ width: HEAD_W }}
-            >
-              {/* Full image is double the wrapper width so only left half shows */}
-              <img
-                src={`${BASE}converted_1.png`}
-                alt="Avatar head"
-                style={{ width: FULL_W }}
-                className="block"
-              />
-            </div>
-          </motion.button>
-        )}
+            {/* Full image is AVATAR_W wide; only its left half is visible */}
+            <img
+              src={`${BASE}converted_1.png`}
+              alt="Avatar head"
+              style={{ width: AVATAR_W, display: "block" }}
+            />
+          </div>
+        </button>
 
-        {/* ===== Expanded: ONLY full body + bubble ===== */}
+        {/* ===== EXPANDED: only full body + bubble ===== */}
         <AnimatePresence>
           {open && (
             <motion.div
@@ -70,11 +77,15 @@ export default function FloatingAvatar({
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 16 }}
               transition={{ type: "spring", stiffness: 240, damping: 20 }}
+              // anchor to the right edge, vertically centered so bubble is at mouth level
               className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-3"
-              onMouseLeave={() => setOpen(false)}
+              style={{ pointerEvents: "auto" }}
             >
-              {/* Speech bubble aligned to mouth height (center of image) */}
-              <div className="relative max-w-[320px] rounded-2xl border border-slate-200 bg-white p-4 shadow-xl">
+              {/* Bubble to the LEFT of the avatar, centered at mouth */}
+              <div
+                className="relative max-w-[320px] rounded-2xl border border-slate-200 bg-white p-4 shadow-xl"
+                style={{ transform: `translateY(${BUBBLE_OFFSET_Y}px)` }}
+              >
                 <div className="text-sm font-semibold">Let’s connect</div>
                 <ul className="mt-2 space-y-2 text-sm text-slate-700">
                   <li className="flex items-center gap-2">
@@ -83,29 +94,37 @@ export default function FloatingAvatar({
                   </li>
                   <li className="flex items-center gap-2">
                     <Github className="w-4 h-4" />
-                    <a className="hover:underline" href={`https://github.com/${github}`} target="_blank" rel="noreferrer">
+                    <a
+                      className="hover:underline"
+                      href={`https://github.com/${github}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       github.com/{github}
                     </a>
                   </li>
                   <li className="flex items-center gap-2">
                     <Linkedin className="w-4 h-4" />
-                    <a className="hover:underline" href={`https://www.linkedin.com/in/${linkedin}`} target="_blank" rel="noreferrer">
+                    <a
+                      className="hover:underline"
+                      href={`https://www.linkedin.com/in/${linkedin}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       linkedin.com/in/{linkedin}
                     </a>
                   </li>
                 </ul>
-
-                {/* Tail pointing toward mouth (middle of full image) */}
+                {/* Tail aiming toward the mouth (center of the avatar image) */}
                 <div className="absolute top-1/2 -translate-y-1/2 -right-2 w-0 h-0 border-y-8 border-y-transparent border-l-8 border-l-white" />
               </div>
 
-              {/* Full-body image (same scale as peeking) */}
+              {/* Full body — SAME size as the peeking image */}
               <motion.img
                 src={`${BASE}converted_2.png`}
                 alt="Avatar open"
-                style={{ width: FULL_W }}
-                className="block drop-shadow"
-                initial={{ y: 14, opacity: 0 }}
+                style={{ width: AVATAR_W, display: "block" }}
+                initial={{ y: 12, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: 8, opacity: 0 }}
                 transition={{ type: "spring", stiffness: 220, damping: 18 }}
