@@ -39,7 +39,7 @@ export default function App() {
         </section>
       </main>
 
-      {/* Avatar widget pinned to bottom-right */}
+      {/* Floating widget */}
       <FloatingAvatar
         email="you@example.com"
         github="yourhandle"
