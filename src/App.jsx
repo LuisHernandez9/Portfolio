@@ -4,7 +4,6 @@ import FloatingAvatar from "./components/FloatingAvatar";
 export default function App() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 text-slate-800">
-      {/* Header */}
       <header className="sticky top-0 z-10 backdrop-blur bg-white/60 border-b border-slate-200">
         <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
           <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">My Portfolio</h1>
@@ -16,7 +15,6 @@ export default function App() {
         </div>
       </header>
 
-      {/* Hero */}
       <main className="mx-auto max-w-6xl px-6 py-14">
         <section className="grid md:grid-cols-2 gap-10 items-center">
           <div>
@@ -41,8 +39,12 @@ export default function App() {
         </section>
       </main>
 
-      {/* Floating avatar widget */}
-      <FloatingAvatar />
+      {/* Avatar widget pinned to bottom-right */}
+      <FloatingAvatar
+        email="you@example.com"
+        github="yourhandle"
+        linkedin="yourhandle"
+      />
     </div>
   );
 }
