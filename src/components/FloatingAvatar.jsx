@@ -66,7 +66,7 @@ export default function FloatingAvatar({
               className="absolute bottom-0 right-[88px] flex items-end gap-3"
             >
               {/* Bubble — nudged UP a bit to sit near the mouth */}
-              <div className="relative -translate-y-3 max-w-[300px] rounded-2xl border border-slate-200 bg-white p-4 shadow-xl">
+              <div className="relative -translate-y-6 max-w-[300px] rounded-2xl border border-slate-200 bg-white p-4 shadow-xl">
                 <div className="text-sm font-semibold">Let’s connect</div>
                 <ul className="mt-2 space-y-2 text-sm text-slate-700">
                   <li className="flex items-center gap-2">
