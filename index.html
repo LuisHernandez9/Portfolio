@@ -1,20 +1,31 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Pixel font -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Portfolio</title>
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"/>
-    <title>Luicakes | Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0f2e3a" />
+
+    <!-- Tab title + favicon -->
+    <title>My Pokéfolio</title>
+    <link rel="icon" href="/closed_poke.png" />
   </head>
+
   <body>
-  <body class="min-h-screen bg-neutral-50 text-neutral-900">
+    <!-- Retro brand bar (optional; remove this block if you don’t want a header strip) -->
+    <header class="site-brand">
+      <a class="brand" href="/Portfolio/#/">
+        <span class="brand-inner">My Pokéfolio</span>
+      </a>
+    </header>
+
+    <!-- React mounts here -->
     <div id="root"></div>
-    <!-- Vite loads your React app from here -->
+
+    <!-- Vite boot -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
