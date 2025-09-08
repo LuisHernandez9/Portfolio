@@ -5,7 +5,7 @@
 /* ---------- Base ---------- */
 body {
   @apply bg-gb-100 text-gb-900;
-  background-image: url('/bg2.png'); /* your uploaded pattern */
+  background-image: url('/bg_pattern.png'); /* your uploaded pattern */
   background-repeat: repeat;
   background-size: 300px 300px;
 }
