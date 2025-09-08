@@ -28,9 +28,9 @@ function PokeTab({ to, align = "left", label }) {
 
   return (
     <div className={`flex ${isLeft ? "justify-start" : "justify-end"} w-full`}>
-      {/* group = lets the ball react to tab hover too */}
+      {/* group lets the ball react when the whole tab is hovered */}
       <div className="relative group w-[min(680px,50vw)] h-12 sm:h-14">
-        {/* Tab (bar) */}
+        {/* Bar with label */}
         <Link
           to={to}
           className="relative flex h-full w-full items-center justify-center
@@ -47,13 +47,12 @@ function PokeTab({ to, align = "left", label }) {
           </span>
         </Link>
 
-        {/* Pokéball — reacts to ball hover AND bar (group) hover; no layout shift */}
+        {/* Pokéball — transforms only; reacts to bar hover & direct hover */}
         <Link
           to={to}
           aria-label={label}
           className={[
             "absolute top-1/2 -translate-y-1/2 z-30 will-change-transform",
-            // push farther out so scaling never touches the bar/neighbor
             isLeft ? "-right-24 sm:-right-28" : "-left-24 sm:-left-28",
             "transition-transform duration-150 ease-out",
             "group-hover:translate-y-[-2px] group-hover:scale-[1.05]",
@@ -69,7 +68,6 @@ function PokeTab({ to, align = "left", label }) {
 
 export default function PokeTabs() {
   return (
-    {/* clip any off-canvas transform so no horizontal scrollbar is created */}
     <div className="mx-auto max-w-6xl px-4 mt-10 space-y-16 sm:space-y-20 overflow-hidden">
       <PokeTab to="/projects" align="left"  label="Projects" />
       <PokeTab to="/skills"   align="right" label="Skills" />
