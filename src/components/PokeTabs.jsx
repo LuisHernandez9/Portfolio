@@ -18,11 +18,11 @@ function SpriteBall({ className = "", alt = "Pokéball" }) {
                    group-hover:opacity-0 group-focus-visible:opacity-0"
         draggable="false"
       />
-      {/* open state — gets the snap animation via .open-sprite hook in CSS */}
+      {/* open state — animated via .poke-open-sprite in CSS */}
       <img
         src={open}
         alt={alt}
-        className="open-sprite block w-full h-full pixelated absolute inset-0 opacity-0 
+        className="poke-open-sprite block w-full h-full pixelated absolute inset-0 opacity-0 
                    transition-opacity duration-150 ease-out 
                    group-hover:opacity-100 group-focus-visible:opacity-100"
         draggable="false"
@@ -36,9 +36,9 @@ function PokeTab({ to, align = "left", label }) {
 
   return (
     <div className={`flex ${isLeft ? "justify-start" : "justify-end"} w-full`}>
-      {/* group = hover/focus propagates to the SpriteBall */}
-      <div className="relative group w-[min(680px,50vw)] h-12 sm:h-14">
-        {/* Bar with label (tiny lift on hover) */}
+      {/* NOTE: 'poke-tab group' lets bar hover affect the ball; ball has its own hover too */}
+      <div className="poke-tab group relative w-[min(680px,50vw)] h-12 sm:h-14">
+        {/* Bar with label */}
         <Link
           to={to}
           className="relative flex h-full w-full items-center justify-center
@@ -60,7 +60,7 @@ function PokeTab({ to, align = "left", label }) {
           to={to}
           aria-label={label}
           className={[
-            "absolute top-1/2 -translate-y-1/2 z-30",
+            "poke-ball absolute top-1/2 -translate-y-1/2 z-30",
             isLeft ? "-right-20 sm:-right-24" : "-left-20 sm:-left-24",
             "outline-none focus-visible:ring-2 ring-[var(--poke-border)] rounded",
           ].join(" ")}
