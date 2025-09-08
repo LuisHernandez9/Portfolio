@@ -83,3 +83,41 @@ body {
   overflow-y: scroll;   /* keeps vertical bar reserved */
   overflow-x: hidden;   /* never show horizontal bar */
 }
+
+/* --- Pokémon pop-out animation (adds to your existing hover logic) --- */
+@keyframes pokemonPop {
+  0%   { transform: translateY(14px) scale(0.7); opacity: 0; filter: blur(3px); }
+  60%  { transform: translateY(-6px) scale(1.06); opacity: 1; filter: blur(0); }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* Hidden by default; shown when the pokéball is "open" via your existing hover/focus rules */
+.pokemon-sprite {
+  position: absolute;
+  left: 50%;
+  bottom: calc(50% + 6px); /* rises from the center band */
+  transform: translateX(-50%) translateY(10px) scale(0.9);
+  transform-origin: 50% 100%;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* when the ball/tab is hovered/focused, reveal + animate the Pokémon */
+.poke-tab:hover .pokemon-sprite,
+.poke-tab:focus-within .pokemon-sprite,
+.poke-ball:hover .pokemon-sprite,
+.poke-ball:focus-visible .pokemon-sprite {
+  opacity: 1;
+  animation: pokemonPop 260ms ease-out both;
+}
+
+/* reduced motion: show without animation */
+@media (prefers-reduced-motion: reduce) {
+  .pokemon-sprite {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: translateX(-50%) translateY(0) scale(1) !important;
+    filter: none !important;
+  }
+}
