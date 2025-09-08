@@ -11,13 +11,9 @@ body {
 
 /* Retro tiled background */
 .body-tiles {
-  background-image: repeating-linear-gradient(
-    45deg,
-    #f2f5f7 0px,
-    #f2f5f7 8px,
-    #e6eef1 8px,
-    #e6eef1 16px
-  );
+  background-image: url("/Portfolio/bg_pattern.png");
+  background-repeat: repeat;
+  background-size: 256px 256px; /* tweak tile size */
 }
 
 /* ---------- Typography & buttons ---------- */
