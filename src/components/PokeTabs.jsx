@@ -4,14 +4,11 @@ import { Link } from "react-router-dom";
 const BASE = import.meta.env.BASE_URL || "/";
 
 /**
- * Vertical Pokédex-style rail:
- * - All tabs sit on the LEFT.
- * - Hovered tab scales up; the others subtly scale down.
- * - Pokéballs stay on the left; Pokémon pop AWAY from the rail (to the left).
- *
- * Uses local hover state so siblings can react together.
+ * Left-aligned Pokédex rail
+ * - Balls on the RIGHT of each bar
+ * - Monsters pop AWAY to the RIGHT
+ * - Hovered bar scales up; siblings scale down
  */
-
 export default function PokeTabs() {
   const [hovered, setHovered] = React.useState(null); // 0 | 1 | 2 | null
 
@@ -19,16 +16,13 @@ export default function PokeTabs() {
     {
       to: "/projects",
       label: "Projects",
-      ballSide: "left",
       mon: `${BASE}gengar.png`,
       monAlt: "Gengar appears!",
-      // how far up/down to align monster relative to ball center
       monOffsetY: "-56%",
     },
     {
       to: "/skills",
       label: "Skills",
-      ballSide: "left",
       mon: `${BASE}jirachi.png`,
       monAlt: "Jirachi appears!",
       monOffsetY: "-56%",
@@ -36,7 +30,6 @@ export default function PokeTabs() {
     {
       to: "/about",
       label: "About",
-      ballSide: "left",
       mon: `${BASE}bulbasaur.png`,
       monAlt: "Bulbasaur appears!",
       monOffsetY: "-56%",
@@ -45,14 +38,11 @@ export default function PokeTabs() {
 
   return (
     <div className="relative">
-      {/* Vertical rail */}
       <div className="flex flex-col gap-8 sm:gap-10">
         {tabs.map((t, i) => {
           const isHovering = hovered === i;
           const someHover = hovered !== null;
-          // scale: hovered grows, others shrink a touch
-          const scale =
-            isHovering ? 1.06 : someHover ? 0.96 : 1.0;
+          const scale = isHovering ? 1.06 : someHover ? 0.96 : 1;
 
           return (
             <div
@@ -61,11 +51,11 @@ export default function PokeTabs() {
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
             >
-              {/* Pokéball (left of the bar) */}
+              {/* Pokéball (RIGHT of the bar) */}
               <button
                 type="button"
                 aria-label={`Open ${t.label}`}
-                className="poke-ball absolute -left-10 top-1/2 -translate-y-1/2"
+                className="poke-ball absolute -right-10 top-1/2 -translate-y-1/2"
               >
                 {/* closed */}
                 <img
@@ -82,18 +72,12 @@ export default function PokeTabs() {
                 />
               </button>
 
-              {/* Pokémon that pops AWAY from the rail (to the left) */}
+              {/* Pokémon pops AWAY to the RIGHT */}
               <img
                 src={t.mon}
                 alt={t.monAlt}
-                className={`poke-mon pixelated absolute left-[-54px] top-1/2 -translate-y-1/2 opacity-0 pointer-events-none select-none pop-left`}
-                style={{
-                  // keep baseline aligned with the ball center using the CSS var
-                  // (your index.css animations read this var)
-                  // negative pushes upward a bit; adjust per sprite if needed
-                  // Example: "-56%" usually looks right for 32–48px sprites.
-                  ["--mon-ty"]: t.monOffsetY,
-                }}
+                className="poke-mon pixelated absolute right-[-54px] top-1/2 -translate-y-1/2 opacity-0 pointer-events-none select-none pop-right"
+                style={{ ["--mon-ty"]: t.monOffsetY }}
                 width={34}
                 height={34}
               />
