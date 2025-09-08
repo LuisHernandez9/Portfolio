@@ -1,17 +1,19 @@
 import React from "react";
 import FloatingAvatar from "./components/FloatingAvatar";
+import PokeTabs from "./components/PokeTabs";
 
 export default function App() {
   return (
     <div className="min-h-screen body-tiles text-gb-800">
-      {/* NAV */}
+      {/* NAV (you can keep or strip text links) */}
       <nav className="nav-poke fixed top-0 inset-x-0 z-40 backdrop-blur bg-white/60 border-b-2 border-poke-border">
         <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
           <span className="h1-poke">My Pokéfolio</span>
-          <ul className="flex items-center gap-6">
-            <li><a className="hover:underline" href="#projects">Projects</a></li>
+          {/* remove captions per your request (optional) */}
+          <ul className="hidden sm:flex items-center gap-6">
+            {/* <li><a className="hover:underline" href="#projects">Projects</a></li>
             <li><a className="hover:underline" href="#skills">Skills</a></li>
-            <li><a className="hover:underline" href="#about">About</a></li>
+            <li><a className="hover:underline" href="#about">About</a></li> */}
           </ul>
         </div>
       </nav>
@@ -31,7 +33,10 @@ export default function App() {
         </div>
       </header>
 
-      {/* PROJECTS */}
+      {/* NEW: Alternating Poké tabs */}
+      <PokeTabs />
+
+      {/* Sections */}
       <section id="projects" className="mt-20 mx-auto max-w-6xl px-4">
         <div className="panel p-5">
           <h2 className="font-press text-lg mb-4">Projects</h2>
@@ -41,7 +46,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* SKILLS */}
       <section id="skills" className="mt-20 mx-auto max-w-6xl px-4">
         <div className="panel p-5">
           <h2 className="font-press text-lg mb-4">Skills</h2>
@@ -49,24 +53,16 @@ export default function App() {
         </div>
       </section>
 
-      {/* ABOUT */}
       <section id="about" className="mt-20 mx-auto max-w-6xl px-4">
         <div className="panel p-5">
           <h2 className="font-press text-lg mb-4">About</h2>
-          <p className="text-sm text-gb-700">
-            A short description about you, styled in a retro panel.
-          </p>
+          <p className="text-sm text-gb-700">A short description about you, styled in a retro panel.</p>
         </div>
       </section>
 
-      {/* FLOATING AVATAR */}
-      <FloatingAvatar
-        email="you@example.com"
-        github="yourhandle"
-        linkedin="yourhandle"
-      />
+      <FloatingAvatar email="you@example.com" github="yourhandle" linkedin="yourhandle" />
 
-      {/* OPTIONAL SCANLINES */}
+      {/* optional scanlines */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 opacity-[0.07] mix-blend-multiply"
