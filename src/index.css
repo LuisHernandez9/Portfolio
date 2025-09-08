@@ -9,26 +9,16 @@ body {
   line-height: 1.4;
 }
 
-/* Background tiling — image itself is set inline in App.jsx */
-.bg-tiles {
-  background-repeat: repeat;
-  background-size: 256px 256px;
-}
+/* Background tiling */
+.bg-tiles { background-repeat: repeat; background-size: 256px 256px; }
 
-/* ---------- Typography ---------- */
+/* ---------- Typography & panels ---------- */
 .h1-poke { @apply font-press text-xl sm:text-2xl text-gb-900; }
-
-/* ---------- Retro panels ---------- */
-.panel { @apply border-2 border-gb-900 rounded-pixel bg-poke-panel shadow-pixel; }
-
-/* Nav bar */
-.nav-poke { @apply bg-white border-b-2 border-gb-900; }
+.panel   { @apply border-2 border-gb-900 rounded-pixel bg-poke-panel shadow-pixel; }
+.nav-poke{ @apply bg-white border-b-2 border-gb-900; }
 
 /* ---------- Pixel art helpers ---------- */
-.pixelated {
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-}
+.pixelated { image-rendering: pixelated; image-rendering: crisp-edges; }
 
 /* ---------- Pokéball open/close swap + snap ---------- */
 @keyframes pokeSnap {
@@ -38,7 +28,6 @@ body {
 }
 .poke-open-sprite { transform-origin: 50% 60%; will-change: transform; }
 
-/* Show the open ball on hover/focus */
 .poke-tab:hover .poke-open-sprite,
 .poke-tab:focus-within .poke-open-sprite,
 .poke-ball:hover .poke-open-sprite,
@@ -47,7 +36,6 @@ body {
   animation: pokeSnap 180ms ease-out both;
 }
 
-/* Hide the closed ball at the same time */
 .poke-tab:hover .poke-closed-sprite,
 .poke-tab:focus-within .poke-closed-sprite,
 .poke-ball:hover .poke-closed-sprite,
@@ -55,33 +43,51 @@ body {
   opacity: 0;
 }
 
-/* ---------- Pokémon pop-out animation ---------- */
-@keyframes pokeMonPop {
-  0%   { transform: translateY(10px) scale(0.65); opacity: 0; }
-  60%  { transform: translateY(-6px) scale(1.05); opacity: 1; }
-  100% { transform: translateY(-2px) scale(1.00); opacity: 1; }
+/* ---------- Pokémon pop AWAY from the panel ---------- */
+/* Right-side ball → pop right */
+@keyframes monPopRight {
+  0%   { transform: translate(-6px, -50%) scale(0.65); opacity: 0; }
+  60%  { transform: translate(14px, -50%) scale(1.05); opacity: 1; }
+  100% { transform: translate(10px, -50%) scale(1.00); opacity: 1; }
+}
+/* Left-side ball → pop left */
+@keyframes monPopLeft {
+  0%   { transform: translate(6px, -50%) scale(0.65); opacity: 0; }
+  60%  { transform: translate(-14px, -50%) scale(1.05); opacity: 1; }
+  100% { transform: translate(-10px, -50%) scale(1.00); opacity: 1; }
 }
 
-@keyframes pokeMonFloat {
-  0%   { transform: translateY(-2px); }
-  100% { transform: translateY(-8px); }
+/* Gentle bob — faster now (1.2s) */
+@keyframes monFloatRight {
+  0%   { transform: translate(10px, -50%); }
+  100% { transform: translate(14px, -50%); }
+}
+@keyframes monFloatLeft {
+  0%   { transform: translate(-10px, -50%); }
+  100% { transform: translate(-14px, -50%); }
 }
 
-/* When the tab or the ball is hovered/focused, reveal the Pokémon and animate */
-.poke-tab:hover .poke-mon,
-.poke-tab:focus-within .poke-mon,
-.poke-ball:hover ~ .poke-mon,         /* sibling: ball hovered */
-.poke-ball:focus-visible ~ .poke-mon  /* keyboard focus on ball */
-{
+/* Trigger hover/focus */
+.poke-tab:hover  .poke-mon.pop-right,
+.poke-tab:focus-within .poke-mon.pop-right,
+.poke-ball:hover ~ .poke-mon.pop-right,
+.poke-ball:focus-visible ~ .poke-mon.pop-right {
   opacity: 1;
   animation:
-    pokeMonPop 220ms ease-out forwards,
-    pokeMonFloat 1800ms ease-in-out 220ms infinite alternate;
+    monPopRight 220ms ease-out forwards,
+    monFloatRight 1200ms ease-in-out 220ms infinite alternate;
+}
+
+.poke-tab:hover  .poke-mon.pop-left,
+.poke-tab:focus-within .poke-mon.pop-left,
+.poke-ball:hover ~ .poke-mon.pop-left,
+.poke-ball:focus-visible ~ .poke-mon.pop-left {
+  opacity: 1;
+  animation:
+    monPopLeft 220ms ease-out forwards,
+    monFloatLeft 1200ms ease-in-out 220ms infinite alternate;
 }
 
 /* ---------- Global overflow guards ---------- */
 html, body, #root { height: 100%; }
-body {
-  overflow-y: scroll;   /* keeps vertical bar reserved */
-  overflow-x: hidden;   /* never show horizontal bar */
-}
+body { overflow-y: scroll; overflow-x: hidden; }
