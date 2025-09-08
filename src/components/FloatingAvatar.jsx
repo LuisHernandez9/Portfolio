@@ -1,9 +1,11 @@
 import React from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Github, Linkedin } from "lucide-react";
 
 const BASE = import.meta.env.BASE_URL; // "/Portfolio/" on Pages
-const AVATAR_WIDTH = 120; // both head + full avatar size
+const AVATAR_WIDTH = 120;              // both head + full avatar size
+const FRAME_PX = 8;                    // adjust to match your border thickness
 
 export default function FloatingAvatar({
   email = "you@example.com",
@@ -28,15 +30,19 @@ export default function FloatingAvatar({
     };
   }, [open]);
 
-  return (
-    // removed pr-1 sm:pr-2 so it can sit flush against the right edge
-    <div className="fixed bottom-8 right-0 z-50 select-none" ref={rootRef}>
+  // Avatar + bubble UI
+  const avatarNode = (
+    <div
+      ref={rootRef}
+      className="fixed bottom-8 z-[60] select-none"
+      style={{ right: -FRAME_PX }}
+    >
       <div
         className="relative"
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
       >
-        {/* Peeking head (left half only) — image itself acts as the button */}
+        {/* Peeking head (left half only) */}
         <img
           src={`${BASE}converted_1.png`}
           alt="Avatar head"
@@ -121,4 +127,7 @@ export default function FloatingAvatar({
       </div>
     </div>
   );
+
+  // Portal directly to <body>, so position is relative to the viewport
+  return createPortal(avatarNode, document.body);
 }
