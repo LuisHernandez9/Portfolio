@@ -1,30 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const BASE = import.meta.env.BASE_URL; // "/Portfolio/" on GitHub Pages
+const BASE = import.meta.env.BASE_URL || "/";
 
-// Map each tab to its Pokémon sprite in /public
+/* Map each tab to its Pokémon sprite in /public */
 const POKEMON_BY_LABEL = {
   Projects: `${BASE}gengar.png`,
   Skills: `${BASE}jirachi.png`,
   About: `${BASE}bulbasaur.png`,
 };
 
-/** Pixel Pokéball that switches closed → open (your original) */
+/** Pixel Pokéball that switches closed → open (your original visuals) */
 function SpriteBall({ className = "", alt = "Pokéball" }) {
   const closed = `${BASE}closed_poke.png`;
-  const open   = `${BASE}open_poke.png`;
-
+  const open = `${BASE}open_poke.png`;
   return (
     <span className={`relative inline-block select-none ${className}`} aria-hidden="true">
-      {/* closed state */}
       <img
         src={closed}
         alt=""
         className="poke-closed-sprite block w-full h-full pixelated transition-opacity duration-150 ease-out"
         draggable="false"
       />
-      {/* open state (snaps via CSS in index.css) */}
       <img
         src={open}
         alt={alt}
@@ -35,20 +32,30 @@ function SpriteBall({ className = "", alt = "Pokéball" }) {
   );
 }
 
-function PokeTab({ to, align = "left", label }) {
+function PokeTab({ to, align = "left", label, openLabel, setOpenLabel }) {
   const isLeft = align === "left";
-
+  const isOpen = openLabel === label;
   const TAB_BG = "rgba(247,244,232,0.96)";
   const scanlines =
     "repeating-linear-gradient(0deg, rgba(0,0,0,0.06) 0px, rgba(0,0,0,0.06) 1px, transparent 1px, transparent 4px)";
-
-  // pick the right Pokémon for this tab
   const sprite = POKEMON_BY_LABEL[label];
+
+  // handlers to open/close via state (works for mouse + keyboard)
+  const open = () => setOpenLabel(label);
+  const close = () => setOpenLabel(null);
 
   return (
     <div className={`flex ${isLeft ? "justify-start" : "justify-end"} w-full`}>
-      {/* IMPORTANT: .poke-tab is the hover target used by CSS */}
-      <div className="poke-tab relative w-[min(760px,60vw)] h-14 sm:h-16">
+      {/* .poke-tab enables your existing hover styles; we ALSO add/remove .pokeball-open via state */}
+      <div
+        className={`poke-tab relative w-[min(760px,60vw)] h-14 sm:h-16 ${
+          isOpen ? "pokeball-open" : ""
+        }`}
+        onMouseEnter={open}
+        onMouseLeave={close}
+        onFocus={open}
+        onBlur={close}
+      >
         {/* The tab bar */}
         <Link
           to={to}
@@ -65,25 +72,24 @@ function PokeTab({ to, align = "left", label }) {
           style={{ backgroundColor: TAB_BG, backgroundImage: scanlines }}
           aria-label={label}
         >
-          <span className="font-press text-[14px] sm:text-[16px] text-[#0b2833]">
-            {label}
-          </span>
+          <span className="font-press text-[14px] sm:text-[16px] text-[#0b2833]">{label}</span>
         </Link>
 
-        {/* Pokéball + Pokémon */}
+        {/* Ball + Pokémon. `relative` ensures the sprite positions off the ball */}
         <Link
           to={to}
           aria-label={label}
           className={[
-            // container is positioned; children use absolute placement
-            "poke-ball absolute top-1/2 -translate-y-1/2 z-30",
-            "inline-block", // ensure it sizes to the ball and becomes containing block
+            "poke-ball absolute top-1/2 -translate-y-1/2 z-30 inline-block relative",
             isLeft ? "-right-16 sm:-right-20" : "-left-16 sm:-left-20",
             "outline-none focus-visible:ring-2 ring-[#0f2e3a] rounded",
-            "relative", // so .pokemon-sprite positions relative to this link
           ].join(" ")}
+          onMouseEnter={open}
+          onMouseLeave={close}
+          onFocus={open}
+          onBlur={close}
         >
-          {/* Pokémon sprite (hidden by default; appears via your CSS on hover/focus) */}
+          {/* Pokémon sprite — visibility now controlled by .pokeball-open as well */}
           <img
             src={sprite}
             alt={`${label} Pokémon`}
@@ -100,12 +106,12 @@ function PokeTab({ to, align = "left", label }) {
 }
 
 export default function PokeTabs() {
+  const [openLabel, setOpenLabel] = useState(null);
   return (
-    // overflow visible so balls aren’t clipped by the surrounding panel
     <div className="px-2 sm:px-4 space-y-12 sm:space-y-14 overflow-visible">
-      <PokeTab to="/projects" align="left"  label="Projects" />
-      <PokeTab to="/skills"   align="right" label="Skills" />
-      <PokeTab to="/about"    align="left"  label="About" />
+      <PokeTab to="/projects" align="left" label="Projects" openLabel={openLabel} setOpenLabel={setOpenLabel} />
+      <PokeTab to="/skills" align="right" label="Skills" openLabel={openLabel} setOpenLabel={setOpenLabel} />
+      <PokeTab to="/about" align="left" label="About" openLabel={openLabel} setOpenLabel={setOpenLabel} />
     </div>
   );
 }
