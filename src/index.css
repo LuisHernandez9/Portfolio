@@ -129,3 +129,46 @@ h1,h2,h3,h4,h5,h6 { @apply font-press; }
   letter-spacing: .5px;
   text-shadow: 0 1px 0 #ffffff55;
 }
+/* ===== Retro brand bar (header) ===== */
+:root { --brand-h: 56px; } /* used below, easy to tweak */
+
+.site-brand {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: var(--brand-h);
+  display: flex;
+  align-items: center;
+
+  background: #F7F4E8;               /* matches poke.panel */
+  border-bottom: 3px solid #0f2e3a;  /* dark teal border */
+  box-shadow:
+    inset 0 -4px 0 #F7F4E8,
+    0 1px 0 #0f2e3a;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(0,0,0,.05) 0px,
+    rgba(0,0,0,.05) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
+.site-brand .brand {
+  display: block;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  text-decoration: none;
+}
+
+.site-brand .brand-inner {
+  font-family: "Press Start 2P", cursive;
+  color: #0b2833;
+  font-size: clamp(18px, 2.2vw, 28px);
+  letter-spacing: .5px;
+  text-shadow: 0 1px 0 #ffffff55;
+}
+
+/* Ensure no default body margin creates a white strip */
+html, body { margin: 0; }
