@@ -26,7 +26,7 @@ function SpriteBall({ className = "", alt = "Pokéball" }) {
 }
 
 function PokeTab({ to, align = "left", label, pokemonFile }) {
-  // align="left" → bar aligned left → BALL ON THE RIGHT
+  // align="left" ⇒ bar is left-aligned, so the BALL sits on the RIGHT
   const ballOnRight = align === "left";
 
   const TAB_BG = "rgba(247,244,232,0.96)";
@@ -37,7 +37,7 @@ function PokeTab({ to, align = "left", label, pokemonFile }) {
 
   return (
     <div className={`flex ${ballOnRight ? "justify-start" : "justify-end"} w-full`}>
-      <div className="poke-tab relative w=[min(760px,60vw)] w-[min(760px,60vw)] h-14 sm:h-16">
+      <div className="poke-tab relative w-[min(760px,60vw)] h-14 sm:h-16 overflow-visible">
         {/* Tab bar */}
         <Link
           to={to}
@@ -72,7 +72,8 @@ function PokeTab({ to, align = "left", label, pokemonFile }) {
           <SpriteBall className="w-12 h-12 sm:w-14 sm:h-14" alt={`${label} tab`} />
         </Link>
 
-        {/* Pokémon sprite — vertically aligned with the ball */}
+        {/* Pokémon sprite — place it OUTSIDE the panel at the ball side,
+            so it pops AWAY into open space */}
         <img
           src={monSrc}
           alt=""
@@ -82,10 +83,8 @@ function PokeTab({ to, align = "left", label, pokemonFile }) {
             "poke-mon pointer-events-none absolute z-20 pixelated opacity-0",
             "w-16 h-16 sm:w-20 sm:h-20",
             "top-1/2 -translate-y-1/2",
-            // IMPORTANT: pop AWAY from the panel
-            // ball on right -> sprite pops RIGHT  => use pop-right
-            // ball on left  -> sprite pops LEFT   => use pop-left
-            ballOnRight ? "right-6 sm:right-8 pop-right" : "left-6 sm:left-8 pop-left",
+            // outside offsets (note the negative utilities)
+            ballOnRight ? "-right-8 sm:-right-10 pop-right" : "-left-8 sm:-left-10 pop-left",
           ].join(" ")}
         />
       </div>
@@ -96,11 +95,11 @@ function PokeTab({ to, align = "left", label, pokemonFile }) {
 export default function PokeTabs() {
   return (
     <div className="px-2 sm:px-4 space-y-12 sm:space-y-14 overflow-visible">
-      {/* Projects → ball on right → Gengar pops RIGHT */}
+      {/* Projects → ball on right → Gengar pops RIGHT (away) */}
       <PokeTab to="/projects" align="left"  label="Projects"  pokemonFile="gengar.png"  />
-      {/* Skills → ball on left → Jirachi pops LEFT */}
+      {/* Skills → ball on left → Jirachi pops LEFT (away) */}
       <PokeTab to="/skills"   align="right" label="Skills"    pokemonFile="jirachi.png" />
-      {/* About → ball on right → Bulbasaur pops RIGHT */}
+      {/* About → ball on right → Bulbasaur pops RIGHT (away) */}
       <PokeTab to="/about"    align="left"  label="About"     pokemonFile="bulbasaur.png" />
     </div>
   );
