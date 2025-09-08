@@ -47,3 +47,20 @@ p {
   margin-bottom: 1rem;
   color: #333;
 }
+
+/* --- Size the main page window without touching the theme/animations --- */
+.app-window{
+  width: min(1200px, 85vw);
+  min-height: 85vh;
+  margin: clamp(16px, 4vh, 32px) auto;
+  padding: clamp(16px, 2.5vw, 32px);
+}
+
+/* optional: a bit tighter on very small screens */
+@media (max-width: 640px){
+  .app-window{
+    width: 92vw;
+    min-height: 88vh;
+    padding: 16px;
+  }
+}
