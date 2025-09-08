@@ -3,9 +3,9 @@ import PokeTabs from "../components/PokeTabs";
 
 export default function Home() {
   return (
-    <div className="mx-auto max-w-6xl px-4 pt-24">
+    <div className="mx-auto max-w-[1200px] md:max-w-[1320px] lg:max-w-[1400px] px-4 sm:px-6 lg:px-8">
       {/* Big cream panel like Projects/Skills/About */}
-      <section className="panel p-6 sm:p-8">
+      <section className="panel mt-6 sm:mt-10 p-5 sm:p-8 md:p-10 lg:p-12">
         <header>
           <h1 className="h1-poke">
             Building reliable,<br /> delightful software.
