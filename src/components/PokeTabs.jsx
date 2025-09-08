@@ -1,107 +1,119 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const BASE = import.meta.env.BASE_URL; // "/Portfolio/" on GitHub Pages
+const BASE = import.meta.env.BASE_URL || "/";
 
-function SpriteBall({ className = "", alt = "Pokéball" }) {
-  const closed = `${BASE}closed_poke.png`;
-  const open   = `${BASE}open_poke.png`;
-
-  return (
-    <span className={`relative inline-block select-none ${className}`} aria-hidden="true">
-      <img
-        src={closed}
-        alt=""
-        className="poke-closed-sprite block w-full h-full pixelated transition-opacity duration-150 ease-out"
-        draggable="false"
-      />
-      <img
-        src={open}
-        alt={alt}
-        className="poke-open-sprite block w-full h-full pixelated absolute inset-0 opacity-0 transition-opacity duration-150 ease-out"
-        draggable="false"
-      />
-    </span>
-  );
-}
-
-function PokeTab({ to, align = "left", label, pokemonFile }) {
-  // align="left" ⇒ bar aligned left ⇒ BALL ON THE RIGHT
-  const ballOnRight = align === "left";
-
-  const TAB_BG = "rgba(247,244,232,0.96)";
-  const scanlines =
-    "repeating-linear-gradient(0deg, rgba(0,0,0,0.06) 0px, rgba(0,0,0,0.06) 1px, transparent 1px, transparent 4px)";
-
-  const monSrc = `${BASE}${pokemonFile}`;
-
-  return (
-    <div className={`flex ${ballOnRight ? "justify-start" : "justify-end"} w-full`}>
-      <div className="poke-tab relative w-[min(760px,60vw)] h-14 sm:h-16 overflow-visible">
-        {/* Tab bar */}
-        <Link
-          to={to}
-          className="
-            relative flex h-full w-full items-center justify-center
-            rounded-[12px]
-            border-[3px] border-[#0f2e3a]
-            shadow-[0_0_0_4px_#F7F4E8,0_0_0_7px_#0f2e3a]
-            transition-transform duration-150 ease-out
-            hover:-translate-y-[1px]
-            focus:outline-none focus:ring-2 focus:ring-[#0f2e3a]
-          "
-          style={{ backgroundColor: TAB_BG, backgroundImage: scanlines }}
-          aria-label={label}
-        >
-          <span className="font-press text-[14px] sm:text-[16px] text-[#0b2833]">
-            {label}
-          </span>
-        </Link>
-
-        {/* Ball — OUTSIDE the panel edge */}
-        <Link
-          to={to}
-          aria-label={label}
-          className={[
-            "poke-ball absolute top-1/2 -translate-y-1/2 z-30 outline-none focus-visible:ring-2 ring-[#0f2e3a] rounded",
-            ballOnRight ? "-right-16 sm:-right-20" : "-left-16 sm:-left-20",
-          ].join(" ")}
-        >
-          <SpriteBall className="w-12 h-12 sm:w-14 sm:h-14" alt={`${label} tab`} />
-        </Link>
-
-        {/* Pokémon — starts beyond the ball, pops further OUT.
-            We set a CSS variable --mon-ty so animations preserve the Y offset. */}
-        <img
-          src={monSrc}
-          alt=""
-          aria-hidden="true"
-          draggable="false"
-          className={[
-            "poke-mon pointer-events-none absolute z-20 pixelated opacity-0",
-            "w-16 h-16 sm:w-20 sm:h-20",
-            "top-1/2", // Y anchor comes from the CSS var below (not translate utility)
-            ballOnRight
-              ? "-right-28 sm:-right-32 pop-right"
-              : "-left-28  sm:-left-32  pop-left",
-          ].join(" ")}
-          // Raise a touch above the ball's visual center (tweak -56% to taste)
-          style={{ "--mon-ty": "-56%" }}
-        />
-      </div>
-    </div>
-  );
-}
+/**
+ * Vertical Pokédex-style rail:
+ * - All tabs sit on the LEFT.
+ * - Hovered tab scales up; the others subtly scale down.
+ * - Pokéballs stay on the left; Pokémon pop AWAY from the rail (to the left).
+ *
+ * Uses local hover state so siblings can react together.
+ */
 
 export default function PokeTabs() {
+  const [hovered, setHovered] = React.useState(null); // 0 | 1 | 2 | null
+
+  const tabs = [
+    {
+      to: "/projects",
+      label: "Projects",
+      ballSide: "left",
+      mon: `${BASE}gengar.png`,
+      monAlt: "Gengar appears!",
+      // how far up/down to align monster relative to ball center
+      monOffsetY: "-56%",
+    },
+    {
+      to: "/skills",
+      label: "Skills",
+      ballSide: "left",
+      mon: `${BASE}jirachi.png`,
+      monAlt: "Jirachi appears!",
+      monOffsetY: "-56%",
+    },
+    {
+      to: "/about",
+      label: "About",
+      ballSide: "left",
+      mon: `${BASE}bulbasaur.png`,
+      monAlt: "Bulbasaur appears!",
+      monOffsetY: "-56%",
+    },
+  ];
+
   return (
-    <div className="px-2 sm:px-4 space-y-12 sm:space-y-14 overflow-visible">
-      {/* Projects → ball on right → Gengar pops OUT to the right */}
-      <PokeTab to="/projects" align="left"  label="Projects"  pokemonFile="gengar.png"  />
-      {/* Skills → ball on left → Jirachi pops OUT to the left */}
-      <PokeTab to="/skills"   align="right" label="Skills"    pokemonFile="jirachi.png" />
-      {/* About → ball on right → Bulbasaur pops OUT to the right */}
-      <PokeTab to="/about"    align="left"  label="About"     pokemonFile="bulbasaur.png" />
+    <div className="relative">
+      {/* Vertical rail */}
+      <div className="flex flex-col gap-8 sm:gap-10">
+        {tabs.map((t, i) => {
+          const isHovering = hovered === i;
+          const someHover = hovered !== null;
+          // scale: hovered grows, others shrink a touch
+          const scale =
+            isHovering ? 1.06 : someHover ? 0.96 : 1.0;
+
+          return (
+            <div
+              key={t.to}
+              className="relative poke-tab"
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
+            >
+              {/* Pokéball (left of the bar) */}
+              <button
+                type="button"
+                aria-label={`Open ${t.label}`}
+                className="poke-ball absolute -left-10 top-1/2 -translate-y-1/2"
+              >
+                {/* closed */}
+                <img
+                  src={`${BASE}closed_poke.png`}
+                  alt=""
+                  className="poke-closed-sprite pixelated w-8 h-8 pointer-events-none select-none"
+                />
+                {/* open (fades in on hover) */}
+                <img
+                  src={`${BASE}open_poke.png`}
+                  alt=""
+                  className="poke-open-sprite pixelated w-8 h-8 absolute inset-0 opacity-0 pointer-events-none select-none"
+                  style={{ filter: "drop-shadow(0 1px 0 rgba(0,0,0,.2))" }}
+                />
+              </button>
+
+              {/* Pokémon that pops AWAY from the rail (to the left) */}
+              <img
+                src={t.mon}
+                alt={t.monAlt}
+                className={`poke-mon pixelated absolute left-[-54px] top-1/2 -translate-y-1/2 opacity-0 pointer-events-none select-none pop-left`}
+                style={{
+                  // keep baseline aligned with the ball center using the CSS var
+                  // (your index.css animations read this var)
+                  // negative pushes upward a bit; adjust per sprite if needed
+                  // Example: "-56%" usually looks right for 32–48px sprites.
+                  ["--mon-ty"]: t.monOffsetY,
+                }}
+                width={34}
+                height={34}
+              />
+
+              {/* The tab bar */}
+              <Link
+                to={t.to}
+                className="block"
+                style={{ transform: `scale(${scale})`, transition: "transform 140ms ease" }}
+              >
+                <div className="panel px-5 sm:px-6 py-3 sm:py-[14px] w-[min(780px,90vw)]">
+                  <div className="font-press text-[14px] sm:text-[15px] tracking-wider text-center">
+                    {t.label}
+                  </div>
+                </div>
+              </Link>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
