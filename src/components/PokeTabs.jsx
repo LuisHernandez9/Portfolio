@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const BASE = import.meta.env.BASE_URL; // "/Portfolio/" on GitHub Pages
 
-/** Pixel Pokéball that switches closed → open on hover/focus */
+/** Pixel Pokéball that switches closed → open with a snap */
 function SpriteBall({ className = "", alt = "Pokéball" }) {
   const closed = `${BASE}closed_poke.png`;
   const open   = `${BASE}open_poke.png`;
@@ -18,11 +18,11 @@ function SpriteBall({ className = "", alt = "Pokéball" }) {
                    group-hover:opacity-0 group-focus-visible:opacity-0"
         draggable="false"
       />
-      {/* open state */}
+      {/* open state — gets the snap animation via .open-sprite hook in CSS */}
       <img
         src={open}
         alt={alt}
-        className="block w-full h-full pixelated absolute inset-0 opacity-0 
+        className="open-sprite block w-full h-full pixelated absolute inset-0 opacity-0 
                    transition-opacity duration-150 ease-out 
                    group-hover:opacity-100 group-focus-visible:opacity-100"
         draggable="false"
@@ -36,9 +36,9 @@ function PokeTab({ to, align = "left", label }) {
 
   return (
     <div className={`flex ${isLeft ? "justify-start" : "justify-end"} w-full`}>
-      {/* group = hover/focus propagates to SpriteBall */}
+      {/* group = hover/focus propagates to the SpriteBall */}
       <div className="relative group w-[min(680px,50vw)] h-12 sm:h-14">
-        {/* Tab (label visible) */}
+        {/* Bar with label (tiny lift on hover) */}
         <Link
           to={to}
           className="relative flex h-full w-full items-center justify-center
@@ -55,7 +55,7 @@ function PokeTab({ to, align = "left", label }) {
           </span>
         </Link>
 
-        {/* Pokéball positioned outside the bar */}
+        {/* Pixel Pokéball outside the bar */}
         <Link
           to={to}
           aria-label={label}
