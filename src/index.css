@@ -9,7 +9,7 @@ body {
   line-height: 1.4;
 }
 
-/* Background tiling */
+/* Background tiling (image itself set inline in App.jsx) */
 .bg-tiles { background-repeat: repeat; background-size: 256px 256px; }
 
 /* ---------- Typography & panels ---------- */
@@ -35,7 +35,6 @@ body {
   opacity: 1;
   animation: pokeSnap 180ms ease-out both;
 }
-
 .poke-tab:hover .poke-closed-sprite,
 .poke-tab:focus-within .poke-closed-sprite,
 .poke-ball:hover .poke-closed-sprite,
@@ -43,49 +42,48 @@ body {
   opacity: 0;
 }
 
-/* ---------- Pokémon pop AWAY from the panel ---------- */
-/* Right-side ball → pop right */
-@keyframes monPopRight {
-  0%   { transform: translate(-6px, -50%) scale(0.65); opacity: 0; }
-  60%  { transform: translate(14px, -50%) scale(1.05); opacity: 1; }
-  100% { transform: translate(10px, -50%) scale(1.00); opacity: 1; }
+/* ---------- Pop OUTWARD from the ball (relative to the ball anchor) ---------- */
+/* For a right-side ball: Pokémon sits to the right (dir-right) and pops further right */
+@keyframes popOutFromBallRight {
+  0%   { transform: translateX(0)   scale(0.65); opacity: 0; }
+  60%  { transform: translateX(16px) scale(1.05); opacity: 1; }
+  100% { transform: translateX(12px) scale(1.00); opacity: 1; }
 }
-/* Left-side ball → pop left */
-@keyframes monPopLeft {
-  0%   { transform: translate(6px, -50%) scale(0.65); opacity: 0; }
-  60%  { transform: translate(-14px, -50%) scale(1.05); opacity: 1; }
-  100% { transform: translate(-10px, -50%) scale(1.00); opacity: 1; }
-}
-
-/* Gentle bob — faster now (1.2s) */
-@keyframes monFloatRight {
-  0%   { transform: translate(10px, -50%); }
-  100% { transform: translate(14px, -50%); }
-}
-@keyframes monFloatLeft {
-  0%   { transform: translate(-10px, -50%); }
-  100% { transform: translate(-14px, -50%); }
+/* For a left-side ball: Pokémon sits to the left (dir-left) and pops further left */
+@keyframes popOutFromBallLeft {
+  0%   { transform: translateX(0)    scale(0.65); opacity: 0; }
+  60%  { transform: translateX(-16px) scale(1.05); opacity: 1; }
+  100% { transform: translateX(-12px) scale(1.00); opacity: 1; }
 }
 
-/* Trigger hover/focus */
-.poke-tab:hover  .poke-mon.pop-right,
-.poke-tab:focus-within .poke-mon.pop-right,
-.poke-ball:hover ~ .poke-mon.pop-right,
-.poke-ball:focus-visible ~ .poke-mon.pop-right {
+/* Faster, subtle bob */
+@keyframes bobRight {
+  0%   { transform: translateX(12px); }
+  100% { transform: translateX(16px); }
+}
+@keyframes bobLeft {
+  0%   { transform: translateX(-12px); }
+  100% { transform: translateX(-16px); }
+}
+
+/* Trigger: hover/focus on the row or ball */
+.poke-tab:hover  .poke-mon.dir-right,
+.poke-tab:focus-within .poke-mon.dir-right,
+.poke-ball:hover + .poke-mon.dir-right,
+.poke-ball:focus-visible + .poke-mon.dir-right {
   opacity: 1;
   animation:
-    monPopRight 220ms ease-out forwards,
-    monFloatRight 1200ms ease-in-out 220ms infinite alternate;
+    popOutFromBallRight 220ms ease-out forwards,
+    bobRight 1100ms ease-in-out 220ms infinite alternate;
 }
-
-.poke-tab:hover  .poke-mon.pop-left,
-.poke-tab:focus-within .poke-mon.pop-left,
-.poke-ball:hover ~ .poke-mon.pop-left,
-.poke-ball:focus-visible ~ .poke-mon.pop-left {
+.poke-tab:hover  .poke-mon.dir-left,
+.poke-tab:focus-within .poke-mon.dir-left,
+.poke-ball:hover + .poke-mon.dir-left,
+.poke-ball:focus-visible + .poke-mon.dir-left {
   opacity: 1;
   animation:
-    monPopLeft 220ms ease-out forwards,
-    monFloatLeft 1200ms ease-in-out 220ms infinite alternate;
+    popOutFromBallLeft 220ms ease-out forwards,
+    bobLeft 1100ms ease-in-out 220ms infinite alternate;
 }
 
 /* ---------- Global overflow guards ---------- */
