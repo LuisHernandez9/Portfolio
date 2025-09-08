@@ -91,23 +91,25 @@ body {
   100% { transform: translateY(0) scale(1); opacity: 1; }
 }
 
-/* Hidden by default */
+/* Hidden by default; positioned just above the ball */
 .pokemon-sprite {
   position: absolute;
   left: 50%;
-  bottom: calc(50% + 6px); /* rises from the center band */
-  transform: translateX(-50%) translateY(10px) scale(0.9);
+  bottom: calc(100% + 6px);   /* sit above the ball */
+  transform: translateX(-50%) translateY(8px) scale(0.9);
   transform-origin: 50% 100%;
   opacity: 0;
   pointer-events: none;
   user-select: none;
+  z-index: 50;                /* ensure sprite appears above panel */
 }
 
-/* Show + animate on hover/focus */
+/* Reveal on hover/focus OR when state adds .pokeball-open */
 .poke-tab:hover .pokemon-sprite,
 .poke-tab:focus-within .pokemon-sprite,
 .poke-ball:hover .pokemon-sprite,
-.poke-ball:focus-visible .pokemon-sprite {
+.poke-ball:focus-visible .pokemon-sprite,
+.pokeball-open .pokemon-sprite {
   opacity: 1;
   animation: pokemonPop 260ms ease-out both;
 }
@@ -118,13 +120,14 @@ body {
     animation: none !important;
     filter: none !important;
     opacity: 0 !important;
-    transform: translateX(-50%) translateY(10px) scale(0.9) !important;
+    transform: translateX(-50%) translateY(8px) scale(0.9) !important;
   }
 
   .poke-tab:hover .pokemon-sprite,
   .poke-tab:focus-within .pokemon-sprite,
   .poke-ball:hover .pokemon-sprite,
-  .poke-ball:focus-visible .pokemon-sprite {
+  .poke-ball:focus-visible .pokemon-sprite,
+  .pokeball-open .pokemon-sprite {
     opacity: 1 !important;
     transform: translateX(-50%) translateY(0) scale(1) !important;
   }
