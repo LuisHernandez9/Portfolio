@@ -9,10 +9,11 @@ body {
   line-height: 1.4;
 }
 
-/* Utility to control tiling/size; image itself is set inline in App.jsx */
+/* Use an external image for the site background.
+   The URL is set inline in App.jsx; this just controls tiling/size. */
 .bg-tiles {
   background-repeat: repeat;
-  background-size: 256px 256px; /* tweak tile size here */
+  background-size: 256px 256px; /* tweak tile size if needed */
 }
 
 /* ---------- Typography & buttons ---------- */
