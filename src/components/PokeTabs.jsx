@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 const BASE = import.meta.env.BASE_URL; // "/Portfolio/" on GitHub Pages
 
-/** Pixel Pokéball that swaps closed → open. Opacity/anim driven via CSS */
 function SpriteBall({ className = "", alt = "Pokéball" }) {
   const closed = `${BASE}closed_poke.png`;
   const open   = `${BASE}open_poke.png`;
@@ -26,22 +25,20 @@ function SpriteBall({ className = "", alt = "Pokéball" }) {
   );
 }
 
-/** A tab row with its Pokéball and a Pokémon sprite that pops out on hover */
 function PokeTab({ to, align = "left", label, pokemonFile }) {
-  const isLeft = align === "left";
+  // align="left" → bar aligned left → BALL ON THE RIGHT
+  const ballOnRight = align === "left";
 
   const TAB_BG = "rgba(247,244,232,0.96)";
   const scanlines =
     "repeating-linear-gradient(0deg, rgba(0,0,0,0.06) 0px, rgba(0,0,0,0.06) 1px, transparent 1px, transparent 4px)";
 
-  // Pokémon sprite path
   const monSrc = `${BASE}${pokemonFile}`;
 
   return (
-    <div className={`flex ${isLeft ? "justify-start" : "justify-end"} w-full`}>
-      {/* .poke-tab is the hover target used by CSS */}
-      <div className="poke-tab relative w-[min(760px,60vw)] h-14 sm:h-16">
-        {/* The tab bar */}
+    <div className={`flex ${ballOnRight ? "justify-start" : "justify-end"} w-full`}>
+      <div className="poke-tab relative w=[min(760px,60vw)] w-[min(760px,60vw)] h-14 sm:h-16">
+        {/* Tab bar */}
         <Link
           to={to}
           className="
@@ -62,21 +59,20 @@ function PokeTab({ to, align = "left", label, pokemonFile }) {
           </span>
         </Link>
 
-        {/* Pokéball link (kept as a link so the whole affordance is clickable) */}
+        {/* Pokéball */}
         <Link
           to={to}
           aria-label={label}
           className={[
             "poke-ball absolute top-1/2 -translate-y-1/2 z-30",
-            isLeft ? "-right-16 sm:-right-20" : "-left-16 sm:-left-20",
+            ballOnRight ? "-right-16 sm:-right-20" : "-left-16 sm:-left-20",
             "outline-none focus-visible:ring-2 ring-[#0f2e3a] rounded",
           ].join(" ")}
         >
           <SpriteBall className="w-12 h-12 sm:w-14 sm:h-14" alt={`${label} tab`} />
         </Link>
 
-        {/* Pokémon sprite — absolutely positioned near the ball.
-            Hidden by default; reveals & animates via CSS on hover/focus. */}
+        {/* Pokémon sprite — vertically aligned with the ball */}
         <img
           src={monSrc}
           alt=""
@@ -84,13 +80,12 @@ function PokeTab({ to, align = "left", label, pokemonFile }) {
           draggable="false"
           className={[
             "poke-mon pointer-events-none absolute z-20 pixelated opacity-0",
-            // size (tweak as you like per sprite set)
             "w-16 h-16 sm:w-20 sm:h-20",
-            // place next to the ball: if ball is on the right side of the bar,
-            // the sprite sits just outside that side and pops upward.
-            isLeft
-              ? "right-6 sm:right-8 top-1/2 -translate-y-[90%]"
-              : "left-6 sm:left-8 top-1/2 -translate-y-[90%]",
+            "top-1/2 -translate-y-1/2",
+            // IMPORTANT: pop AWAY from the panel
+            // ball on right -> sprite pops RIGHT  => use pop-right
+            // ball on left  -> sprite pops LEFT   => use pop-left
+            ballOnRight ? "right-6 sm:right-8 pop-right" : "left-6 sm:left-8 pop-left",
           ].join(" ")}
         />
       </div>
@@ -100,13 +95,12 @@ function PokeTab({ to, align = "left", label, pokemonFile }) {
 
 export default function PokeTabs() {
   return (
-    // overflow visible so balls/mon aren’t clipped by the surrounding panel
     <div className="px-2 sm:px-4 space-y-12 sm:space-y-14 overflow-visible">
-      {/* 1) Projects → Gengar */}
+      {/* Projects → ball on right → Gengar pops RIGHT */}
       <PokeTab to="/projects" align="left"  label="Projects"  pokemonFile="gengar.png"  />
-      {/* 2) Skills → Jirachi */}
+      {/* Skills → ball on left → Jirachi pops LEFT */}
       <PokeTab to="/skills"   align="right" label="Skills"    pokemonFile="jirachi.png" />
-      {/* 3) About → Bulbasaur */}
+      {/* About → ball on right → Bulbasaur pops RIGHT */}
       <PokeTab to="/about"    align="left"  label="About"     pokemonFile="bulbasaur.png" />
     </div>
   );
