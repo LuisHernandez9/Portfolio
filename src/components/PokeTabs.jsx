@@ -1,25 +1,33 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-/** Inline Pokéball SVG */
-function PokeBall({ className = "w-10 h-10" }) {
+const BASE = import.meta.env.BASE_URL; // "/Portfolio/" on GitHub Pages
+
+/** Pixel Pokéball that switches closed → open on hover/focus */
+function SpriteBall({ className = "", alt = "Pokéball" }) {
+  const closed = `${BASE}closed_poke.png`;
+  const open   = `${BASE}open_poke.png`;
+
   return (
-    <svg viewBox="0 0 100 100" className={className} aria-hidden="true" focusable="false">
-      <defs>
-        <clipPath id="half">
-          <rect x="0" y="0" width="100" height="50" />
-        </clipPath>
-      </defs>
-      <circle cx="50" cy="50" r="48" fill="#1C3B4A" />
-      <circle cx="50" cy="50" r="44" fill="#F8F8F0" />
-      <g clipPath="url(#half)">
-        <circle cx="50" cy="50" r="44" fill="#D64545" />
-      </g>
-      <rect x="6" y="46" width="88" height="8" fill="#1C3B4A" />
-      <circle cx="50" cy="50" r="18" fill="#1C3B4A" />
-      <circle cx="50" cy="50" r="14" fill="#F8F8F0" />
-      <circle cx="50" cy="50" r="8"  fill="#CFE0E6" />
-    </svg>
+    <span className={`relative inline-block select-none ${className}`} aria-hidden="true">
+      {/* closed state */}
+      <img
+        src={closed}
+        alt=""
+        className="block w-full h-full pixelated transition-opacity duration-150 ease-out 
+                   group-hover:opacity-0 group-focus-visible:opacity-0"
+        draggable="false"
+      />
+      {/* open state */}
+      <img
+        src={open}
+        alt={alt}
+        className="block w-full h-full pixelated absolute inset-0 opacity-0 
+                   transition-opacity duration-150 ease-out 
+                   group-hover:opacity-100 group-focus-visible:opacity-100"
+        draggable="false"
+      />
+    </span>
   );
 }
 
@@ -28,9 +36,9 @@ function PokeTab({ to, align = "left", label }) {
 
   return (
     <div className={`flex ${isLeft ? "justify-start" : "justify-end"} w-full`}>
-      {/* group lets the ball react when the whole tab is hovered */}
+      {/* group = hover/focus propagates to SpriteBall */}
       <div className="relative group w-[min(680px,50vw)] h-12 sm:h-14">
-        {/* Bar with label */}
+        {/* Tab (label visible) */}
         <Link
           to={to}
           className="relative flex h-full w-full items-center justify-center
@@ -47,19 +55,17 @@ function PokeTab({ to, align = "left", label }) {
           </span>
         </Link>
 
-        {/* Pokéball — transforms only; reacts to bar hover & direct hover */}
+        {/* Pokéball positioned outside the bar */}
         <Link
           to={to}
           aria-label={label}
           className={[
-            "absolute top-1/2 -translate-y-1/2 z-30 will-change-transform",
-            isLeft ? "-right-24 sm:-right-28" : "-left-24 sm:-left-28",
-            "transition-transform duration-150 ease-out",
-            "group-hover:translate-y-[-2px] group-hover:scale-[1.05]",
-            "hover:scale-[1.07] hover:-rotate-3",
+            "absolute top-1/2 -translate-y-1/2 z-30",
+            isLeft ? "-right-20 sm:-right-24" : "-left-20 sm:-left-24",
+            "outline-none focus-visible:ring-2 ring-[var(--poke-border)] rounded",
           ].join(" ")}
         >
-          <PokeBall className="w-12 h-12 sm:w-14 sm:h-14 drop-shadow pixelated" />
+          <SpriteBall className="w-12 h-12 sm:w-14 sm:h-14" alt={`${label} tab`} />
         </Link>
       </div>
     </div>
