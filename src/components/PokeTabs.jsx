@@ -3,26 +3,26 @@ import { Link } from "react-router-dom";
 
 const BASE = import.meta.env.BASE_URL; // "/Portfolio/" on GitHub Pages
 
-/** Pixel Pokéball that switches closed → open with a snap (CSS in index.css) */
+/** Pixel Pokéball that switches closed → open. Opacity/animation now controlled by CSS
+    using .poke-tab:hover and .poke-ball:hover so it works no matter what you hover. */
 function SpriteBall({ className = "", alt = "Pokéball" }) {
   const closed = `${BASE}closed_poke.png`;
   const open   = `${BASE}open_poke.png`;
 
   return (
     <span className={`relative inline-block select-none ${className}`} aria-hidden="true">
+      {/* closed state */}
       <img
         src={closed}
         alt=""
-        className="block w-full h-full pixelated transition-opacity duration-150 ease-out 
-                   group-hover:opacity-0 group-focus-visible:opacity-0"
+        className="poke-closed-sprite block w-full h-full pixelated transition-opacity duration-150 ease-out"
         draggable="false"
       />
+      {/* open state (snaps via CSS in index.css) */}
       <img
         src={open}
         alt={alt}
-        className="poke-open-sprite block w-full h-full pixelated absolute inset-0 opacity-0 
-                   transition-opacity duration-150 ease-out 
-                   group-hover:opacity-100 group-focus-visible:opacity-100"
+        className="poke-open-sprite block w-full h-full pixelated absolute inset-0 opacity-0 transition-opacity duration-150 ease-out"
         draggable="false"
       />
     </span>
@@ -32,14 +32,15 @@ function SpriteBall({ className = "", alt = "Pokéball" }) {
 function PokeTab({ to, align = "left", label }) {
   const isLeft = align === "left";
 
-  // High-contrast tab surface so it doesn’t blend with bg
   const TAB_BG = "rgba(247,244,232,0.96)";
   const scanlines =
     "repeating-linear-gradient(0deg, rgba(0,0,0,0.06) 0px, rgba(0,0,0,0.06) 1px, transparent 1px, transparent 4px)";
 
   return (
     <div className={`flex ${isLeft ? "justify-start" : "justify-end"} w-full`}>
-      <div className="relative group w-[min(760px,60vw)] h-14 sm:h-16">
+      {/* IMPORTANT: .poke-tab is the hover target used by CSS */}
+      <div className="poke-tab relative w-[min(760px,60vw)] h-14 sm:h-16">
+        {/* The tab bar */}
         <Link
           to={to}
           className="
@@ -50,7 +51,7 @@ function PokeTab({ to, align = "left", label }) {
             focus:outline-none focus:ring-2 focus:ring-offset-2
             focus:ring-[#0f2e3a] focus:ring-offset-transparent
             transition-transform duration-150 ease-out
-            group-hover:-translate-y-[1px]
+            hover:-translate-y-[1px]
           "
           style={{ backgroundColor: TAB_BG, backgroundImage: scanlines }}
           aria-label={label}
@@ -60,13 +61,12 @@ function PokeTab({ to, align = "left", label }) {
           </span>
         </Link>
 
-        {/* Pixel Pokéball just outside the bar */}
+        {/* Pokéball — give the link a .poke-ball class so CSS can target it */}
         <Link
           to={to}
           aria-label={label}
           className={[
             "poke-ball absolute top-1/2 -translate-y-1/2 z-30",
-            // nudged a touch closer so it sits nicely inside the panel padding
             isLeft ? "-right-16 sm:-right-20" : "-left-16 sm:-left-20",
             "outline-none focus-visible:ring-2 ring-[#0f2e3a] rounded",
           ].join(" ")}
@@ -80,7 +80,7 @@ function PokeTab({ to, align = "left", label }) {
 
 export default function PokeTabs() {
   return (
-    // overflow visible so the balls aren’t clipped by the panel box
+    // overflow visible so balls aren’t clipped by the surrounding panel
     <div className="px-2 sm:px-4 space-y-12 sm:space-y-14 overflow-visible">
       <PokeTab to="/projects" align="left"  label="Projects" />
       <PokeTab to="/skills"   align="right" label="Skills" />
