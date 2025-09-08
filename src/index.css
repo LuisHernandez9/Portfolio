@@ -96,3 +96,16 @@ body {
 .overflow-x-clip {
   overflow-x: clip;
 }
+
+/* Snap-open bounce for the Pokéball (triggered on hover/focus) */
+@keyframes pokeSnap {
+  0%   { transform: scale(0.92) rotate(0deg); }
+  60%  { transform: scale(1.12) rotate(-8deg); }
+  100% { transform: scale(1.00) rotate(-4deg); }
+}
+
+/* Run the snap when the tab (group) is hovered or focused */
+.group:hover .open-sprite,
+.group:focus-within .open-sprite {
+  animation: pokeSnap 160ms ease-out both;
+}
