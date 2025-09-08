@@ -3,47 +3,77 @@ import FloatingAvatar from "./components/FloatingAvatar";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 text-slate-800">
-      <header className="sticky top-0 z-10 backdrop-blur bg-white/60 border-b border-slate-200">
-        <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">My Portfolio</h1>
-          <nav className="hidden sm:flex gap-6 text-sm font-medium text-slate-600">
-            <a href="#projects" className="hover:text-slate-900 transition">Projects</a>
-            <a href="#skills" className="hover:text-slate-900 transition">Skills</a>
-            <a href="#about" className="hover:text-slate-900 transition">About</a>
-          </nav>
+    <div className="min-h-screen body-tiles text-gb-800">
+      {/* NAV */}
+      <nav className="nav-poke fixed top-0 inset-x-0 z-40 backdrop-blur bg-white/60 border-b-2 border-poke-border">
+        <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
+          <span className="h1-poke">My Pokéfolio</span>
+          <ul className="flex items-center gap-6">
+            <li><a className="hover:underline" href="#projects">Projects</a></li>
+            <li><a className="hover:underline" href="#skills">Skills</a></li>
+            <li><a className="hover:underline" href="#about">About</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      {/* HERO */}
+      <header className="pt-24 mx-auto max-w-6xl px-4">
+        <h1 className="h1-poke">
+          Building reliable,<br /> delightful software.
+        </h1>
+        <p className="mt-4 max-w-prose text-gb-700">
+          I love turning ideas into production-ready tools—clean code, practical design,
+          and a splash of fun.
+        </p>
+        <div className="mt-6 flex gap-3">
+          <a href="#projects" className="btn-poke">View Projects</a>
+          <a href="#contact" className="btn-ghost">Contact</a>
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-6 py-14">
-        <section className="grid md:grid-cols-2 gap-10 items-center">
-          <div>
-            <p className="inline-block rounded-full bg-indigo-50 text-indigo-700 px-3 py-1 text-xs font-semibold">
-              Computer Science
-            </p>
-            <h2 className="mt-4 text-3xl md:text-5xl font-extrabold leading-tight">
-              Building reliable, delightful software.
-            </h2>
-            <p className="mt-4 text-slate-600 md:text-lg">
-              I love turning ideas into production-ready tools—clean code, practical design, and a splash of fun.
-            </p>
-            <div className="mt-6 flex gap-3">
-              <a href="#projects" className="inline-flex items-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold shadow-sm hover:shadow transition">
-                View Projects
-              </a>
-              <a href="#contact" className="inline-flex items-center rounded-xl bg-slate-900 text-white px-4 py-2 text-sm font-semibold shadow-sm hover:bg-slate-800 transition">
-                Contact
-              </a>
-            </div>
-          </div>
-        </section>
-      </main>
+      {/* PROJECTS */}
+      <section id="projects" className="mt-20 mx-auto max-w-6xl px-4">
+        <div className="panel p-5">
+          <h2 className="font-press text-lg mb-4">Projects</h2>
+          <p className="text-sm text-gb-700">
+            Your portfolio projects go here. Wrap each in a <code>panel</code> for the retro frame.
+          </p>
+        </div>
+      </section>
 
-      {/* Floating widget */}
+      {/* SKILLS */}
+      <section id="skills" className="mt-20 mx-auto max-w-6xl px-4">
+        <div className="panel p-5">
+          <h2 className="font-press text-lg mb-4">Skills</h2>
+          <p className="text-sm text-gb-700">List your skills with a 16-bit flavor.</p>
+        </div>
+      </section>
+
+      {/* ABOUT */}
+      <section id="about" className="mt-20 mx-auto max-w-6xl px-4">
+        <div className="panel p-5">
+          <h2 className="font-press text-lg mb-4">About</h2>
+          <p className="text-sm text-gb-700">
+            A short description about you, styled in a retro panel.
+          </p>
+        </div>
+      </section>
+
+      {/* FLOATING AVATAR */}
       <FloatingAvatar
         email="you@example.com"
         github="yourhandle"
         linkedin="yourhandle"
+      />
+
+      {/* OPTIONAL SCANLINES */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 opacity-[0.07] mix-blend-multiply"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.35) 3px)",
+        }}
       />
     </div>
   );
