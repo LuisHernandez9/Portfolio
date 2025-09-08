@@ -16,7 +16,7 @@ export default function Home() {
           panel
           mt-6 sm:mt-10
           p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14
-          min-h-[58vh] md:min-h-[62vh] lg:min-h-[70vh]  /* expand downward */
+          min-h-[70vh] md:min-h-[75vh] lg:min-h-[80vh]  /* expand downward */
           flex flex-col
         "
       >
