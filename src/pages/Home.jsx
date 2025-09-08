@@ -1,3 +1,4 @@
+// src/pages/Home.jsx
 import React from "react";
 import PokeTabs from "../components/PokeTabs";
 
@@ -12,13 +13,14 @@ export default function Home() {
           I love turning ideas into production-ready tools—clean code, practical design,
           and a splash of fun.
         </p>
-        <div className="mt-6 flex gap-3">
-          <a href="#projects" className="btn-poke">View Projects</a>
-          <a href="#contact" className="btn-ghost">Contact</a>
-        </div>
+        {/* (Removed) buttons:
+            <div className="mt-6 flex gap-3">
+              <a href="#projects" className="btn-poke">View Projects</a>
+              <a href="#contact" className="btn-ghost">Contact</a>
+            </div>
+        */}
       </header>
 
-      {/* The actual tabs you click */}
       <PokeTabs />
     </>
   );
