@@ -6,9 +6,8 @@ import { Mail, Github, Linkedin } from "lucide-react";
 const BASE = import.meta.env.BASE_URL; // "/Portfolio/" on Pages
 const AVATAR_WIDTH = 120;              // both head + full avatar size
 
-// Tune this to match your outer page frame thickness.
-// From your screenshot, 10–14px looks right; using 12px here.
-const FRAME_PX = 12;
+// Optional tiny nudge if you want it to overlap the scrollbar by 1–2px
+const FUDGE_PX = 0; // try 1 or 2 if you still see a hairline gap
 
 export default function FloatingAvatar({
   email = "you@example.com",
@@ -16,7 +15,24 @@ export default function FloatingAvatar({
   linkedin = "yourhandle",
 }) {
   const [open, setOpen] = React.useState(false);
+  const [sbw, setSbw] = React.useState(0); // scrollbar width in px
   const rootRef = React.useRef(null);
+
+  // Measure scrollbar width so we can nudge to the scrollbar's inside edge.
+  React.useEffect(() => {
+    const calc = () => {
+      const width = window.innerWidth - document.documentElement.clientWidth;
+      setSbw(Math.max(0, width)); // usually ~17px on Windows, 0 on overlay scrollbars
+    };
+    calc();
+    window.addEventListener("resize", calc);
+    // Some browsers change when scrollbars appear/disappear:
+    window.addEventListener("orientationchange", calc);
+    return () => {
+      window.removeEventListener("resize", calc);
+      window.removeEventListener("orientationchange", calc);
+    };
+  }, []);
 
   // Close on outside click / Esc
   React.useEffect(() => {
@@ -33,17 +49,19 @@ export default function FloatingAvatar({
     };
   }, [open]);
 
-  // We offset the avatar past the page frame and also
-  // add the same amount into the bubble group's right offset
-  const bubbleRightOffsetPx = 88 + FRAME_PX;
+  // When the peeking head is offset to the very edge, keep the bubble spacing
+  // identical by adding the same amount to the bubble's right offset.
+  const baseBubbleRight = 88;             // your original spacing
+  const bubbleRightOffsetPx = baseBubbleRight + sbw + FUDGE_PX;
 
   const avatarNode = (
     <div
       ref={rootRef}
       className="fixed bottom-8 z-[60] select-none"
-      // Push past the page frame to the *real* screen edge.
-      // Also respect iOS safe-area inset so it never clips under the notch.
-      style={{ right: `calc(env(safe-area-inset-right, 0px) - ${FRAME_PX}px)` }}
+      // Position relative to viewport, minus scrollbar width, plus safe-area if any.
+      style={{
+        right: `calc(env(safe-area-inset-right, 0px) - ${sbw + FUDGE_PX}px)`,
+      }}
     >
       <div
         className="relative"
@@ -59,7 +77,9 @@ export default function FloatingAvatar({
           aria-label="Open contact avatar"
           tabIndex={0}
           onClick={() => setOpen((v) => !v)}
-          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setOpen((v) => !v); }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") setOpen((v) => !v);
+          }}
           className={`block cursor-pointer drop-shadow pixelated transition-opacity duration-300 ease-out [clip-path:polygon(0_0,50%_0,50%_100%,0_100%)] ${
             open ? "opacity-0 pointer-events-none" : "opacity-100"
           }`}
@@ -74,8 +94,7 @@ export default function FloatingAvatar({
               exit={{ opacity: 0, x: 12 }}
               transition={{ type: "spring", stiffness: 240, damping: 20 }}
               className="absolute bottom-0 flex items-end gap-3"
-              // Move the bubble group inward by (88 + FRAME_PX) so layout
-              // stays identical after we pushed the avatar past the frame.
+              // Keep bubble spacing identical after we moved the head to the scrollbar.
               style={{ right: `${bubbleRightOffsetPx}px` }}
             >
               {/* Bubble — nudged up and themed */}
@@ -84,7 +103,9 @@ export default function FloatingAvatar({
                 <ul className="mt-3 space-y-2 text-[12px] text-gb-800">
                   <li className="flex items-center gap-2">
                     <Mail className="w-4 h-4" />
-                    <a className="hover:underline" href={`mailto:${email}`}>{email}</a>
+                    <a className="hover:underline" href={`mailto:${email}`}>
+                      {email}
+                    </a>
                   </li>
                   <li className="flex items-center gap-2">
                     <Github className="w-4 h-4" />
