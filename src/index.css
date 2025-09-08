@@ -9,11 +9,10 @@ body {
   line-height: 1.4;
 }
 
-/* Retro tiled background */
-.body-tiles {
-  background-image: url("/Portfolio/bg_pattern.png");
+/* Utility to control tiling/size; image itself is set inline in App.jsx */
+.bg-tiles {
   background-repeat: repeat;
-  background-size: 256px 256px; /* tweak tile size */
+  background-size: 256px 256px; /* tweak tile size here */
 }
 
 /* ---------- Typography & buttons ---------- */
@@ -25,27 +24,19 @@ body {
   @apply font-press text-xs sm:text-sm px-4 py-2 rounded-pixel border-2 border-gb-900 
          bg-gb-100 shadow-pixel transition-colors;
 }
-.btn-poke:hover {
-  @apply bg-gb-200;
-}
+.btn-poke:hover { @apply bg-gb-200; }
 
 .btn-ghost {
   @apply font-press text-xs sm:text-sm px-4 py-2 rounded-pixel border-2 border-gb-900 
          bg-white shadow-pixel transition-colors;
 }
-.btn-ghost:hover {
-  @apply bg-gb-100;
-}
+.btn-ghost:hover { @apply bg-gb-100; }
 
 /* Retro panels */
-.panel {
-  @apply border-2 border-gb-900 rounded-pixel bg-poke-panel shadow-pixel;
-}
+.panel { @apply border-2 border-gb-900 rounded-pixel bg-poke-panel shadow-pixel; }
 
 /* Nav bar */
-.nav-poke {
-  @apply bg-white border-b-2 border-gb-900;
-}
+.nav-poke { @apply bg-white border-b-2 border-gb-900; }
 
 /* ---------- Pixel art helpers ---------- */
 .pixelated {
@@ -59,25 +50,14 @@ body {
   55%  { transform: scale(1.18) rotate(-12deg); }
   100% { transform: scale(1.00) rotate(-6deg);  }
 }
-
-/* Apply transform origin slightly lower (hinge effect) */
-.poke-open-sprite {
-  transform-origin: 50% 60%;
-  will-change: transform;
-}
-
-/* Trigger the snap when hovering/focusing tab OR ball */
+.poke-open-sprite { transform-origin: 50% 60%; will-change: transform; }
 .poke-tab:hover .poke-open-sprite,
 .poke-tab:focus-within .poke-open-sprite,
 .poke-ball:hover .poke-open-sprite,
-.poke-ball:focus-visible .poke-open-sprite {
-  animation: pokeSnap 180ms ease-out both;
-}
+.poke-ball:focus-visible .poke-open-sprite { animation: pokeSnap 180ms ease-out both; }
 
 /* ---------- Global overflow guards ---------- */
-html, body, #root {
-  height: 100%;
-}
+html, body, #root { height: 100%; }
 body {
   overflow-y: scroll;   /* reserve vertical bar so no layout shift on hover */
   overflow-x: hidden;   /* no horizontal scrollbar ever */
