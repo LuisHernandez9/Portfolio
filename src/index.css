@@ -2,31 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ---------- Base body styling ---------- */
+/* Global background */
 body {
-  @apply font-sans bg-gb-50 text-gb-800;
-  min-height: 100%;
-  line-height: 1.4;
+  @apply bg-gb-100 text-gb-900;
+  background-image: url('/bg2.png'); /* your uploaded pattern */
+  background-repeat: repeat;
+  background-size: 300px 300px;
 }
 
-/* Background tiling (image itself set inline in App.jsx) */
-.bg-tiles { background-repeat: repeat; background-size: 256px 256px; }
+/* Pixel art font smoothing */
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
 
-/* ---------- Typography & panels ---------- */
-.h1-poke { @apply font-press text-xl sm:text-2xl text-gb-900; }
-.panel   { @apply border-2 border-gb-900 rounded-pixel bg-poke-panel shadow-pixel; }
-.nav-poke{ @apply bg-white border-b-2 border-gb-900; }
+/* Panels with retro frame */
+.panel {
+  @apply border-4 border-poke-border bg-poke-panel shadow-pixel rounded-pixel;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.05) 0px,
+    rgba(0, 0, 0, 0.05) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
 
-/* ---------- Pixel art helpers ---------- */
-.pixelated { image-rendering: pixelated; image-rendering: crisp-edges; }
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  @apply font-press;
+}
 
-/* ---------- Pokéball open/close swap + snap ---------- */
+/* --- Pokéball + Pokémon animations --- */
+
+/* Ball snap when opening */
 @keyframes pokeSnap {
-  0%   { transform: scale(0.90) rotate(0deg);   }
+  0%   { transform: scale(0.90) rotate(0deg); }
   55%  { transform: scale(1.18) rotate(-12deg); }
-  100% { transform: scale(1.00) rotate(-6deg);  }
+  100% { transform: scale(1.00) rotate(-6deg); }
 }
-.poke-open-sprite { transform-origin: 50% 60%; will-change: transform; }
+
+.poke-open-sprite {
+  transform-origin: 50% 60%;
+  will-change: transform;
+}
 
 .poke-tab:hover .poke-open-sprite,
 .poke-tab:focus-within .poke-open-sprite,
@@ -35,6 +54,7 @@ body {
   opacity: 1;
   animation: pokeSnap 180ms ease-out both;
 }
+
 .poke-tab:hover .poke-closed-sprite,
 .poke-tab:focus-within .poke-closed-sprite,
 .poke-ball:hover .poke-closed-sprite,
@@ -42,50 +62,57 @@ body {
   opacity: 0;
 }
 
-/* ---------- Pop OUTWARD from the ball (relative to the ball anchor) ---------- */
-/* For a right-side ball: Pokémon sits to the right (dir-right) and pops further right */
+/* Pokémon pop OUT into open space */
 @keyframes popOutFromBallRight {
-  0%   { transform: translateX(0)   scale(0.65); opacity: 0; }
+  0%   { transform: translateX(0) scale(0.65); opacity: 0; }
   60%  { transform: translateX(16px) scale(1.05); opacity: 1; }
   100% { transform: translateX(12px) scale(1.00); opacity: 1; }
 }
-/* For a left-side ball: Pokémon sits to the left (dir-left) and pops further left */
+
 @keyframes popOutFromBallLeft {
-  0%   { transform: translateX(0)    scale(0.65); opacity: 0; }
+  0%   { transform: translateX(0) scale(0.65); opacity: 0; }
   60%  { transform: translateX(-16px) scale(1.05); opacity: 1; }
   100% { transform: translateX(-12px) scale(1.00); opacity: 1; }
 }
 
-/* Faster, subtle bob */
+/* Bobbing effect (sped up to ~1.1s) */
 @keyframes bobRight {
   0%   { transform: translateX(12px); }
   100% { transform: translateX(16px); }
 }
+
 @keyframes bobLeft {
   0%   { transform: translateX(-12px); }
   100% { transform: translateX(-16px); }
 }
 
-/* Trigger: hover/focus on the row or ball */
-.poke-tab:hover  .poke-mon.dir-right,
+/* Apply animations when tab or ball is hovered/focused */
+.poke-tab:hover .poke-mon.dir-right,
 .poke-tab:focus-within .poke-mon.dir-right,
-.poke-ball:hover + .poke-mon.dir-right,
-.poke-ball:focus-visible + .poke-mon.dir-right {
+.poke-ball:hover ~ .poke-mon.dir-right,
+.poke-ball:focus-visible ~ .poke-mon.dir-right {
   opacity: 1;
   animation:
     popOutFromBallRight 220ms ease-out forwards,
     bobRight 1100ms ease-in-out 220ms infinite alternate;
 }
-.poke-tab:hover  .poke-mon.dir-left,
+
+.poke-tab:hover .poke-mon.dir-left,
 .poke-tab:focus-within .poke-mon.dir-left,
-.poke-ball:hover + .poke-mon.dir-left,
-.poke-ball:focus-visible + .poke-mon.dir-left {
+.poke-ball:hover ~ .poke-mon.dir-left,
+.poke-ball:focus-visible ~ .poke-mon.dir-left {
   opacity: 1;
   animation:
     popOutFromBallLeft 220ms ease-out forwards,
     bobLeft 1100ms ease-in-out 220ms infinite alternate;
 }
 
-/* ---------- Global overflow guards ---------- */
-html, body, #root { height: 100%; }
-body { overflow-y: scroll; overflow-x: hidden; }
+/* Overflow guards */
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
