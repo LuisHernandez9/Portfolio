@@ -2,65 +2,94 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Pixel font */
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
+/* ---------- Base ---------- */
 body {
-  font-family: "Press Start 2P", cursive;
-  background: url("/background.png") repeat;
-  background-size: cover;
-  color: #0f2e3a;
-  margin: 0;
-  padding: 0;
+  @apply bg-gb-100 text-gb-900;
+  background-image: url('/bg2.png'); /* your uploaded pattern */
+  background-repeat: repeat;
+  background-size: 300px 300px;
 }
+html, body, #root { height: 100%; }
+body { overflow-y: scroll; overflow-x: hidden; }
 
-/* Main window wrapper for all pages */
-.main-panel {
-  @apply mx-auto rounded-[16px] border-[4px] border-[#0f2e3a] shadow-[0_0_0_6px_#F7F4E8,0_0_0_10px_#0f2e3a];
-  width: 85%;      /* ~85% of screen width */
-  height: 85vh;    /* ~85% of viewport height */
-  background-color: #F7F4E8;
+/* ---------- Helpers ---------- */
+.pixelated { image-rendering: pixelated; image-rendering: crisp-edges; }
+
+/* ---------- Panels / Headers ---------- */
+.panel {
+  @apply border-4 border-poke-border bg-poke-panel shadow-pixel rounded-pixel;
   background-image: repeating-linear-gradient(
     0deg,
-    rgba(0, 0, 0, 0.05) 0px,
-    rgba(0, 0, 0, 0.05) 1px,
+    rgba(0,0,0,0.05) 0px,
+    rgba(0,0,0,0.05) 1px,
     transparent 1px,
     transparent 4px
   );
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+}
+h1,h2,h3,h4,h5,h6 { @apply font-press; }
+
+/* ---------- Pokéball swap ---------- */
+@keyframes pokeSnap {
+  0%   { transform: scale(0.90) rotate(0deg); }
+  55%  { transform: scale(1.18) rotate(-12deg); }
+  100% { transform: scale(1.00) rotate(-6deg); }
+}
+.poke-open-sprite { transform-origin: 50% 60%; will-change: transform; }
+
+.poke-tab:hover .poke-open-sprite,
+.poke-tab:focus-within .poke-open-sprite,
+.poke-ball:hover .poke-open-sprite,
+.poke-ball:focus-visible .poke-open-sprite {
+  opacity: 1;
+  animation: pokeSnap 180ms ease-out both;
+}
+.poke-tab:hover .poke-closed-sprite,
+.poke-tab:focus-within .poke-closed-sprite,
+.poke-ball:hover .poke-closed-sprite,
+.poke-ball:focus-visible .poke-closed-sprite {
+  opacity: 0;
 }
 
-/* Headings */
-h1, h2 {
-  font-family: "Press Start 2P", cursive;
-  color: #0f2e3a;
+/* ---------- Preserve Y offset during animation ----------
+   Every frame includes translateY(var(--mon-ty)) so vertical alignment stays fixed.
+*/
+@keyframes monPopRight {
+  0%   { transform: translate(0, var(--mon-ty)) scale(0.65); opacity: 0; }
+  60%  { transform: translate(16px, var(--mon-ty)) scale(1.05); opacity: 1; }
+  100% { transform: translate(12px, var(--mon-ty)) scale(1.00); opacity: 1; }
+}
+@keyframes monPopLeft {
+  0%   { transform: translate(0, var(--mon-ty)) scale(0.65); opacity: 0; }
+  60%  { transform: translate(-16px, var(--mon-ty)) scale(1.05); opacity: 1; }
+  100% { transform: translate(-12px, var(--mon-ty)) scale(1.00); opacity: 1; }
 }
 
-/* Paragraph text */
-p {
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  margin-bottom: 1rem;
-  color: #333;
+/* Slightly faster bob */
+@keyframes monFloatRight {
+  0%   { transform: translate(12px, var(--mon-ty)); }
+  100% { transform: translate(16px, var(--mon-ty)); }
+}
+@keyframes monFloatLeft {
+  0%   { transform: translate(-12px, var(--mon-ty)); }
+  100% { transform: translate(-16px, var(--mon-ty)); }
 }
 
-/* --- Size the main page window without touching the theme/animations --- */
-.app-window{
-  width: min(1200px, 85vw);
-  min-height: 85vh;
-  margin: clamp(16px, 4vh, 32px) auto;
-  padding: clamp(16px, 2.5vw, 32px);
+/* ---------- Triggers ---------- */
+.poke-tab:hover  .poke-mon.pop-right,
+.poke-tab:focus-within .poke-mon.pop-right,
+.poke-ball:hover ~ .poke-mon.pop-right,
+.poke-ball:focus-visible ~ .poke-mon.pop-right {
+  opacity: 1;
+  animation:
+    monPopRight 220ms ease-out forwards,
+    monFloatRight 1100ms ease-in-out 220ms infinite alternate;
 }
-
-/* optional: a bit tighter on very small screens */
-@media (max-width: 640px){
-  .app-window{
-    width: 92vw;
-    min-height: 88vh;
-    padding: 16px;
-  }
+.poke-tab:hover  .poke-mon.pop-left,
+.poke-tab:focus-within .poke-mon.pop-left,
+.poke-ball:hover ~ .poke-mon.pop-left,
+.poke-ball:focus-visible ~ .poke-mon.pop-left {
+  opacity: 1;
+  animation:
+    monPopLeft 220ms ease-out forwards,
+    monFloatLeft 1100ms ease-in-out 220ms infinite alternate;
 }
