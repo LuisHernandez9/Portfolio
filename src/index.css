@@ -82,8 +82,10 @@
 }
 
 /* Prevent any horizontal scrolling from off-canvas effects */
-html, body, #root {
-  height: 100%;
+html, body, #root { height: 100%; }
+body {
+  overflow-y: scroll;   /* reserve vertical scrollbar space */
+  overflow-x: hidden;   /* never allow horizontal scrolling */
 }
 
 body {
