@@ -29,31 +29,29 @@ export default function FloatingAvatar({
   }, [open]);
 
   return (
-    <div
-      className="fixed bottom-8 right-0 z-50 pr-1 sm:pr-2 select-none"
-      ref={rootRef}
-    >
+    // removed pr-1 sm:pr-2 so it can sit flush against the right edge
+    <div className="fixed bottom-8 right-0 z-50 select-none" ref={rootRef}>
       <div
         className="relative"
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
       >
-        {/* Peeking head (left half only) */}
-        <button
-          type="button"
+        {/* Peeking head (left half only) — image itself acts as the button */}
+        <img
+          src={`${BASE}converted_1.png`}
+          alt="Avatar head"
+          style={{ width: AVATAR_WIDTH, height: "auto" }}
+          role="button"
           aria-label="Open contact avatar"
-          onClick={() => setOpen((v) => !v)} // mobile tap
-          className="outline-none"
-        >
-          <img
-            src={`${BASE}converted_1.png`}
-            alt="Avatar head"
-            style={{ width: AVATAR_WIDTH, height: "auto" }}
-            className={`drop-shadow pixelated transition-opacity duration-300 ease-out [clip-path:polygon(0_0,50%_0,50%_100%,0_100%)] ${
-              open ? "opacity-0 pointer-events-none" : "opacity-100"
-            }`}
-          />
-        </button>
+          tabIndex={0}
+          onClick={() => setOpen((v) => !v)}              // mobile + mouse
+          onKeyDown={(e) => {                             // keyboard access
+            if (e.key === "Enter" || e.key === " ") setOpen((v) => !v);
+          }}
+          className={`block cursor-pointer drop-shadow pixelated transition-opacity duration-300 ease-out [clip-path:polygon(0_0,50%_0,50%_100%,0_100%)] ${
+            open ? "opacity-0 pointer-events-none" : "opacity-100"
+          }`}
+        />
 
         {/* Expanded: full body + bubble */}
         <AnimatePresence>
@@ -65,16 +63,13 @@ export default function FloatingAvatar({
               transition={{ type: "spring", stiffness: 240, damping: 20 }}
               className="absolute bottom-0 right-[88px] flex items-end gap-3"
             >
-              {/* Bubble — nudged up */}
+              {/* Bubble — nudged up and themed */}
               <div className="relative -translate-y-6 max-w-[300px] panel p-4">
                 <div className="text-[11px] font-press">Let’s connect</div>
                 <ul className="mt-3 space-y-2 text-[12px] text-gb-800">
                   <li className="flex items-center gap-2">
                     <Mail className="w-4 h-4" />
-                    <a
-                      className="hover:underline"
-                      href={`mailto:${email}`}
-                    >
+                    <a className="hover:underline" href={`mailto:${email}`}>
                       {email}
                     </a>
                   </li>
