@@ -9,7 +9,6 @@ import Projects from "./pages/Projects";
 import Skills from "./pages/Skills";
 import About from "./pages/About";
 
-// Page transitions
 const pageVariants = {
   initial: { x: 40, opacity: 0 },
   animate: { x: 0, opacity: 1, transition: { duration: 0.28, ease: "easeOut" } },
@@ -18,10 +17,18 @@ const pageVariants = {
 
 export default function App() {
   const location = useLocation();
+  const BASE = import.meta.env.BASE_URL; // "/Portfolio/" on Pages
 
   return (
-    <div className="min-h-screen text-gb-800 overflow-x-hidden">
-      {/* ROUTES WITH SLIDE TRANSITIONS */}
+    <div
+      className="min-h-screen text-gb-800 overflow-x-hidden"
+      style={{
+        // put your file name here; it lives in /public
+        backgroundImage: `url("${BASE}bg2.png")`,
+        backgroundRepeat: "repeat",
+        backgroundSize: "300px 300px",
+      }}
+    >
       <AnimatePresence mode="wait">
         <motion.main
           key={location.pathname}
@@ -40,10 +47,9 @@ export default function App() {
         </motion.main>
       </AnimatePresence>
 
-      {/* Floating avatar persists across pages */}
       <FloatingAvatar email="you@example.com" github="yourhandle" linkedin="yourhandle" />
 
-      {/* optional scanlines overlay */}
+      {/* scanlines overlay */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 opacity-[0.07] mix-blend-multiply"
