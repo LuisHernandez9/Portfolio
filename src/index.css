@@ -50,7 +50,9 @@ h1,h2,h3,h4,h5,h6 { @apply font-press; }
   opacity: 0;
 }
 
-/* ---------- Preserve Y offset during animation ---------- */
+/* ---------- Preserve Y offset during animation ----------
+   We animate X while always including translateY(var(--mon-ty)).
+   The element sets --mon-ty inline (e.g. -56%). */
 @keyframes monPopRight {
   0%   { transform: translate(0, var(--mon-ty)) scale(0.65); opacity: 0; }
   60%  { transform: translate(16px, var(--mon-ty)) scale(1.05); opacity: 1; }
@@ -62,7 +64,7 @@ h1,h2,h3,h4,h5,h6 { @apply font-press; }
   100% { transform: translate(-12px, var(--mon-ty)) scale(1.00); opacity: 1; }
 }
 
-/* Slightly faster bob */
+/* Slightly faster bob that keeps Y offset */
 @keyframes monFloatRight {
   0%   { transform: translate(12px, var(--mon-ty)); }
   100% { transform: translate(16px, var(--mon-ty)); }
