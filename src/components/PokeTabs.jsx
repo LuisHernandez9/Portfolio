@@ -1,3 +1,4 @@
+// src/components/PokeTabs.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -7,27 +8,9 @@ export default function PokeTabs() {
   const [hovered, setHovered] = React.useState(null);
 
   const tabs = [
-    {
-      to: "/projects",
-      label: "Projects",
-      mon: `${BASE}gengar.png`,
-      monAlt: "Gengar appears!",
-      monOffsetY: "-56%",
-    },
-    {
-      to: "/skills",
-      label: "Skills",
-      mon: `${BASE}jirachi.png`,
-      monAlt: "Jirachi appears!",
-      monOffsetY: "-56%",
-    },
-    {
-      to: "/about",
-      label: "About",
-      mon: `${BASE}bulbasaur.png`,
-      monAlt: "Bulbasaur appears!",
-      monOffsetY: "-56%",
-    },
+    { to: "/projects", label: "Projects", mon: `${BASE}gengar.png`,   monAlt: "Gengar appears!",   monOffsetY: "-56%" },
+    { to: "/skills",   label: "Skills",   mon: `${BASE}jirachi.png`,  monAlt: "Jirachi appears!",  monOffsetY: "-56%" },
+    { to: "/about",    label: "About",    mon: `${BASE}bulbasaur.png`,monAlt: "Bulbasaur appears!",monOffsetY: "-56%" },
   ];
 
   return (
@@ -39,19 +22,20 @@ export default function PokeTabs() {
           const scale = isHover ? 1.06 : anyHover ? 0.96 : 1;
 
           return (
-            // Make THIS the positioning context + same width as the bar
+            // APPLY SCALE TO THE ROW WRAPPER so bar+ball+mon move together
             <div
               key={t.to}
-              className="poke-tab relative w-[min(760px,92vw)]"
+              className="poke-tab group relative w-[min(760px,92vw)]"
+              style={{
+                transform: `scale(${scale})`,
+                transformOrigin: "left center",
+                transition: "transform 140ms ease",
+              }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
             >
-              {/* Bar (fills the positioning box) */}
-              <Link
-                to={t.to}
-                className="block w-full"
-                style={{ transform: `scale(${scale})`, transition: "transform 140ms ease" }}
-              >
+              {/* The bar fills the wrapper */}
+              <Link to={t.to} className="block w-full">
                 <div className="panel px-5 sm:px-6 py-3 sm:py-[14px]">
                   <div className="font-press text-[14px] sm:text-[15px] tracking-wider text-center">
                     {t.label}
@@ -59,7 +43,7 @@ export default function PokeTabs() {
                 </div>
               </Link>
 
-              {/* Ball (now positioned to THIS box’s right edge) */}
+              {/* Ball: positioned just outside the right edge of the SAME wrapper */}
               <button
                 type="button"
                 aria-label={`Open ${t.label}`}
@@ -77,7 +61,7 @@ export default function PokeTabs() {
                 />
               </button>
 
-              {/* Pokémon pops away to the RIGHT of the ball */}
+              {/* Pokémon: pops away to the right of the ball, moves with the wrapper */}
               <img
                 src={t.mon}
                 alt={t.monAlt}
