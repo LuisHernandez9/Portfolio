@@ -3,8 +3,14 @@ import { Link } from "react-router-dom";
 
 const BASE = import.meta.env.BASE_URL; // "/Portfolio/" on GitHub Pages
 
-/** Pixel Pokéball that switches closed → open. Opacity/animation now controlled by CSS
-    using .poke-tab:hover and .poke-ball:hover so it works no matter what you hover. */
+// Map each tab to its Pokémon sprite in /public
+const POKEMON_BY_LABEL = {
+  Projects: `${BASE}gengar.png`,
+  Skills: `${BASE}jirachi.png`,
+  About: `${BASE}bulbasaur.png`,
+};
+
+/** Pixel Pokéball that switches closed → open (your original) */
 function SpriteBall({ className = "", alt = "Pokéball" }) {
   const closed = `${BASE}closed_poke.png`;
   const open   = `${BASE}open_poke.png`;
@@ -36,6 +42,9 @@ function PokeTab({ to, align = "left", label }) {
   const scanlines =
     "repeating-linear-gradient(0deg, rgba(0,0,0,0.06) 0px, rgba(0,0,0,0.06) 1px, transparent 1px, transparent 4px)";
 
+  // pick the right Pokémon for this tab
+  const sprite = POKEMON_BY_LABEL[label];
+
   return (
     <div className={`flex ${isLeft ? "justify-start" : "justify-end"} w-full`}>
       {/* IMPORTANT: .poke-tab is the hover target used by CSS */}
@@ -61,16 +70,28 @@ function PokeTab({ to, align = "left", label }) {
           </span>
         </Link>
 
-        {/* Pokéball — give the link a .poke-ball class so CSS can target it */}
+        {/* Pokéball + Pokémon */}
         <Link
           to={to}
           aria-label={label}
           className={[
+            // container is positioned; children use absolute placement
             "poke-ball absolute top-1/2 -translate-y-1/2 z-30",
+            "inline-block", // ensure it sizes to the ball and becomes containing block
             isLeft ? "-right-16 sm:-right-20" : "-left-16 sm:-left-20",
             "outline-none focus-visible:ring-2 ring-[#0f2e3a] rounded",
+            "relative", // so .pokemon-sprite positions relative to this link
           ].join(" ")}
         >
+          {/* Pokémon sprite (hidden by default; appears via your CSS on hover/focus) */}
+          <img
+            src={sprite}
+            alt={`${label} Pokémon`}
+            className="pokemon-sprite h-24 sm:h-28 md:h-32 object-contain pixelated"
+            draggable="false"
+          />
+
+          {/* The pokéball images */}
           <SpriteBall className="w-12 h-12 sm:w-14 sm:h-14" alt={`${label} tab`} />
         </Link>
       </div>
