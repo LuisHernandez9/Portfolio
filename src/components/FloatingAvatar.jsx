@@ -5,7 +5,10 @@ import { Mail, Github, Linkedin } from "lucide-react";
 
 const BASE = import.meta.env.BASE_URL; // "/Portfolio/" on Pages
 const AVATAR_WIDTH = 120;              // both head + full avatar size
-const FRAME_PX = 8;                    // adjust to match your border thickness
+
+// Tune this to match your outer page frame thickness.
+// From your screenshot, 10–14px looks right; using 12px here.
+const FRAME_PX = 12;
 
 export default function FloatingAvatar({
   email = "you@example.com",
@@ -30,19 +33,24 @@ export default function FloatingAvatar({
     };
   }, [open]);
 
-  // Avatar + bubble UI
+  // We offset the avatar past the page frame and also
+  // add the same amount into the bubble group's right offset
+  const bubbleRightOffsetPx = 88 + FRAME_PX;
+
   const avatarNode = (
     <div
       ref={rootRef}
       className="fixed bottom-8 z-[60] select-none"
-      style={{ right: -FRAME_PX }}
+      // Push past the page frame to the *real* screen edge.
+      // Also respect iOS safe-area inset so it never clips under the notch.
+      style={{ right: `calc(env(safe-area-inset-right, 0px) - ${FRAME_PX}px)` }}
     >
       <div
         className="relative"
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
       >
-        {/* Peeking head (left half only) */}
+        {/* Peeking head (left half only) — the image is the button */}
         <img
           src={`${BASE}converted_1.png`}
           alt="Avatar head"
@@ -50,10 +58,8 @@ export default function FloatingAvatar({
           role="button"
           aria-label="Open contact avatar"
           tabIndex={0}
-          onClick={() => setOpen((v) => !v)}              // mobile + mouse
-          onKeyDown={(e) => {                             // keyboard access
-            if (e.key === "Enter" || e.key === " ") setOpen((v) => !v);
-          }}
+          onClick={() => setOpen((v) => !v)}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setOpen((v) => !v); }}
           className={`block cursor-pointer drop-shadow pixelated transition-opacity duration-300 ease-out [clip-path:polygon(0_0,50%_0,50%_100%,0_100%)] ${
             open ? "opacity-0 pointer-events-none" : "opacity-100"
           }`}
@@ -67,7 +73,10 @@ export default function FloatingAvatar({
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 12 }}
               transition={{ type: "spring", stiffness: 240, damping: 20 }}
-              className="absolute bottom-0 right-[88px] flex items-end gap-3"
+              className="absolute bottom-0 flex items-end gap-3"
+              // Move the bubble group inward by (88 + FRAME_PX) so layout
+              // stays identical after we pushed the avatar past the frame.
+              style={{ right: `${bubbleRightOffsetPx}px` }}
             >
               {/* Bubble — nudged up and themed */}
               <div className="relative -translate-y-6 max-w-[300px] panel p-4">
@@ -75,9 +84,7 @@ export default function FloatingAvatar({
                 <ul className="mt-3 space-y-2 text-[12px] text-gb-800">
                   <li className="flex items-center gap-2">
                     <Mail className="w-4 h-4" />
-                    <a className="hover:underline" href={`mailto:${email}`}>
-                      {email}
-                    </a>
+                    <a className="hover:underline" href={`mailto:${email}`}>{email}</a>
                   </li>
                   <li className="flex items-center gap-2">
                     <Github className="w-4 h-4" />
@@ -128,6 +135,6 @@ export default function FloatingAvatar({
     </div>
   );
 
-  // Portal directly to <body>, so position is relative to the viewport
+  // Mount at <body> so it's relative to the viewport, not the page frame
   return createPortal(avatarNode, document.body);
 }
