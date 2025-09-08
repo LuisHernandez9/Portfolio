@@ -9,38 +9,20 @@ body {
   line-height: 1.4;
 }
 
-/* Background tiling — the actual image is set inline in App.jsx */
+/* Background tiling — image itself is set inline in App.jsx */
 .bg-tiles {
   background-repeat: repeat;
   background-size: 256px 256px;
 }
 
-/* ---------- Typography & buttons ---------- */
-.h1-poke {
-  @apply font-press text-xl sm:text-2xl text-gb-900;
-}
-
-.btn-poke {
-  @apply font-press text-xs sm:text-sm px-4 py-2 rounded-pixel border-2 border-gb-900 
-         bg-gb-100 shadow-pixel transition-colors;
-}
-.btn-poke:hover { @apply bg-gb-200; }
-
-.btn-ghost {
-  @apply font-press text-xs sm:text-sm px-4 py-2 rounded-pixel border-2 border-gb-900 
-         bg-white shadow-pixel transition-colors;
-}
-.btn-ghost:hover { @apply bg-gb-100; }
+/* ---------- Typography ---------- */
+.h1-poke { @apply font-press text-xl sm:text-2xl text-gb-900; }
 
 /* ---------- Retro panels ---------- */
-.panel {
-  @apply border-2 border-gb-900 rounded-pixel bg-poke-panel shadow-pixel;
-}
+.panel { @apply border-2 border-gb-900 rounded-pixel bg-poke-panel shadow-pixel; }
 
 /* Nav bar */
-.nav-poke {
-  @apply bg-white border-b-2 border-gb-900;
-}
+.nav-poke { @apply bg-white border-b-2 border-gb-900; }
 
 /* ---------- Pixel art helpers ---------- */
 .pixelated {
@@ -48,17 +30,13 @@ body {
   image-rendering: crisp-edges;
 }
 
-/* ---------- Pokéball snap-open animation ---------- */
+/* ---------- Pokéball open/close swap + snap ---------- */
 @keyframes pokeSnap {
   0%   { transform: scale(0.90) rotate(0deg);   }
   55%  { transform: scale(1.18) rotate(-12deg); }
   100% { transform: scale(1.00) rotate(-6deg);  }
 }
-
-.poke-open-sprite {
-  transform-origin: 50% 60%;
-  will-change: transform;
-}
+.poke-open-sprite { transform-origin: 50% 60%; will-change: transform; }
 
 /* Show the open ball on hover/focus */
 .poke-tab:hover .poke-open-sprite,
@@ -77,58 +55,33 @@ body {
   opacity: 0;
 }
 
+/* ---------- Pokémon pop-out animation ---------- */
+@keyframes pokeMonPop {
+  0%   { transform: translateY(10px) scale(0.65); opacity: 0; }
+  60%  { transform: translateY(-6px) scale(1.05); opacity: 1; }
+  100% { transform: translateY(-2px) scale(1.00); opacity: 1; }
+}
+
+@keyframes pokeMonFloat {
+  0%   { transform: translateY(-2px); }
+  100% { transform: translateY(-8px); }
+}
+
+/* When the tab or the ball is hovered/focused, reveal the Pokémon and animate */
+.poke-tab:hover .poke-mon,
+.poke-tab:focus-within .poke-mon,
+.poke-ball:hover ~ .poke-mon,         /* sibling: ball hovered */
+.poke-ball:focus-visible ~ .poke-mon  /* keyboard focus on ball */
+{
+  opacity: 1;
+  animation:
+    pokeMonPop 220ms ease-out forwards,
+    pokeMonFloat 1800ms ease-in-out 220ms infinite alternate;
+}
+
 /* ---------- Global overflow guards ---------- */
 html, body, #root { height: 100%; }
 body {
   overflow-y: scroll;   /* keeps vertical bar reserved */
   overflow-x: hidden;   /* never show horizontal bar */
-}
-
-/* --- Pokémon pop-out animation --- */
-@keyframes pokemonPop {
-  0%   { transform: translateY(14px) scale(0.7); opacity: 0; filter: blur(3px); }
-  60%  { transform: translateY(-6px) scale(1.06); opacity: 1; filter: blur(0); }
-  100% { transform: translateY(0) scale(1); opacity: 1; }
-}
-
-/* Hidden by default; positioned just above the ball */
-.pokemon-sprite {
-  position: absolute;
-  left: 50%;
-  bottom: calc(100% + 6px);   /* sit above the ball */
-  transform: translateX(-50%) translateY(8px) scale(0.9);
-  transform-origin: 50% 100%;
-  opacity: 0;
-  pointer-events: none;
-  user-select: none;
-  z-index: 50;                /* ensure sprite appears above panel */
-}
-
-/* Reveal on hover/focus OR when state adds .pokeball-open */
-.poke-tab:hover .pokemon-sprite,
-.poke-tab:focus-within .pokemon-sprite,
-.poke-ball:hover .pokemon-sprite,
-.poke-ball:focus-visible .pokemon-sprite,
-.pokeball-open .pokemon-sprite {
-  opacity: 1;
-  animation: pokemonPop 260ms ease-out both;
-}
-
-/* Reduced motion: disable animation but still hidden until hover/focus */
-@media (prefers-reduced-motion: reduce) {
-  .pokemon-sprite {
-    animation: none !important;
-    filter: none !important;
-    opacity: 0 !important;
-    transform: translateX(-50%) translateY(8px) scale(0.9) !important;
-  }
-
-  .poke-tab:hover .pokemon-sprite,
-  .poke-tab:focus-within .pokemon-sprite,
-  .poke-ball:hover .pokemon-sprite,
-  .poke-ball:focus-visible .pokemon-sprite,
-  .pokeball-open .pokemon-sprite {
-    opacity: 1 !important;
-    transform: translateX(-50%) translateY(0) scale(1) !important;
-  }
 }
