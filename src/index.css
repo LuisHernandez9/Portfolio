@@ -80,3 +80,17 @@
   font-size: 11px;
   color: #234A5C; /* gb-700 */
 }
+
+/* Prevent any horizontal scrolling from off-canvas effects */
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  overflow-x: hidden; /* hard stop for horizontal scroll */
+}
+
+/* If a component adds overflow-x by mistake, clip instead of scroll */
+.overflow-x-clip {
+  overflow-x: clip;
+}
