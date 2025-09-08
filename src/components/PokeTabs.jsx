@@ -79,8 +79,8 @@ function PokeTab({ to, align = "left", label, pokemonFile }) {
           className={[
             "poke-mon pointer-events-none absolute z-20 pixelated opacity-0",
             "w-16 h-16 sm:w-20 sm:h-20",
-            // center on the tab line, then nudge UP slightly to match the ball's visual center
-            "top-1/2 -translate-y-1/2 -mt-0.5 sm:-mt-1",
+            // center, then nudge UP a few pixels so it aligns with the ball
+            "top-1/2 -translate-y-1/2 translate-y-[-3px] sm:translate-y-[-4px]",
             ballOnRight
               ? "-right-28 sm:-right-32 dir-right"
               : "-left-28  sm:-left-32  dir-left",
