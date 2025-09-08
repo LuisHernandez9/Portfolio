@@ -2,4 +2,81 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body, #root { height: 100%; }
+/* -------------------------
+   Pokémon 16-bit Theme Base
+   ------------------------- */
+
+:root {
+  --bg1: #E6EEF1;  /* sky */
+  --bg2: #CFE0E6;  /* distant */
+  --tile: rgba(255,255,255,0.35);
+
+  /* panel vars (match tailwind theme colors) */
+  --poke-panel: #F8F8F0;
+  --poke-border: #1C3B4A;
+  --poke-accent: #2F6176;
+}
+
+/* Subtle 16-bit style repeating tiles background */
+.body-tiles {
+  background:
+    linear-gradient(0deg, var(--bg1), var(--bg2)) fixed,
+    radial-gradient(circle at 0 0, var(--tile) 0 12px, transparent 13px),
+    radial-gradient(circle at 12px 12px, var(--tile) 0 12px, transparent 13px);
+  background-size: 100% 100%, 24px 24px, 24px 24px;
+}
+
+/* Make images & sprites look crunchy */
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Retro panel with pixel-style border/shadow */
+.panel {
+  background: var(--poke-panel);
+  border: 3px solid var(--poke-border);
+  box-shadow:
+    0 0 0 2px var(--poke-border),
+    0 0 0 4px var(--poke-panel),
+    0 0 0 6px var(--poke-border);
+  border-radius: 0.25rem; /* squared-ish corners */
+}
+
+/* Buttons */
+.btn-poke {
+  font-family: "Press Start 2P", cursive;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  background: var(--poke-accent);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--poke-border);
+}
+.btn-poke:active { transform: translateY(1px); }
+
+.btn-ghost {
+  font-family: "Press Start 2P", cursive;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  background: var(--poke-panel);
+  color: var(--poke-border);
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--poke-border);
+}
+.btn-ghost:active { transform: translateY(1px); }
+
+/* Headings & nav text */
+.h1-poke {
+  font-family: "Press Start 2P", cursive;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.15;
+  color: #1C3B4A; /* gb-800 */
+  text-shadow: 0 2px 0 #CFE0E6;
+}
+
+.nav-poke {
+  font-family: "Press Start 2P", cursive;
+  font-size: 11px;
+  color: #234A5C; /* gb-700 */
+}
