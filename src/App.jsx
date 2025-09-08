@@ -20,10 +20,11 @@ export default function App() {
   const location = useLocation();
 
   return (
-    // Set the background image inline using BASE so it always resolves correctly
+    // IMPORTANT: use bg-tiles and set the image inline with BASE so it resolves on Pages
     <div
       className="min-h-screen bg-tiles text-gb-800 overflow-x-hidden"
       style={{
+        // 👇 rename "bg_pattern.png" here if your file is named differently
         backgroundImage: `url("${BASE}bg_pattern.png")`,
       }}
     >
