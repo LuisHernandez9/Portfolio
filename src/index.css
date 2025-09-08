@@ -2,110 +2,87 @@
 @tailwind components;
 @tailwind utilities;
 
-/* -------------------------
-   Pokémon 16-bit Theme Base
-   ------------------------- */
-
-:root {
-  --bg1: #E6EEF1;  /* sky */
-  --bg2: #CFE0E6;  /* distant */
-  --tile: rgba(255,255,255,0.35);
-
-  /* panel vars (match tailwind theme colors) */
-  --poke-panel: #F8F8F0;
-  --poke-border: #1C3B4A;
-  --poke-accent: #2F6176;
+/* ---------- Base body styling ---------- */
+body {
+  @apply font-sans bg-gb-50 text-gb-800;
+  min-height: 100%;
+  line-height: 1.4;
 }
 
-/* Subtle 16-bit style repeating tiles background */
+/* Retro tiled background */
 .body-tiles {
-  background:
-    linear-gradient(0deg, var(--bg1), var(--bg2)) fixed,
-    radial-gradient(circle at 0 0, var(--tile) 0 12px, transparent 13px),
-    radial-gradient(circle at 12px 12px, var(--tile) 0 12px, transparent 13px);
-  background-size: 100% 100%, 24px 24px, 24px 24px;
+  background-image: repeating-linear-gradient(
+    45deg,
+    #f2f5f7 0px,
+    #f2f5f7 8px,
+    #e6eef1 8px,
+    #e6eef1 16px
+  );
 }
 
-/* Make images & sprites look crunchy */
+/* ---------- Typography & buttons ---------- */
+.h1-poke {
+  @apply font-press text-xl sm:text-2xl text-gb-900;
+}
+
+.btn-poke {
+  @apply font-press text-xs sm:text-sm px-4 py-2 rounded-pixel border-2 border-gb-900 
+         bg-gb-100 shadow-pixel transition-colors;
+}
+.btn-poke:hover {
+  @apply bg-gb-200;
+}
+
+.btn-ghost {
+  @apply font-press text-xs sm:text-sm px-4 py-2 rounded-pixel border-2 border-gb-900 
+         bg-white shadow-pixel transition-colors;
+}
+.btn-ghost:hover {
+  @apply bg-gb-100;
+}
+
+/* Retro panels */
+.panel {
+  @apply border-2 border-gb-900 rounded-pixel bg-poke-panel shadow-pixel;
+}
+
+/* Nav bar */
+.nav-poke {
+  @apply bg-white border-b-2 border-gb-900;
+}
+
+/* ---------- Pixel art helpers ---------- */
 .pixelated {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
 
-/* Retro panel with pixel-style border/shadow */
-.panel {
-  background: var(--poke-panel);
-  border: 3px solid var(--poke-border);
-  box-shadow:
-    0 0 0 2px var(--poke-border),
-    0 0 0 4px var(--poke-panel),
-    0 0 0 6px var(--poke-border);
-  border-radius: 0.25rem; /* squared-ish corners */
-}
-
-/* Buttons */
-.btn-poke {
-  font-family: "Press Start 2P", cursive;
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  background: var(--poke-accent);
-  color: #fff;
-  padding: 0.5rem 1rem;
-  border: 2px solid var(--poke-border);
-}
-.btn-poke:active { transform: translateY(1px); }
-
-.btn-ghost {
-  font-family: "Press Start 2P", cursive;
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  background: var(--poke-panel);
-  color: var(--poke-border);
-  padding: 0.5rem 1rem;
-  border: 2px solid var(--poke-border);
-}
-.btn-ghost:active { transform: translateY(1px); }
-
-/* Headings & nav text */
-.h1-poke {
-  font-family: "Press Start 2P", cursive;
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  line-height: 1.15;
-  color: #1C3B4A; /* gb-800 */
-  text-shadow: 0 2px 0 #CFE0E6;
-}
-
-.nav-poke {
-  font-family: "Press Start 2P", cursive;
-  font-size: 11px;
-  color: #234A5C; /* gb-700 */
-}
-
-/* Prevent any horizontal scrolling from off-canvas effects */
-html, body, #root { height: 100%; }
-body {
-  overflow-y: scroll;   /* reserve vertical scrollbar space */
-  overflow-x: hidden;   /* never allow horizontal scrolling */
-}
-
-body {
-  overflow-x: hidden; /* hard stop for horizontal scroll */
-}
-
-/* If a component adds overflow-x by mistake, clip instead of scroll */
-.overflow-x-clip {
-  overflow-x: clip;
-}
-
-/* Snap-open bounce for the Pokéball (triggered on hover/focus) */
+/* ---------- Pokéball snap-open animation ---------- */
 @keyframes pokeSnap {
-  0%   { transform: scale(0.92) rotate(0deg); }
-  60%  { transform: scale(1.12) rotate(-8deg); }
-  100% { transform: scale(1.00) rotate(-4deg); }
+  0%   { transform: scale(0.90) rotate(0deg);   }
+  55%  { transform: scale(1.18) rotate(-12deg); }
+  100% { transform: scale(1.00) rotate(-6deg);  }
 }
 
-/* Run the snap when the tab (group) is hovered or focused */
-.group:hover .open-sprite,
-.group:focus-within .open-sprite {
-  animation: pokeSnap 160ms ease-out both;
+/* Apply transform origin slightly lower (hinge effect) */
+.poke-open-sprite {
+  transform-origin: 50% 60%;
+  will-change: transform;
+}
+
+/* Trigger the snap when hovering/focusing tab OR ball */
+.poke-tab:hover .poke-open-sprite,
+.poke-tab:focus-within .poke-open-sprite,
+.poke-ball:hover .poke-open-sprite,
+.poke-ball:focus-visible .poke-open-sprite {
+  animation: pokeSnap 180ms ease-out both;
+}
+
+/* ---------- Global overflow guards ---------- */
+html, body, #root {
+  height: 100%;
+}
+body {
+  overflow-y: scroll;   /* reserve vertical bar so no layout shift on hover */
+  overflow-x: hidden;   /* no horizontal scrollbar ever */
 }
