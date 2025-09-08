@@ -9,11 +9,10 @@ body {
   line-height: 1.4;
 }
 
-/* Use an external image for the site background.
-   The URL is set inline in App.jsx; this just controls tiling/size. */
+/* Background tiling — the actual image is set inline in App.jsx */
 .bg-tiles {
   background-repeat: repeat;
-  background-size: 256px 256px; /* tweak tile size if needed */
+  background-size: 256px 256px;
 }
 
 /* ---------- Typography & buttons ---------- */
@@ -33,11 +32,15 @@ body {
 }
 .btn-ghost:hover { @apply bg-gb-100; }
 
-/* Retro panels */
-.panel { @apply border-2 border-gb-900 rounded-pixel bg-poke-panel shadow-pixel; }
+/* ---------- Retro panels ---------- */
+.panel {
+  @apply border-2 border-gb-900 rounded-pixel bg-poke-panel shadow-pixel;
+}
 
 /* Nav bar */
-.nav-poke { @apply bg-white border-b-2 border-gb-900; }
+.nav-poke {
+  @apply bg-white border-b-2 border-gb-900;
+}
 
 /* ---------- Pixel art helpers ---------- */
 .pixelated {
@@ -51,15 +54,32 @@ body {
   55%  { transform: scale(1.18) rotate(-12deg); }
   100% { transform: scale(1.00) rotate(-6deg);  }
 }
-.poke-open-sprite { transform-origin: 50% 60%; will-change: transform; }
+
+.poke-open-sprite {
+  transform-origin: 50% 60%;
+  will-change: transform;
+}
+
+/* Show the open ball on hover/focus */
 .poke-tab:hover .poke-open-sprite,
 .poke-tab:focus-within .poke-open-sprite,
 .poke-ball:hover .poke-open-sprite,
-.poke-ball:focus-visible .poke-open-sprite { animation: pokeSnap 180ms ease-out both; }
+.poke-ball:focus-visible .poke-open-sprite {
+  opacity: 1;
+  animation: pokeSnap 180ms ease-out both;
+}
+
+/* Hide the closed ball at the same time */
+.poke-tab:hover .poke-closed-sprite,
+.poke-tab:focus-within .poke-closed-sprite,
+.poke-ball:hover .poke-closed-sprite,
+.poke-ball:focus-visible .poke-closed-sprite {
+  opacity: 0;
+}
 
 /* ---------- Global overflow guards ---------- */
 html, body, #root { height: 100%; }
 body {
-  overflow-y: scroll;   /* reserve vertical bar so no layout shift on hover */
-  overflow-x: hidden;   /* no horizontal scrollbar ever */
+  overflow-y: scroll;   /* keeps vertical bar reserved */
+  overflow-x: hidden;   /* never show horizontal bar */
 }
