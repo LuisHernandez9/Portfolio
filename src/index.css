@@ -172,3 +172,9 @@ h1,h2,h3,h4,h5,h6 { @apply font-press; }
 
 /* Ensure no default body margin creates a white strip */
 html, body { margin: 0; }
+
+/* Smoother scale for bars */
+.poke-tab > a { will-change: transform; }
+
+/* Make sure pokéball images don’t shift */
+.poke-ball img { display: block; }
