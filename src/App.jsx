@@ -1,44 +1,74 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import PokeTabs from "./components/PokeTabs";
 
-function Home() {
+function HomePage() {
   return (
-    <div className="main-panel">
-      <h1 className="text-3xl sm:text-4xl font-press mb-6 text-center">
-        Building reliable, <br /> delightful software.
+    <div className="panel app-window">
+      <h1 className="font-press text-3xl sm:text-5xl leading-tight mb-6 text-center">
+        Building reliable, <br className="hidden sm:block"/> delightful software.
       </h1>
-      <p className="mb-10 text-center max-w-2xl">
+
+      <p className="text-[13px] sm:text-[14px] text-gb-800 text-center max-w-3xl mx-auto mb-10">
         I love turning ideas into production-ready tools—clean code, practical design, and a splash of fun.
       </p>
+
+      {/* Your existing tabs/balls/animations */}
       <PokeTabs />
     </div>
   );
 }
 
-function Projects() {
+function ProjectsPage() {
   return (
-    <div className="main-panel">
-      <h2 className="text-2xl sm:text-3xl font-press mb-6 text-center">Projects</h2>
-      <p className="text-center">Showcase your projects here in retro panels or cards.</p>
+    <div className="panel app-window">
+      <h2 className="font-press text-2xl sm:text-3xl mb-6">Projects</h2>
+      <div className="space-y-4">
+        <div className="panel p-4">
+          <h3 className="font-press text-xl mb-2">Project One</h3>
+          <p>Short description of the project.</p>
+        </div>
+        <div className="panel p-4">
+          <h3 className="font-press text-xl mb-2">Project Two</h3>
+          <p>Another cool thing you built.</p>
+        </div>
+      </div>
+
+      <div className="mt-8">
+        <Link to="/" className="inline-block panel px-4 py-2">Back to Home</Link>
+      </div>
     </div>
   );
 }
 
-function Skills() {
+function SkillsPage() {
   return (
-    <div className="main-panel">
-      <h2 className="text-2xl sm:text-3xl font-press mb-6 text-center">Skills</h2>
-      <p className="text-center">List your skills here in fun retro style.</p>
+    <div className="panel app-window">
+      <h2 className="font-press text-2xl sm:text-3xl mb-6">Skills</h2>
+      <div className="space-y-4">
+        <div className="panel p-4">JavaScript / TypeScript</div>
+        <div className="panel p-4">React / Vite / Tailwind</div>
+        <div className="panel p-4">Node / Express</div>
+      </div>
+
+      <div className="mt-8">
+        <Link to="/" className="inline-block panel px-4 py-2">Back to Home</Link>
+      </div>
     </div>
   );
 }
 
-function About() {
+function AboutPage() {
   return (
-    <div className="main-panel">
-      <h2 className="text-2xl sm:text-3xl font-press mb-6 text-center">About</h2>
-      <p className="text-center">Some fun info about you!</p>
+    <div className="panel app-window">
+      <h2 className="font-press text-2xl sm:text-3xl mb-6">About</h2>
+      <p className="max-w-3xl">
+        A short bio. Keep the retro vibes rolling ✨
+      </p>
+
+      <div className="mt-8">
+        <Link to="/" className="inline-block panel px-4 py-2">Back to Home</Link>
+      </div>
     </div>
   );
 }
@@ -46,10 +76,10 @@ function About() {
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/projects" element={<Projects />} />
-      <Route path="/skills" element={<Skills />} />
-      <Route path="/about" element={<About />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/projects" element={<ProjectsPage />} />
+      <Route path="/skills" element={<SkillsPage />} />
+      <Route path="/about" element={<AboutPage />} />
     </Routes>
   );
 }
