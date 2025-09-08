@@ -8,6 +8,8 @@ import Projects from "./pages/Projects";
 import Skills from "./pages/Skills";
 import About from "./pages/About";
 
+const BASE = import.meta.env.BASE_URL; // "/Portfolio/" on GitHub Pages
+
 const pageVariants = {
   initial: { x: 40, opacity: 0 },
   animate: { x: 0, opacity: 1, transition: { duration: 0.28, ease: "easeOut" } },
@@ -18,8 +20,14 @@ export default function App() {
   const location = useLocation();
 
   return (
-    // overflow-x-hidden prevents any horizontal scroll caused by off-screen balls
-    <div className="min-h-screen body-tiles text-gb-800 overflow-x-hidden">
+    // Set the background image inline using BASE so it always resolves correctly
+    <div
+      className="min-h-screen bg-tiles text-gb-800 overflow-x-hidden"
+      style={{
+        backgroundImage: `url("${BASE}bg_pattern.png")`,
+      }}
+    >
+      {/* NAV */}
       <nav className="nav-poke fixed top-0 inset-x-0 z-40 backdrop-blur bg-white/60 border-b-2 border-poke-border">
         <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
           <Link to="/" className="h1-poke">My Pokéfolio</Link>
@@ -27,6 +35,7 @@ export default function App() {
         </div>
       </nav>
 
+      {/* ROUTES WITH SLIDE TRANSITIONS */}
       <AnimatePresence mode="wait">
         <motion.main
           key={location.pathname}
@@ -45,8 +54,10 @@ export default function App() {
         </motion.main>
       </AnimatePresence>
 
+      {/* Floating avatar persists across pages */}
       <FloatingAvatar email="you@example.com" github="yourhandle" linkedin="yourhandle" />
 
+      {/* optional scanlines overlay */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 opacity-[0.07] mix-blend-multiply"
