@@ -5,11 +5,11 @@ import PokeTabs from "./components/PokeTabs";
 function HomePage() {
   return (
     <div className="panel max-w-6xl mx-auto mt-8 p-6 sm:p-8">
-      <h1 className="font-press text-3xl sm:text-5xl leading-tight mb-6 text-center">
+      <h1 className="font-press text-3xl sm:text-5xl leading-tight mb-6">
         Building reliable, <br className="hidden sm:block" /> delightful software.
       </h1>
 
-      <p className="text-[13px] sm:text-[14px] text-gb-800 text-center max-w-3xl mx-auto mb-10">
+      <p className="text-[13px] sm:text-[14px] text-gb-800 max-w-3xl mb-10">
         I love turning ideas into production-ready tools—clean code, practical design, and a splash of fun.
       </p>
 
