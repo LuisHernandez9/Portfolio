@@ -88,7 +88,12 @@ export default function PokeTabs() {
                 type="button"
                 aria-label={`Open ${t.label}`}
                 className="poke-ball absolute top-1/2 -translate-y-1/2 aspect-square"
-                style={{ height: `${ball}px`, right: "-3rem" }}
+                style={{
+                  height: `${ball}px`,        // dynamic size (measured)
+                  right: "-3rem",             // your gap
+                  transition: "transform 220ms cubic-bezier(.2,.9,.2,1)",
+                  willChange: "height",
+                }}
               >
                 <img
                   src={`${BASE}closed_poke.png`}
