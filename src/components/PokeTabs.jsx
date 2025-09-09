@@ -44,7 +44,7 @@ export default function PokeTabs() {
         {tabs.map((t, i) => {
           const isHover = hovered === i;
           const anyHover = hovered !== null;
-          const scale = isHover ? 1.06 : anyHover ? 0.96 : 1;
+          const scale = isHover ? 1.50 : anyHover ? 0.85 : 1;
 
           // Ball size equals the panel’s current visual height
           const ball = ballSizes[i] ?? 32;
