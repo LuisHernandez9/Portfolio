@@ -7,32 +7,23 @@ const BASE = import.meta.env.BASE_URL || "/";
 export default function PokeTabs() {
   const [hovered, setHovered] = React.useState(null);
 
-  // Refs to panels (the bars) to read layout height
+  // --- Tuning knobs ---
+  const POP = 1.14;         // tab scale when hovered
+  const SHRINK = 0.90;      // tab scale when other tabs are hovered
+  const BALL_MULT = 1.20;   // 1.0 = same height as tab; >1 bigger, <1 smaller
+  const GAP_REM = 3.0;      // distance between tab and ball (rem)
+  // ---------------------
+
+  // Refs to panels; we store their UN-SCALED base heights.
   const panelRefs = React.useRef([]);
-  // Store UN-SCALED base heights (ignore transforms)
   const [baseHeights, setBaseHeights] = React.useState([]);
 
-  // pop/shrink factors
-  const BALL_MULT = 1.20;   // 1.0 = same height as tab; >1 bigger, <1 smaller
-  const GAP_REM   = 3.5;    // distance from tab in rem (use any number)
-  const POP = 1.14;
-  const SHRINK = 0.90;
-
-  const tabs = [
-    { to: "/projects", label: "Projects", mon: `${BASE}gengar.png`,    monAlt: "Gengar appears!",    monOffsetY: "-56%" },
-    { to: "/skills",   label: "Skills",   mon: `${BASE}jirachi.png`,   monAlt: "Jirachi appears!",   monOffsetY: "-56%" },
-    { to: "/about",    label: "About",    mon: `${BASE}bulbasaur.png`, monAlt: "Bulbasaur appears!", monOffsetY: "-56%" },
-  ];
-
-  // Measure unscaled heights. Use offsetHeight so transforms don't affect it.
+  // Measure *unscaled* base height so transforms don't affect it.
   const measureBaseHeights = React.useCallback(() => {
-    const sizes = panelRefs.current.map((el) =>
-      el ? el.offsetHeight : 32
-    );
+    const sizes = panelRefs.current.map((el) => (el ? el.offsetHeight : 32));
     setBaseHeights(sizes);
   }, []);
 
-  // Initial measure + on resize
   React.useLayoutEffect(() => {
     measureBaseHeights();
     const onResize = () => measureBaseHeights();
@@ -40,15 +31,21 @@ export default function PokeTabs() {
     return () => window.removeEventListener("resize", onResize);
   }, [measureBaseHeights]);
 
+  const tabs = [
+    { to: "/projects", label: "Projects", mon: `${BASE}gengar.png`,    monAlt: "Gengar appears!",    monOffsetY: "-56%" },
+    { to: "/skills",   label: "Skills",   mon: `${BASE}jirachi.png`,   monAlt: "Jirachi appears!",   monOffsetY: "-56%" },
+    { to: "/about",    label: "About",    mon: `${BASE}bulbasaur.png`, monAlt: "Bulbasaur appears!", monOffsetY: "-56%" },
+  ];
+
   return (
     <div className="relative">
       <div className="flex flex-col gap-8 sm:gap-10">
         {tabs.map((t, i) => {
+          const isHover  = hovered === i;
           const anyHover = hovered !== null;
-          const isHover = hovered === i;
-          const scale = isHover ? POP : anyHover ? SHRINK : 1;
+          const scale    = isHover ? POP : anyHover ? SHRINK : 1;
 
-          // ball size = base (unscaled) × current scale
+          // Dynamic Pokéball height: base × current tab scale × your multiplier
           const base = baseHeights[i] ?? 32;
           const ball = Math.round(base * scale * BALL_MULT);
 
@@ -57,10 +54,10 @@ export default function PokeTabs() {
               key={t.to}
               className="poke-tab group relative w-[min(760px,92vw)]"
               style={{
-                height: `${ball}px`,
-                right: `-${GAP_REM}rem`,                      // <-- gap control
-                transition: "height 220ms cubic-bezier(.2,.9,.2,1)",
-                willChange: "height",
+                transform: `scale(${scale})`,
+                transformOrigin: "left center",
+                transition: "transform 220ms cubic-bezier(.2,.9,.2,1)",
+                willChange: "transform",
               }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
@@ -77,14 +74,16 @@ export default function PokeTabs() {
                 </div>
               </Link>
 
-              {/* Pokéball — height animates smoothly with the tab scale */}
+              {/* Pokéball — perfectly centered, dynamic size, custom gap */}
               <button
                 type="button"
                 aria-label={`Open ${t.label}`}
+                // IMPORTANT: do NOT keep any Tailwind `right-*` or `-right-*` class here,
+                // so the inline `right` below fully controls spacing.
                 className="poke-ball absolute top-1/2 -translate-y-1/2 aspect-square"
                 style={{
-                  height: `${ball}px`,                       // dynamic: base × scale
-                  right: "-3rem",                             // keep your chosen gap
+                  height: `${ball}px`,
+                  right: `-${GAP_REM}rem`,
                   transition: "height 220ms cubic-bezier(.2,.9,.2,1)",
                   willChange: "height",
                 }}
@@ -101,7 +100,7 @@ export default function PokeTabs() {
                 />
               </button>
 
-              {/* Pokémon sprite */}
+              {/* Pokémon sprite (unchanged) */}
               <img
                 src={t.mon}
                 alt={t.monAlt}
