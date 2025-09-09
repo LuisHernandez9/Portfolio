@@ -7,7 +7,7 @@ const BASE = import.meta.env.BASE_URL || "/";
 export default function PokeTabs() {
   const [hovered, setHovered] = React.useState(null);
 
-  // --- measure each tab's panel height so the Pokéball matches it ---
+  // Measure each panel's rendered height so the Pokéball matches it
   const panelRefs = React.useRef([]);
   const [ballSizes, setBallSizes] = React.useState([]);
 
@@ -22,7 +22,6 @@ export default function PokeTabs() {
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
   }, []);
-  // -------------------------------------------------------------------
 
   const tabs = [
     { to: "/projects", label: "Projects", mon: `${BASE}gengar.png`,   monAlt: "Gengar appears!",   monOffsetY: "-56%" },
@@ -38,10 +37,10 @@ export default function PokeTabs() {
           const anyHover = hovered !== null;
           const scale = isHover ? 1.06 : anyHover ? 0.96 : 1;
 
-          const ball = ballSizes[i] ?? 32; // fallback until measured
+          const ball = ballSizes[i] ?? 32; // px — equals the tab's height
 
           return (
-            // APPLY SCALE TO THE ROW WRAPPER so bar+ball+mon move together
+            // Row wrapper (scales bar+ball+mon together)
             <div
               key={t.to}
               className="poke-tab group relative w-[min(760px,92vw)]"
@@ -53,10 +52,9 @@ export default function PokeTabs() {
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
             >
-              {/* The bar fills the wrapper */}
+              {/* Tab bar */}
               <Link to={t.to} className="block w-full">
                 <div
-                  // ref used ONLY to read the rendered height
                   ref={(el) => (panelRefs.current[i] = el)}
                   className="panel px-5 sm:px-6 py-3 sm:py-[14px]"
                 >
@@ -66,11 +64,11 @@ export default function PokeTabs() {
                 </div>
               </Link>
 
-              {/* Ball: sized to match the panel height (keeps aspect by setting width=height) */}
+              {/* Pokéball — absolute on the wrapper, width=height=tab height */}
               <button
                 type="button"
                 aria-label={`Open ${t.label}`}
-                className="poke-ball absolute -right-12 top-1/2 -translate-y-1/2 relative"
+                className="poke-ball absolute -right-12 top-1/2 -translate-y-1/2"
                 style={{ width: ball, height: ball }}
               >
                 <img
@@ -87,7 +85,7 @@ export default function PokeTabs() {
                 />
               </button>
 
-              {/* Pokémon: pops away to the right of the ball */}
+              {/* Pokémon sprite */}
               <img
                 src={t.mon}
                 alt={t.monAlt}
