@@ -7,21 +7,30 @@ const BASE = import.meta.env.BASE_URL || "/";
 export default function PokeTabs() {
   const [hovered, setHovered] = React.useState(null);
 
-  // Measure each panel's rendered height so the Pokéball matches it
+  // Refs to each panel so we can measure their rendered heights
   const panelRefs = React.useRef([]);
   const [ballSizes, setBallSizes] = React.useState([]);
 
+  // Function to measure visual height of each tab (includes transforms)
+  const measure = React.useCallback(() => {
+    const sizes = panelRefs.current.map((el) =>
+      el ? Math.round(el.getBoundingClientRect().height) : 32
+    );
+    setBallSizes(sizes);
+  }, []);
+
+  // Measure initially and on resize
   React.useLayoutEffect(() => {
-    const measure = () => {
-      const sizes = panelRefs.current.map((el) =>
-        el ? Math.round(el.getBoundingClientRect().height) : 32
-      );
-      setBallSizes(sizes);
-    };
     measure();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
-  }, []);
+  }, [measure]);
+
+  // Re-measure whenever hover state changes (after scale applies)
+  React.useEffect(() => {
+    const id = requestAnimationFrame(measure);
+    return () => cancelAnimationFrame(id);
+  }, [hovered, measure]);
 
   const tabs = [
     { to: "/projects", label: "Projects", mon: `${BASE}gengar.png`,   monAlt: "Gengar appears!",   monOffsetY: "-56%" },
@@ -37,10 +46,10 @@ export default function PokeTabs() {
           const anyHover = hovered !== null;
           const scale = isHover ? 1.06 : anyHover ? 0.96 : 1;
 
-          const ball = ballSizes[i] ?? 32; // px — equals the tab's height
+          // Ball size equals the panel’s current visual height
+          const ball = ballSizes[i] ?? 32;
 
           return (
-            // Row wrapper (scales bar+ball+mon together)
             <div
               key={t.to}
               className="poke-tab group relative w-[min(760px,92vw)]"
@@ -64,21 +73,18 @@ export default function PokeTabs() {
                 </div>
               </Link>
 
-              {/* Pokéball — absolute on the wrapper, width=height=tab height */}
+              {/* Pokéball — size tracks tab height */}
               <button
                 type="button"
                 aria-label={`Open ${t.label}`}
                 className="poke-ball absolute top-1/2 -translate-y-1/2 aspect-square"
-                style={{ height: "5rem", right: "-5rem" }}  // 👈 size + gap
+                style={{ height: `${ball}px`, right: "-3rem" }} // dynamic size + fixed gap
               >
-                {/* CLOSED: fills the square but keeps aspect ratio */}
                 <img
                   src={`${BASE}closed_poke.png`}
                   alt=""
                   className="poke-closed-sprite pixelated absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
                 />
-              
-                {/* OPEN: same box, so no shifting on toggle */}
                 <img
                   src={`${BASE}open_poke.png`}
                   alt=""
