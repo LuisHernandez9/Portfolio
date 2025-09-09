@@ -68,8 +68,12 @@ export default function PokeTabs() {
               <button
                 type="button"
                 aria-label={`Open ${t.label}`}
-                className="poke-ball absolute -right-12 top-1/2 -translate-y-1/2"
-                style={{ width: ball, height: ball }}
+                className="poke-ball absolute top-1/2 -translate-y-1/2"
+                style={{ 
+                  width: ball, 
+                  height: ball,
+                  right: "-2.5rem" // add space between tab and ball (~40px)
+                }}
               >
                 <img
                   src={`${BASE}closed_poke.png`}
