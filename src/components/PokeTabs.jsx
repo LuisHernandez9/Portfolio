@@ -78,13 +78,13 @@ export default function PokeTabs() {
                 <img
                   src={`${BASE}closed_poke.png`}
                   alt=""
-                  className="poke-closed-sprite pixelated h-8 w-auto pointer-events-none select-none"
+                  className="poke-closed-sprite pixelated h-12 w-auto pointer-events-none select-none"
                   style={{ width: ball, height: ball }}
                 />
                 <img
                   src={`${BASE}open_poke.png`}
                   alt=""
-                  className="poke-open-sprite pixelated h-8 w-auto absolute inset-0 opacity-0 pointer-events-none select-none"
+                  className="poke-open-sprite pixelated h-12 w-auto absolute inset-0 opacity-0 pointer-events-none select-none"
                   style={{ width: ball, height: ball }}
                 />
               </button>
