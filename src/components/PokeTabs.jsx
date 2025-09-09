@@ -1,126 +1,79 @@
 // src/components/PokeTabs.jsx
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 const BASE = import.meta.env.BASE_URL || "/";
 
-// Measure an element's height reactively
-function useElementHeight() {
-  const ref = useRef(null);
-  const [h, setH] = useState(0);
-
-  useLayoutEffect(() => {
-    if (!ref.current) return;
-    const ro = new ResizeObserver((entries) => {
-      const r = entries[0]?.contentRect;
-      if (r) setH(r.height);
-    });
-    ro.observe(ref.current);
-    return () => ro.disconnect();
-  }, []);
-
-  return [ref, h];
-}
-
-function PokeTabRow({
-  to,
-  label,
-  monSrc,
-  monAlt,
-  // fine-tune vertical visual alignment while animating
-  monOffsetY = "-56%",
-}) {
-  // Measure the tab’s height but DO NOT change its classes/styles
-  const [tabRef, tabH] = useElementHeight();
-
-  // Derive sizes from the measured height (tweak these ratios if desired)
-  const H = Math.max(tabH || 0, 44);   // fallback so it's not 0 before mount
-  const ball = H * 0.72;               // ball diameter ~72% of tab height
-  const mon  = H * 0.82;               // pokemon slightly larger than the ball
-  const gap  = H * 0.30;               // spacing between tab edge and ball
-  const ballRight = -(gap + ball * 0.10);
-  const monRight  = ballRight - ball * 0.85; // sprite sits a bit farther out
-
-  return (
-    <div className="relative group">
-      {/* YOUR TAB – unchanged classes */}
-      <Link
-        ref={tabRef}
-        to={to}
-        className="panel block px-6 py-3 font-press text-lg sm:text-xl md:text-2xl text-center transition-all duration-200"
-      >
-        {label}
-      </Link>
-
-      {/* Pokéball – sized/positioned from the measured height */}
-      <button
-        type="button"
-        aria-label={`Open ${label}`}
-        className="poke-ball absolute top-1/2 -translate-y-1/2"
-        style={{
-          right: `${ballRight}px`,
-          width: `${ball}px`,
-          height: `${ball}px`,
-        }}
-      >
-        <img
-          src={`${BASE}closed_poke.png`}
-          alt=""
-          className="poke-closed-sprite pixelated w-full h-full pointer-events-none select-none"
-        />
-        <img
-          src={`${BASE}open_poke.png`}
-          alt=""
-          className="poke-open-sprite pixelated absolute inset-0 w-full h-full opacity-0 pointer-events-none select-none"
-        />
-      </button>
-
-      {/* Pokémon – also sized from tab height */}
-      <img
-        src={monSrc}
-        alt={monAlt}
-        className="poke-mon pixelated absolute top-1/2 -translate-y-1/2 opacity-0 pointer-events-none select-none pop-right"
-        style={{
-          right: `${monRight}px`,
-          width: `${mon}px`,
-          height: `${mon}px`,
-          ["--mon-ty"]: monOffsetY, // keeps the vertical offset during your animation
-        }}
-      />
-    </div>
-  );
-}
-
 export default function PokeTabs() {
+  const [hovered, setHovered] = React.useState(null);
+
   const tabs = [
-    {
-      to: "/projects",
-      label: "Projects",
-      monSrc: `${BASE}gengar.png`,
-      monAlt: "Gengar",
-      monOffsetY: "-56%",
-    },
-    {
-      to: "/skills",
-      label: "Skills",
-      monSrc: `${BASE}jirachi.png`,
-      monAlt: "Jirachi",
-      monOffsetY: "-50%",
-    },
-    {
-      to: "/about",
-      label: "About",
-      monSrc: `${BASE}bulbasaur.png`,
-      monAlt: "Bulbasaur",
-      monOffsetY: "-52%",
-    },
+    { to: "/projects", label: "Projects", mon: `${BASE}gengar.png`,   monAlt: "Gengar appears!",   monOffsetY: "-56%" },
+    { to: "/skills",   label: "Skills",   mon: `${BASE}jirachi.png`,  monAlt: "Jirachi appears!",  monOffsetY: "-56%" },
+    { to: "/about",    label: "About",    mon: `${BASE}bulbasaur.png`,monAlt: "Bulbasaur appears!",monOffsetY: "-56%" },
   ];
 
   return (
-    <div className="space-y-6">
-      {tabs.map((t) => (
-        <PokeTabRow key={t.to} {...t} />
-      ))}
+    <div className="relative">
+      <div className="flex flex-col gap-8 sm:gap-10">
+        {tabs.map((t, i) => {
+          const isHover = hovered === i;
+          const anyHover = hovered !== null;
+          const scale = isHover ? 1.06 : anyHover ? 0.96 : 1;
+
+          return (
+            // APPLY SCALE TO THE ROW WRAPPER so bar+ball+mon move together
+            <div
+              key={t.to}
+              className="poke-tab group relative w-[min(760px,92vw)]"
+              style={{
+                transform: `scale(${scale})`,
+                transformOrigin: "left center",
+                transition: "transform 140ms ease",
+              }}
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
+            >
+              {/* The bar fills the wrapper */}
+              <Link to={t.to} className="block w-full">
+                <div className="panel px-5 sm:px-6 py-3 sm:py-[14px]">
+                  <div className="font-press text-[14px] sm:text-[15px] tracking-wider text-center">
+                    {t.label}
+                  </div>
+                </div>
+              </Link>
+
+              {/* Ball: positioned just outside the right edge of the SAME wrapper */}
+              <button
+                type="button"
+                aria-label={`Open ${t.label}`}
+                className="poke-ball absolute -right-12 top-1/2 -translate-y-1/2"
+              >
+                <img
+                  src={`${BASE}closed_poke.png`}
+                  alt=""
+                  className="poke-closed-sprite pixelated w-8 h-8 pointer-events-none select-none"
+                />
+                <img
+                  src={`${BASE}open_poke.png`}
+                  alt=""
+                  className="poke-open-sprite pixelated w-8 h-8 absolute inset-0 opacity-0 pointer-events-none select-none"
+                />
+              </button>
+              
+              {/* Pokémon: pops away to the right of the ball */}
+              <img
+                src={t.mon}
+                alt={t.monAlt}
+                className="poke-mon pixelated absolute right-[-82px] top-1/2 -translate-y-1/2 opacity-0 pointer-events-none select-none pop-right"
+                style={{ ["--mon-ty"]: t.monOffsetY }}
+                width={34}
+                height={34}
+              />
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
