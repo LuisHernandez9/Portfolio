@@ -7,41 +7,14 @@ const BASE = import.meta.env.BASE_URL || "/";
 export default function PokeTabs() {
   const [hovered, setHovered] = React.useState(null);
 
-  // refs to read panel sizes
+  // Refs to panels (the bars) to read layout height
   const panelRefs = React.useRef([]);
-  // store the UN-SCALED base height for each tab
+  // Store UN-SCALED base heights (ignore transforms)
   const [baseHeights, setBaseHeights] = React.useState([]);
 
-  // pop/shrink factors (same ones you’re using for the tabs)
+  // pop/shrink factors
   const POP = 1.14;
   const SHRINK = 0.90;
-
-  // helper: what scale is applied to tab i right now?
-  const scaleFor = (i, hoveredIdx) => {
-    if (hoveredIdx === i) return POP;
-    if (hoveredIdx !== null) return SHRINK;
-    return 1;
-  };
-
-  // measure base (unscaled) heights; we derive it by dividing the
-  // current visual height by the current scale for each row.
-  const measureBaseHeights = React.useCallback(() => {
-    const sizes = panelRefs.current.map((el, i) => {
-      if (!el) return 32;
-      const visual = el.getBoundingClientRect().height; // current visible height
-      const s = scaleFor(i, hovered);                    // current scale for this row
-      return Math.max(1, Math.round(visual / s));        // unscaled/base height
-    });
-    setBaseHeights(sizes);
-  }, [hovered]);
-
-  // initial measure + on window resize
-  React.useLayoutEffect(() => {
-    measureBaseHeights();
-    const onResize = () => measureBaseHeights();
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, [measureBaseHeights]);
 
   const tabs = [
     { to: "/projects", label: "Projects", mon: `${BASE}gengar.png`,    monAlt: "Gengar appears!",    monOffsetY: "-56%" },
@@ -49,15 +22,31 @@ export default function PokeTabs() {
     { to: "/about",    label: "About",    mon: `${BASE}bulbasaur.png`, monAlt: "Bulbasaur appears!", monOffsetY: "-56%" },
   ];
 
+  // Measure unscaled heights. Use offsetHeight so transforms don't affect it.
+  const measureBaseHeights = React.useCallback(() => {
+    const sizes = panelRefs.current.map((el) =>
+      el ? el.offsetHeight : 32
+    );
+    setBaseHeights(sizes);
+  }, []);
+
+  // Initial measure + on resize
+  React.useLayoutEffect(() => {
+    measureBaseHeights();
+    const onResize = () => measureBaseHeights();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [measureBaseHeights]);
+
   return (
     <div className="relative">
       <div className="flex flex-col gap-8 sm:gap-10">
         {tabs.map((t, i) => {
-          const isHover  = hovered === i;
           const anyHover = hovered !== null;
-          const scale    = isHover ? POP : anyHover ? SHRINK : 1;
+          const isHover = hovered === i;
+          const scale = isHover ? POP : anyHover ? SHRINK : 1;
 
-          // ball height follows tab scale smoothly: base × scale
+          // ball size = base (unscaled) × current scale
           const base = baseHeights[i] ?? 32;
           const ball = Math.round(base * scale);
 
@@ -86,14 +75,14 @@ export default function PokeTabs() {
                 </div>
               </Link>
 
-              {/* Pokéball — height animates; gap fixed via right */}
+              {/* Pokéball — height animates smoothly with the tab scale */}
               <button
                 type="button"
                 aria-label={`Open ${t.label}`}
                 className="poke-ball absolute top-1/2 -translate-y-1/2 aspect-square"
                 style={{
-                  height: `${ball}px`,                  // dynamic height = base × scale
-                  right: "-3rem",                       // keep your preferred gap
+                  height: `${ball}px`,                       // dynamic: base × scale
+                  right: "-3rem",                             // keep your chosen gap
                   transition: "height 220ms cubic-bezier(.2,.9,.2,1)",
                   willChange: "height",
                 }}
