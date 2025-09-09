@@ -11,7 +11,7 @@ export default function PokeTabs() {
   const POP = 1.14;         // tab scale when hovered
   const SHRINK = 0.90;      // tab scale when other tabs are hovered
   const BALL_MULT = 1.20;   // 1.0 = same height as tab; >1 bigger, <1 smaller
-  const GAP_REM = 3.0;      // distance between tab and ball (rem)
+  const GAP_REM = 5.0;      // distance between tab and ball (rem)
   // ---------------------
 
   // Refs to panels; we store their UN-SCALED base heights.
