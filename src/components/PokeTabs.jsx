@@ -68,18 +68,21 @@ export default function PokeTabs() {
               <button
                 type="button"
                 aria-label={`Open ${t.label}`}
-                className="poke-ball absolute -right-12 top-1/2 -translate-y-1/2 h-12"
-                style={{ aspectRatio: "1 / 1" }}   // keeps the button square; remove any width you set earlier
+                /* square button, anchored to the right with a fixed gap */
+                className="poke-ball absolute -right-12 top-1/2 -translate-y-1/2 h-12 aspect-square"
               >
+                {/* CLOSED: fill the square but keep aspect ratio */}
                 <img
                   src={`${BASE}closed_poke.png`}
                   alt=""
-                  className="poke-closed-sprite pixelated h-full w-auto block pointer-events-none select-none"
+                  className="poke-closed-sprite pixelated absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
                 />
+              
+                {/* OPEN: identical box + sizing so it doesn't shift when toggling */}
                 <img
                   src={`${BASE}open_poke.png`}
                   alt=""
-                  className="poke-open-sprite pixelated h-full w-auto absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 pointer-events-none select-none"
+                  className="poke-open-sprite pixelated absolute inset-0 w-full h-full object-contain opacity-0 pointer-events-none select-none"
                 />
               </button>
 
