@@ -47,7 +47,7 @@ export default function PokeTabs() {
               <button
                 type="button"
                 aria-label={`Open ${t.label}`}
-                className="poke-ball absolute -right-8 top-1/2 -translate-y-1/2"
+                className="poke-ball absolute -right-12 top-1/2 -translate-y-1/2"
               >
                 <img
                   src={`${BASE}closed_poke.png`}
@@ -60,12 +60,12 @@ export default function PokeTabs() {
                   className="poke-open-sprite pixelated w-8 h-8 absolute inset-0 opacity-0 pointer-events-none select-none"
                 />
               </button>
-
-              {/* Pokémon: pops away to the right of the ball, moves with the wrapper */}
+              
+              {/* Pokémon: pops away to the right of the ball */}
               <img
                 src={t.mon}
                 alt={t.monAlt}
-                className="poke-mon pixelated absolute right-[-54px] top-1/2 -translate-y-1/2 opacity-0 pointer-events-none select-none pop-right"
+                className="poke-mon pixelated absolute right-[-82px] top-1/2 -translate-y-1/2 opacity-0 pointer-events-none select-none pop-right"
                 style={{ ["--mon-ty"]: t.monOffsetY }}
                 width={34}
                 height={34}
