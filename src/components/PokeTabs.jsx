@@ -13,6 +13,8 @@ export default function PokeTabs() {
   const [baseHeights, setBaseHeights] = React.useState([]);
 
   // pop/shrink factors
+  const BALL_MULT = 1.20;   // 1.0 = same height as tab; >1 bigger, <1 smaller
+  const GAP_REM   = 3.5;    // distance from tab in rem (use any number)
   const POP = 1.14;
   const SHRINK = 0.90;
 
@@ -48,17 +50,17 @@ export default function PokeTabs() {
 
           // ball size = base (unscaled) × current scale
           const base = baseHeights[i] ?? 32;
-          const ball = Math.round(base * scale);
+          const ball = Math.round(base * scale * BALL_MULT);
 
           return (
             <div
               key={t.to}
               className="poke-tab group relative w-[min(760px,92vw)]"
               style={{
-                transform: `scale(${scale})`,
-                transformOrigin: "left center",
-                transition: "transform 220ms cubic-bezier(.2,.9,.2,1)",
-                willChange: "transform",
+                height: `${ball}px`,
+                right: `-${GAP_REM}rem`,                      // <-- gap control
+                transition: "height 220ms cubic-bezier(.2,.9,.2,1)",
+                willChange: "height",
               }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
