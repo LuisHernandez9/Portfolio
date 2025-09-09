@@ -69,7 +69,7 @@ export default function PokeTabs() {
                 type="button"
                 aria-label={`Open ${t.label}`}
                 /* square button, anchored to the right with a fixed gap */
-                className="poke-ball absolute -right-12 top-1/2 -translate-y-1/2 h-20 aspect-square"
+                className="poke-ball absolute -right-20 top-1/2 -translate-y-1/2 h-25 aspect-square"
               >
                 {/* CLOSED: fill the square but keep aspect ratio */}
                 <img
