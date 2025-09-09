@@ -11,7 +11,7 @@ export default function PokeTabs() {
   const panelRefs = React.useRef([]);
   const [ballSizes, setBallSizes] = React.useState([]);
 
-  // Function to measure visual height of each tab (includes transforms)
+  // Measure visual height of each tab (includes transforms)
   const measure = React.useCallback(() => {
     const sizes = panelRefs.current.map((el) =>
       el ? Math.round(el.getBoundingClientRect().height) : 32
@@ -19,14 +19,15 @@ export default function PokeTabs() {
     setBallSizes(sizes);
   }, []);
 
-  // Measure initially and on resize
+  // Initial + window resize
   React.useLayoutEffect(() => {
     measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    const onResize = () => measure();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, [measure]);
 
-  // Re-measure whenever hover state changes (after scale applies)
+  // During hover changes, schedule a read next frame
   React.useEffect(() => {
     const id = requestAnimationFrame(measure);
     return () => cancelAnimationFrame(id);
@@ -42,9 +43,13 @@ export default function PokeTabs() {
     <div className="relative">
       <div className="flex flex-col gap-8 sm:gap-10">
         {tabs.map((t, i) => {
-          const isHover = hovered === i;
+          const isHover  = hovered === i;
           const anyHover = hovered !== null;
-          const scale = isHover ? 1.50 : anyHover ? 0.85 : 1;
+
+          // pop/shrink settings (tune to taste)
+          const POP = 1.14;
+          const SHRINK = 0.90;
+          const scale = isHover ? POP : anyHover ? SHRINK : 1;
 
           // Ball size equals the panel’s current visual height
           const ball = ballSizes[i] ?? 32;
@@ -56,10 +61,15 @@ export default function PokeTabs() {
               style={{
                 transform: `scale(${scale})`,
                 transformOrigin: "left center",
-                transition: "transform 140ms ease",
+                transition: "transform 180ms cubic-bezier(.2,.9,.2,1)",
+                willChange: "transform",
               }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
+              onTransitionEnd={(e) => {
+                // Only remeasure when the scale transition finishes
+                if (e.propertyName === "transform") measure();
+              }}
             >
               {/* Tab bar */}
               <Link to={t.to} className="block w-full">
@@ -73,12 +83,12 @@ export default function PokeTabs() {
                 </div>
               </Link>
 
-              {/* Pokéball — size tracks tab height */}
+              {/* Pokéball — size tracks tab height; gap fixed via `right` */}
               <button
                 type="button"
                 aria-label={`Open ${t.label}`}
                 className="poke-ball absolute top-1/2 -translate-y-1/2 aspect-square"
-                style={{ height: `${ball}px`, right: "-3rem" }} // dynamic size + fixed gap
+                style={{ height: `${ball}px`, right: "-3rem" }}
               >
                 <img
                   src={`${BASE}closed_poke.png`}
