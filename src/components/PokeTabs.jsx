@@ -72,7 +72,7 @@ export default function PokeTabs() {
                 style={{ 
                   width: ball, 
                   height: ball,
-                  right: "-2.5rem" // add space between tab and ball (~40px)
+                  right: "-5rem" // add space between tab and ball (~40px)
                 }}
               >
                 <img
