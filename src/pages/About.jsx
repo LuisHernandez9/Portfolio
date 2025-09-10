@@ -109,7 +109,6 @@ export default function About() {
   );
 }
 
-/* Helpers */
 function StatRow({ label, value }) {
   return (
     <li
@@ -119,13 +118,13 @@ function StatRow({ label, value }) {
         items-start gap-x-6
       "
     >
-      {/* LABEL: bold, caps, compact size */}
+      {/* LABEL */}
       <span className="font-press uppercase font-bold tracking-widest text-gb-800 text-[11px] sm:text-[12px]">
         {label}
       </span>
 
-      {/* VALUE: right-aligned consistently like text */}
-      <span className="font-press tracking-wide text-[12px] sm:text-[13px] text-right">
+      {/* VALUE: block => takes full column width, so text-right works */}
+      <span className="block w-full text-right font-press tracking-wide text-[12px] sm:text-[13px]">
         {value}
       </span>
     </li>
