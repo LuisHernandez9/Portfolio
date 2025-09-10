@@ -37,7 +37,8 @@ export default function Home() {
             "
           >
             You name it, I've done it! Welcome to my digital portfolio. Please feel free to explore
-            it to get to know me more ;)
+            it to get to know me more. If you want to contact me, give Bolb a hover on the lower right part of your screen.
+            He knows where I live ;)
           </p>
         </header>
 
