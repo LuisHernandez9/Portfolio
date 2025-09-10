@@ -27,7 +27,7 @@ export default function Home() {
               text-[clamp(22px,3.2vw,44px)]
             "
           >
-            Data Science, AI/ML,<br /> and Software Development
+            Data Science,AI/ML,<br /> and Software Development
           </h1>
 
           <p
