@@ -111,17 +111,161 @@ const PROJECTS = [
   },
 ];
 
+/* --------------------------- Helpers --------------------------- */
+function getIconsForRole(openRoleIdx) {
+  // -1 = none selected
+  if (openRoleIdx === 0) {
+    // ISL Lead Student-Researcher
+    return ["fsu.png", "dod.png", "nasa.png", "isl.png"];
+  }
+  if (openRoleIdx === 1) {
+    // ISL Lab Technician
+    return ["fsu.png", "isl.png"];
+  }
+  if (openRoleIdx === 2) {
+    // Faculty Research Lead Student Researcher
+    return ["fsu.png"];
+  }
+  // None selected
+  return ["fsu.png"];
+}
+
+function RightIconShowcase({ icons }) {
+  // Arrange icons depending on count. All bob with stagger.
+  const sizeClasses = "h-[90px] w-[90px] md:h-[110px] md:w-[110px] object-contain";
+
+  if (!icons || icons.length === 0) return null;
+
+  return (
+    <div className="relative w-full h-full flex items-center justify-center">
+      {/* 1 icon: center */}
+      {icons.length === 1 && (
+        <img
+          src={`${BASE}${icons[0]}`}
+          alt=""
+          className={`${sizeClasses}`}
+          style={{ animation: "bob 2.4s ease-in-out infinite" }}
+          draggable={false}
+          decoding="async"
+        />
+      )}
+
+      {/* 2 icons: left/right */}
+      {icons.length === 2 && (
+        <>
+          <img
+            src={`${BASE}${icons[0]}`}
+            alt=""
+            className={`absolute ${sizeClasses}`}
+            style={{
+              left: "16%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+              animation: "bob 2.4s ease-in-out infinite",
+              animationDelay: "0s",
+            }}
+            draggable={false}
+            decoding="async"
+          />
+          <img
+            src={`${BASE}${icons[1]}`}
+            alt=""
+            className={`absolute ${sizeClasses}`}
+            style={{
+              left: "84%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+              animation: "bob 2.4s ease-in-out infinite",
+              animationDelay: ".3s",
+            }}
+            draggable={false}
+            decoding="async"
+          />
+        </>
+      )}
+
+      {/* 4 icons: diamond */}
+      {icons.length === 4 && (
+        <>
+          {/* top */}
+          <img
+            src={`${BASE}${icons[0]}`}
+            alt=""
+            className={`absolute ${sizeClasses}`}
+            style={{
+              top: "16%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              animation: "bob 2.4s ease-in-out infinite",
+              animationDelay: "0s",
+            }}
+            draggable={false}
+            decoding="async"
+          />
+          {/* right */}
+          <img
+            src={`${BASE}${icons[1]}`}
+            alt=""
+            className={`absolute ${sizeClasses}`}
+            style={{
+              top: "50%",
+              left: "84%",
+              transform: "translate(-50%, -50%)",
+              animation: "bob 2.4s ease-in-out infinite",
+              animationDelay: ".15s",
+            }}
+            draggable={false}
+            decoding="async"
+          />
+          {/* bottom */}
+          <img
+            src={`${BASE}${icons[2]}`}
+            alt=""
+            className={`absolute ${sizeClasses}`}
+            style={{
+              top: "84%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              animation: "bob 2.4s ease-in-out infinite",
+              animationDelay: ".3s",
+            }}
+            draggable={false}
+            decoding="async"
+          />
+          {/* left */}
+          <img
+            src={`${BASE}${icons[3]}`}
+            alt=""
+            className={`absolute ${sizeClasses}`}
+            style={{
+              top: "50%",
+              left: "16%",
+              transform: "translate(-50%, -50%)",
+              animation: "bob 2.4s ease-in-out infinite",
+              animationDelay: ".45s",
+            }}
+            draggable={false}
+            decoding="async"
+          />
+        </>
+      )}
+    </div>
+  );
+}
+
 /* --------------------------- Component -------------------------- */
 export default function Projects() {
   const [mode, setMode] = React.useState("exp"); // "exp" | "proj"
   const [companyIdx, setCompanyIdx] = React.useState(0);
-  const [openRoleIdx, setOpenRoleIdx] = React.useState(0);
+  const [openRoleIdx, setOpenRoleIdx] = React.useState(0); // -1 means none selected
 
   const company = COMPANIES[companyIdx];
 
   React.useEffect(() => {
     setOpenRoleIdx(0);
   }, [companyIdx]);
+
+  const rightIcons = mode === "exp" ? getIconsForRole(openRoleIdx) : [];
 
   return (
     <section
@@ -210,7 +354,7 @@ export default function Projects() {
                             {r.period}
                           </span>
                         </button>
-                
+
                         <div
                           className="overflow-hidden transition-[max-height,opacity] duration-300"
                           style={{
@@ -268,8 +412,8 @@ export default function Projects() {
               </div>
             </div>
 
-            {/* RIGHT: big bobbing logo */}
-            <div className="panel relative flex items-center justify-center">
+            {/* RIGHT: icon showcase (bobbing) */}
+            <div className="panel relative flex items-center justify-center min-h-[300px] md:min-h-[360px]">
               <div
                 className="absolute inset-0 opacity-[0.85] pointer-events-none rounded-[6px]"
                 style={{
@@ -281,14 +425,9 @@ export default function Projects() {
                     "linear-gradient(180deg,rgba(0,0,0,0.15),rgba(0,0,0,1))",
                 }}
               />
-              <img
-                src={company.logo}
-                alt={`${company.name} logo`}
-                className="relative z-10 h-[260px] w-[260px] md:h-[300px] md:w-[300px] object-contain"
-                style={{ animation: "bob 2.4s ease-in-out infinite" }}
-                draggable={false}
-                decoding="async"
-              />
+              <div className="relative z-10 w-full h-full">
+                <RightIconShowcase icons={rightIcons} />
+              </div>
             </div>
           </div>
         ) : (
