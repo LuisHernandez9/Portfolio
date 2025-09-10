@@ -54,6 +54,44 @@ export default function Skills() {
     blinkTM();
   }, [mode, blinkTM]);
 
+  // Track whether the list is 2 columns (>= md)
+  const [twoCol, setTwoCol] = React.useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(min-width: 768px)").matches
+      : false
+  );
+  React.useEffect(() => {
+    const mql = window.matchMedia("(min-width: 768px)");
+    const handler = (e) => setTwoCol(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+
+  // Keyboard navigation inside the list
+  const onListKeyDown = (e) => {
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (twoCol && activeIdx - 2 >= 0) selectSkill(activeIdx - 2);
+      else if (!twoCol && activeIdx - 1 >= 0) selectSkill(activeIdx - 1);
+    }
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (twoCol && activeIdx + 2 < skills.length) selectSkill(activeIdx + 2);
+      else if (!twoCol && activeIdx + 1 < skills.length) selectSkill(activeIdx + 1);
+    }
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      if (twoCol && activeIdx % 2 === 1) selectSkill(activeIdx - 1);
+      else if (!twoCol && activeIdx - 1 >= 0) selectSkill(activeIdx - 1);
+    }
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      if (twoCol && activeIdx % 2 === 0 && activeIdx + 1 < skills.length)
+        selectSkill(activeIdx + 1);
+      else if (!twoCol && activeIdx + 1 < skills.length) selectSkill(activeIdx + 1);
+    }
+  };
+
   // Theme swap for soft skills
   const isSoft = mode === "soft";
   const tileIdle = isSoft
@@ -88,11 +126,9 @@ export default function Skills() {
 
           <button
             type="button"
-            onClick={() =>
-              setMode((m) => (m === "tech" ? "soft" : "tech"))
-            }
+            onClick={() => setMode((m) => (m === "tech" ? "soft" : "tech"))}
             className="
-              panel px-3 py-2 font-press text-[12px] sm:text-[13px]
+              panel touch-target px-3 py-2 font-press text-[12px] sm:text-[13px]
               hover:scale-[1.02] active:scale-[0.98] transition-transform
             "
             aria-label="Switch skills category"
@@ -162,11 +198,18 @@ export default function Skills() {
             <div className="h-[2px] bg-sky-700/60 mb-3" />
 
             {/* List — colored like the GBA TM menu */}
-            <ul className="grid md:grid-cols-2 gap-3">
+            <ul
+              className="grid md:grid-cols-2 gap-3"
+              role="listbox"
+              aria-label="Skills"
+              aria-activedescendant={`skill-${activeIdx}`}
+              tabIndex={0}
+              onKeyDown={onListKeyDown}
+            >
               {skills.map((s, i) => {
                 const active = i === activeIdx;
                 const rightCol = i % 2 === 1; // second column
-            
+
                 return (
                   <li key={s.name} className="relative">
                     {/* GBA cursor ▶/◀ */}
@@ -174,13 +217,16 @@ export default function Skills() {
                       <span
                         className={`absolute top-1/2 -translate-y-1/2 font-press text-[14px]`}
                         style={rightCol ? { right: "-18px" } : { left: "-18px" }}
+                        aria-hidden
                       >
                         {rightCol ? "◀" : "▶"}
                       </span>
                     )}
                     <button
+                      id={`skill-${i}`}
                       type="button"
                       onMouseEnter={() => selectSkill(i)}
+                      onFocus={() => selectSkill(i)}
                       onClick={() => selectSkill(i)}
                       role="option"
                       aria-selected={active}
@@ -201,7 +247,7 @@ export default function Skills() {
             <div className="my-4 h-[2px] bg-sky-700/60" />
 
             {/* Description area */}
-            <div className="min-h-[92px]">
+            <div className="min-h-[92px]" aria-live="polite">
               <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">
                 MOVE DESCRIPTION
               </div>
@@ -231,7 +277,7 @@ export default function Skills() {
         <div className="mt-6">
           <Link
             to="/"
-            className="panel inline-block px-4 py-2 font-press text-[12px] sm:text-[13px]"
+            className="panel touch-target inline-block px-4 py-2 font-press text-[12px] sm:text-[13px]"
           >
             Back to Home
           </Link>
