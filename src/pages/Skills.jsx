@@ -165,11 +165,16 @@ export default function Skills() {
             <ul className="grid md:grid-cols-2 gap-3">
               {skills.map((s, i) => {
                 const active = i === activeIdx;
+                const rightCol = i % 2 === 1; // second column
+            
                 return (
                   <li key={s.name} className="relative">
                     {/* GBA cursor ▶ */}
                     {active && (
-                      <span className="absolute -left-4 top-1/2 -translate-y-1/2 font-press text-[14px]">
+                      <span
+                        className={`absolute top-1/2 -translate-y-1/2 font-press text-[14px]
+                          ${rightCol ? "right-[-18px]" : "-left-4"}`}
+                      >
                         ▶
                       </span>
                     )}
