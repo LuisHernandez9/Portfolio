@@ -93,7 +93,7 @@ export default function Projects() {
     >
       {/* local keyframes for bobbing */}
       <style>{`
-        @keyframes bob { 0%{transform:translateY(0)} 50%{transform:translateY(-6px)} 100%{transform:translateY(0)} }
+        @keyframes bob { 0%{transform:translateY(0)} 50%{transform:translateY(-12px)} 100%{transform:translateY(0)} }
       `}</style>
 
       <div
@@ -217,7 +217,7 @@ export default function Projects() {
               <img
                 src={company.logo}
                 alt={`${company.name} logo`}
-                className="relative z-10 h-[200px] w-[200px] md:h-[240px] md:w-[240px] object-contain"
+                className="relative z-10 h-[260px] w-[260px] md:h-[300px] md:w-[300px] object-contain"
                 style={{ animation: "bob 2.4s ease-in-out infinite" }}
                 draggable={false}
                 decoding="async"
