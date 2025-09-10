@@ -94,7 +94,6 @@ const COMPANIES = [
 ];
 
 /* ----------------------------- Projects & Journals ----------------------------- */
-// Add a `type` so the Project List “tabs” can filter.
 const PROJECTS = [
   {
     title: "NASA Minds Competition",
@@ -109,7 +108,7 @@ const PROJECTS = [
         Created an “all-in-one” calendar website that collects and categorizes
         all major events for all major universities within North Carolina. See the{" "}
         <a
-          href="https://luishernandez9.github.io/EventPulse_NC/" /* TODO: replace with real URL */
+          href="https://luishernandez9.github.io/EventPulse_NC/"
           target="_blank"
           rel="noreferrer"
           className="underline hover:opacity-80"
@@ -133,7 +132,7 @@ const PROJECTS = [
       <>
         Developed a car rental{" "}
         <a
-          href="https://github.com/TaylorBrown96/Car-Rental.git" /* TODO: replace with real repo */
+          href="https://github.com/TaylorBrown96/Car-Rental.git"
           target="_blank"
           rel="noreferrer"
           className="underline hover:opacity-80"
@@ -153,7 +152,6 @@ const PROJECTS = [
   },
 ];
 
-// Sub-tabs shown inside the Project List window
 const PROJECT_TABS = [
   { id: "all", label: "All" },
   { id: "competition", label: "Competitions" },
@@ -187,11 +185,7 @@ const JOURNALS = [
 // Brand-colored name renderer
 function CompanyName({ company }) {
   if (company.key === "fsu") {
-    return (
-      <span className="text-[#0033A0]">
-        {company.name}
-      </span>
-    );
+    return <span className="text-[#0033A0]">{company.name}</span>;
   }
   if (company.key === "nasa") {
     return (
@@ -299,11 +293,8 @@ export default function Projects() {
 
   const rightIcons = mode === "exp" ? iconsFor(company.key, openRoleIdx) : [];
 
-  // filtered projects for current tab
   const filteredProjects =
-    projTab === "all"
-      ? PROJECTS
-      : PROJECTS.filter((p) => p.type === projTab);
+    projTab === "all" ? PROJECTS : PROJECTS.filter((p) => p.type === projTab);
 
   return (
     <section
@@ -376,7 +367,9 @@ export default function Projects() {
                           onClick={() =>
                             setOpenRoleIdx((idx) => (idx === i ? -1 : i))
                           }
-                          className="w-full flex items-center justify-between gap-3 px-3 py-2 text-left"
+                          className="w-full flex items-center justify-between gap-3 px-3 py-2 text-left touch-target focus-visible:ring-2 ring-sky-700"
+                          aria-expanded={open}
+                          aria-controls={`role-${i}`}
                         >
                           {/* Job titles wrap; dates don't */}
                           <span className="font-press text-[13px]">
@@ -388,6 +381,7 @@ export default function Projects() {
                         </button>
 
                         <div
+                          id={`role-${i}`}
                           className="overflow-hidden transition-[max-height,opacity] duration-300"
                           style={{
                             maxHeight: open ? 300 : 0,
@@ -482,8 +476,9 @@ export default function Projects() {
                     aria-controls={`projlist-${t.id}`}
                     tabIndex={projTab === t.id ? 0 : -1}
                     onClick={() => setProjTab(t.id)}
-                    className={`panel px-3 py-2 font-press text-[12px] sm:text-[13px] transition
-                      ${projTab === t.id ? "ring-2 ring-sky-700" : "hover:scale-[1.02]"}`}
+                    className={`panel touch-target px-3 py-2 font-press text-[12px] sm:text-[13px] transition focus-visible:ring-2 ring-sky-700 ${
+                      projTab === t.id ? "ring-2 ring-sky-700" : "hover:scale-[1.02]"
+                    }`}
                   >
                     {t.label} (
                     {t.id === "all"
@@ -528,10 +523,10 @@ export default function Projects() {
         )}
 
         {/* Bottom actions */}
-        <div className="mt-6 flex items-center justify-between">
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <Link
             to="/"
-            className="panel inline-block px-4 py-2 font-press text-[12px] sm:text-[13px]"
+            className="panel touch-target inline-block px-4 py-2 font-press text-[12px] sm:text-[13px] focus-visible:ring-2 ring-sky-700"
           >
             Back to Home
           </Link>
@@ -539,7 +534,7 @@ export default function Projects() {
           <a
             href={`${BASE}LuisHernandez_Resume.pdf`}
             download
-            className="panel inline-block px-4 py-2 font-press text-[12px] sm:text-[13px] hover:scale-[1.02] active:scale-[0.98] transition-transform"
+            className="panel touch-target inline-block px-4 py-2 font-press text-[12px] sm:text-[13px] hover:scale-[1.02] active:scale-[0.98] transition-transform focus-visible:ring-2 ring-sky-700"
           >
             Resume
           </a>
