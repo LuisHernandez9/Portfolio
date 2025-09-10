@@ -54,8 +54,9 @@ export default function About() {
             <div className="font-press mb-3 tracking-wide text-[15px]">Trainer Stats</div>
 
             <ul className="divide-y divide-gb-600/30">
-              <StatRow label="Name" value="Luis E. Hernandez</StatRow>" />
+              <StatRow label="Name" value="Luis E. Hernandez" />
               <StatRow label="School" value="Fayetteville State University" />
+              <StatRow label="Education" value="B.S. in Computer Science, Minor in Cybersecurity" />
               <StatRow
                 label="Type"
                 value={
@@ -65,9 +66,8 @@ export default function About() {
                 }
               />
               <StatRow label="Height" value={`6'0"`} />
-              <StatRow label="Weight" value="~ 250 lbs" />
               <StatRow label="Current Region" value="Fayetteville, NC" />
-              <StatRow label="Interests" value="AI/ML, Computer Hardware/Software, Gaming, Anime, Sports, Working Out, Food" />
+              <StatRow label="Interests" value="AI/ML, Data Science, Computer Hardware/Software, Gaming, Anime, Sports, Working Out, Food" />
             </ul>
 
             <div className="mt-5 flex flex-wrap gap-3">
