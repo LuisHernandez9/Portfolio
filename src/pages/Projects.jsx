@@ -141,8 +141,8 @@ function RightIconShowcase({ icons }) {
   const four = "h-32 w-32 md:h-36 md:w-36";
 
   // distances from center (px)
-  const R2 = 110; // for two
-  const R4 = 95;  // for four
+  const R2 = 140; // for two
+  const R4 = 120;  // for four
 
   return (
     <div className="relative w-full h-[clamp(280px,45vh,440px)]">
