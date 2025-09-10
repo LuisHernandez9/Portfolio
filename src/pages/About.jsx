@@ -32,6 +32,12 @@ export default function About() {
     "Food",
   ];
 
+  // keyboard support for the portrait carousel
+  const onKey = (e) => {
+    if (e.key === "ArrowLeft") prevPhoto();
+    if (e.key === "ArrowRight") nextPhoto();
+  };
+
   return (
     <section
       className="
@@ -64,7 +70,14 @@ export default function About() {
           {/* LEFT: portrait “dex screen” */}
           <div className="panel p-3 sm:p-4 flex flex-col items-center">
             {/* fixed-size viewport — set to the aspect ratio of me.jpg */}
-            <div className="relative w-full aspect-[3/4] bg-[#cfeff0]/40 flex items-center justify-center">
+            <div
+              className="relative w-full aspect-[3/4] bg-[#cfeff0]/40 flex items-center justify-center"
+              role="region"
+              aria-roledescription="carousel"
+              aria-label="Portrait gallery"
+              tabIndex={0}
+              onKeyDown={onKey}
+            >
               <img
                 src={photos[photoIdx]}
                 alt="Trainer portrait"
@@ -84,12 +97,12 @@ export default function About() {
                 type="button"
                 aria-label="Previous photo"
                 onClick={prevPhoto}
-                className="panel px-3 py-1 font-press text-[12px] leading-none"
+                className="panel touch-target px-3 py-1 font-press text-[12px] leading-none"
               >
                 ◀
               </button>
 
-              <div className="font-press text-[12px] opacity-80">
+              <div className="font-press text-[12px] opacity-80" aria-live="polite">
                 {photoIdx + 1}/{photos.length}
               </div>
 
@@ -97,7 +110,7 @@ export default function About() {
                 type="button"
                 aria-label="Next photo"
                 onClick={nextPhoto}
-                className="panel px-3 py-1 font-press text-[12px] leading-none"
+                className="panel touch-target px-3 py-1 font-press text-[12px] leading-none"
               >
                 ▶
               </button>
@@ -183,7 +196,7 @@ export default function About() {
 
         {/* Bottom-left "Back to Home" tab */}
         <div className="mt-4">
-          <Link to="/" className="panel inline-block px-4 py-2">
+          <Link to="/" className="panel inline-block px-4 py-2 touch-target">
             <span className="font-press tracking-wider text-[12px] sm:text-[13px]">
               Back to Home
             </span>
