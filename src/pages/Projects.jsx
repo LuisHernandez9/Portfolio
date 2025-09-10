@@ -1,31 +1,297 @@
+// src/pages/Projects.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 
+const BASE = import.meta.env.BASE_URL || "/";
+
+/* ----------------------------- Data ----------------------------- */
+const COMPANIES = [
+  {
+    key: "fsu",
+    name: "Fayetteville State University",
+    logo: `${BASE}fsu.png`,
+    roles: [
+      {
+        title: "Research Assistant",
+        period: "2023–2024",
+        desc:
+          "Assisted with data collection, cleaning, and modeling; built small tools, visualizations, and internal docs to support a faculty-led research effort.",
+      },
+      {
+        title: "Tutor / Lab Mentor",
+        period: "2023",
+        desc:
+          "Helped students with Python, data structures, and debugging workflows; wrote short guides and examples.",
+      },
+    ],
+  },
+  {
+    key: "nasa",
+    name: "NASA Jet Propulsion Laboratory",
+    logo: `${BASE}nasa.png`,
+    roles: [
+      {
+        title: "Summer Intern",
+        period: "2024",
+        desc:
+          "Contributed to AI/ML prototyping; iterated on experiments, evaluated model performance, and reported findings to the team.",
+      },
+    ],
+  },
+  {
+    key: "dod",
+    name: "Department of Defense",
+    logo: `${BASE}dod.png`,
+    roles: [
+      {
+        title: "Software/ML Intern",
+        period: "2025",
+        desc:
+          "Worked on internal tooling and APIs; collaborated on performance improvements and basic automation.",
+      },
+    ],
+  },
+];
+
+/* Demo projects (edit freely) */
+const PROJECTS = [
+  {
+    title: "Image Segmentation Playground",
+    blurb:
+      "Experimented with UNet/Mask2Former pipelines; trained on custom dataset and built a small demo viewer.",
+  },
+  {
+    title: "Portfolio Website",
+    blurb:
+      "This site! Retro Pokémon UI with React + Vite + Tailwind; animated micro-interactions across pages.",
+  },
+  {
+    title: "Basketball Stat Tracker",
+    blurb:
+      "Lightweight tool to log games, compute per-game metrics, and visualize trends.",
+  },
+];
+
+/* --------------------------- Component -------------------------- */
 export default function Projects() {
+  const [mode, setMode] = React.useState<"exp" | "proj">("exp");
+  const [companyIdx, setCompanyIdx] = React.useState(0);
+  const [openRoleIdx, setOpenRoleIdx] = React.useState(0);
+
+  const company = COMPANIES[companyIdx];
+
+  // simple bobbing toggle using CSS keyframes injected below
+  React.useEffect(() => {
+    setOpenRoleIdx(0);
+  }, [companyIdx]);
+
   return (
-    <div className="mx-auto max-w-6xl px-4 pt-24">
-      <div className="panel p-6">
-        <h1 className="h1-poke mb-4">Projects</h1>
-        <p className="text-sm text-gb-700 mb-6">
-          Showcase your projects here in retro panels or cards.
-        </p>
+    <section
+      className="
+        mx-auto
+        max-w-[1200px] md:max-w-[1320px] lg:max-w-[1400px]
+        px-4 sm:px-6 lg:px-8
+      "
+    >
+      {/* local keyframes for bobbing */}
+      <style>{`
+        @keyframes bob {
+          0%   { transform: translateY(0) }
+          50%  { transform: translateY(-6px) }
+          100% { transform: translateY(0) }
+        }
+      `}</style>
 
-        {/* sample project card */}
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="panel p-4">
-            <h3 className="font-press text-base mb-2">Project One</h3>
-            <p className="text-sm text-gb-700">Short description of the project.</p>
-          </div>
-          <div className="panel p-4">
-            <h3 className="font-press text-base mb-2">Project Two</h3>
-            <p className="text-sm text-gb-700">Another cool thing you built.</p>
-          </div>
+      <div
+        className="
+          panel
+          mt-6 sm:mt-10
+          p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14
+          min-h-[70vh] md:min-h-[75vh] lg:min-h-[80vh]
+          flex flex-col
+        "
+      >
+        {/* Header: Experience / Projects toggle */}
+        <div className="mb-6 sm:mb-8 flex items-center justify-between">
+          <h1 className="font-press leading-[1.1] text-[clamp(22px,3.2vw,44px)]">
+            {mode === "exp" ? "Experience" : "Projects"}
+          </h1>
+
+          <button
+            type="button"
+            onClick={() => setMode((m) => (m === "exp" ? "proj" : "exp"))}
+            className="panel px-3 py-2 font-press text-[12px] sm:text-[13px] hover:scale-[1.02] active:scale-[0.98] transition-transform"
+          >
+            {mode === "exp" ? "▶ Projects" : "◀ Experience"}
+          </button>
         </div>
 
+        {/* Body */}
+        {mode === "exp" ? (
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr,0.9fr] gap-6 sm:gap-8">
+            {/* LEFT: Trainer card fields (company + roles) */}
+            <div className="panel p-4 sm:p-5 md:p-6 relative overflow-hidden">
+              {/* Title strip */}
+              <div className="flex items-center justify-between">
+                <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
+                  TRAINER CARD
+                </div>
+                <div className="font-press text-[12px] opacity-80">
+                  ID No. 0209
+                </div>
+              </div>
+              <div className="mt-1 h-[2px] bg-sky-700/60" />
+
+              {/* NAME row */}
+              <div className="mt-4">
+                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-1">
+                  NAME
+                </div>
+                <div className="panel px-3 py-2 font-press text-[15px]">
+                  {company.name}
+                </div>
+              </div>
+
+              {/* POSITIONS / ROLES */}
+              <div className="mt-4">
+                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">
+                  POSITIONS
+                </div>
+
+                <ul className="space-y-2">
+                  {company.roles.map((r, i) => {
+                    const open = i === openRoleIdx;
+                    return (
+                      <li key={r.title} className="panel">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setOpenRoleIdx((idx) => (idx === i ? -1 : i))
+                          }
+                          className="
+                            w-full flex items-center justify-between gap-3
+                            px-3 py-2 text-left
+                          "
+                        >
+                          <span className="font-press text-[13px]">
+                            {r.title}
+                          </span>
+                          <span className="font-press text-[11px] opacity-70">
+                            {r.period}
+                          </span>
+                        </button>
+
+                        {/* collapsible body */}
+                        <div
+                          className="overflow-hidden transition-[max-height,opacity] duration-300"
+                          style={{
+                            maxHeight: open ? 300 : 0,
+                            opacity: open ? 1 : 0,
+                          }}
+                        >
+                          <div className="px-3 pb-3 pt-0">
+                            <p className="text-gb-800 text-[14px] leading-relaxed">
+                              {r.desc}
+                            </p>
+                          </div>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
+              {/* BADGES (company icons) */}
+              <div className="mt-5">
+                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">
+                  BADGES
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {COMPANIES.map((c, i) => {
+                    const active = i === companyIdx;
+                    return (
+                      <button
+                        key={c.key}
+                        type="button"
+                        onClick={() => setCompanyIdx(i)}
+                        className={`
+                          panel flex items-center justify-center p-2
+                          transition
+                          ${active ? "ring-2 ring-sky-700" : "hover:scale-[1.02]"}
+                        `}
+                        aria-label={`Select ${c.name}`}
+                      >
+                        <img
+                          src={c.logo}
+                          alt=""
+                          className="h-10 w-10 object-contain"
+                          draggable={false}
+                          decoding="async"
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT: Big company icon (bobbing) */}
+            <div className="panel relative flex items-center justify-center">
+              {/* retro teal background stripes */}
+              <div
+                className="absolute inset-0 opacity-[0.85] pointer-events-none rounded-[6px]"
+                style={{
+                  background:
+                    "repeating-linear-gradient(180deg,#6fd0cf 0 6px,#63c5c4 6px 12px)",
+                  maskImage:
+                    "linear-gradient(180deg,rgba(0,0,0,0.15),rgba(0,0,0,1))",
+                  WebkitMaskImage:
+                    "linear-gradient(180deg,rgba(0,0,0,0.15),rgba(0,0,0,1))",
+                }}
+              />
+              <img
+                src={company.logo}
+                alt={`${company.name} logo`}
+                className="relative z-10 h-[200px] w-[200px] md:h-[240px] md:w-[240px] object-contain"
+                style={{ animation: "bob 2.4s ease-in-out infinite" }}
+                draggable={false}
+                decoding="async"
+              />
+            </div>
+          </div>
+        ) : (
+          /* --------------------------- Projects mode --------------------------- */
+          <div className="panel p-4 sm:p-5 md:p-6">
+            <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
+              PROJECT LIST
+            </div>
+            <div className="mt-1 h-[2px] bg-sky-700/60 mb-4" />
+
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {PROJECTS.map((p) => (
+                <div key={p.title} className="panel p-4">
+                  <h3 className="font-press text-base mb-2">{p.title}</h3>
+                  <p className="text-sm text-gb-800 leading-relaxed">
+                    {p.blurb}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Back to Home */}
         <div className="mt-6">
-          <Link to="/" className="btn-ghost">Back to Home</Link>
+          <Link
+            to="/"
+            className="panel inline-block px-4 py-2 font-press text-[12px] sm:text-[13px]"
+          >
+            Back to Home
+          </Link>
         </div>
+
+        <div className="flex-1" />
       </div>
-    </div>
+    </section>
   );
 }
