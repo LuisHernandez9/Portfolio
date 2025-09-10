@@ -13,8 +13,10 @@ export default function About() {
     `${BASE}me4.jpg`,
   ];
   const [photoIdx, setPhotoIdx] = React.useState(0);
-  const prevPhoto = () => setPhotoIdx((i) => (i - 1 + photos.length) % photos.length);
-  const nextPhoto = () => setPhotoIdx((i) => (i + 1) % photos.length);
+  const prevPhoto = () =>
+    setPhotoIdx((i) => (i - 1 + photos.length) % photos.length);
+  const nextPhoto = () =>
+    setPhotoIdx((i) => (i + 1) % photos.length);
 
   // (optional) preload for snappier switches
   React.useEffect(() => {
@@ -22,7 +24,8 @@ export default function About() {
       const img = new Image();
       img.src = src;
     });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <section
@@ -52,45 +55,49 @@ export default function About() {
         </header>
 
         {/* Pokédex body */}
-        {/* LEFT: portrait “dex screen” */}
-        <div className="panel p-3 sm:p-4 flex flex-col items-center">
-          {/* fixed-size viewport, use aspect ratio of me.jpg */}
-          <div className="relative w-full aspect-[3/4] bg-[#cfeff0]/40 flex items-center justify-center">
-            <img
-              src={photos[photoIdx]} // <-- comes from your stateful photo array
-              alt="Trainer portrait"
-              className="max-h-full max-w-full object-contain" // removed pixelated
-            />
-            {/* corner lights */}
-            <div className="absolute left-2 top-2 h-2 w-2 bg-red-500 shadow-[0_0_6px_#f00]" />
-            <div className="absolute right-2 top-2 h-2 w-2 bg-green-500 shadow-[0_0_6px_#0f0]" />
-          </div>
-        
-          {/* arrows + counter */}
-          <div className="mt-3 flex items-center justify-between w-full">
-            <button
-              type="button"
-              aria-label="Previous photo"
-              onClick={prevPhoto}
-              className="panel px-3 py-1 font-press text-[12px] leading-none"
-            >
-              ◀
-            </button>
-        
-            <div className="font-press text-[12px] opacity-80">
-              {photoIdx + 1}/{photos.length}
+        <div className="grid w-full grid-cols-1 md:grid-cols-[340px,1fr] gap-6 sm:gap-8">
+          {/* LEFT: portrait “dex screen” */}
+          <div className="panel p-3 sm:p-4 flex flex-col items-center">
+            {/* fixed-size viewport — set to the aspect ratio of me.jpg */}
+            <div className="relative w-full aspect-[3/4] bg-[#cfeff0]/40 flex items-center justify-center">
+              <img
+                src={photos[photoIdx]}
+                alt="Trainer portrait"
+                className="h-full w-full object-contain select-none"
+                style={{ imageRendering: "auto" }}
+                draggable={false}
+                decoding="async"
+              />
+              {/* corner lights */}
+              <div className="absolute left-2 top-2 h-2 w-2 bg-red-500 shadow-[0_0_6px_#f00]" />
+              <div className="absolute right-2 top-2 h-2 w-2 bg-green-500 shadow-[0_0_6px_#0f0]" />
             </div>
-        
-            <button
-              type="button"
-              aria-label="Next photo"
-              onClick={nextPhoto}
-              className="panel px-3 py-1 font-press text-[12px] leading-none"
-            >
-              ▶
-            </button>
+
+            {/* arrows + counter */}
+            <div className="mt-3 flex items-center justify-between w-full">
+              <button
+                type="button"
+                aria-label="Previous photo"
+                onClick={prevPhoto}
+                className="panel px-3 py-1 font-press text-[12px] leading-none"
+              >
+                ◀
+              </button>
+
+              <div className="font-press text-[12px] opacity-80">
+                {photoIdx + 1}/{photos.length}
+              </div>
+
+              <button
+                type="button"
+                aria-label="Next photo"
+                onClick={nextPhoto}
+                className="panel px-3 py-1 font-press text-[12px] leading-none"
+              >
+                ▶
+              </button>
+            </div>
           </div>
-        </div>
 
           {/* RIGHT: stats */}
           <div className="panel p-4 sm:p-5 md:p-6 relative overflow-hidden">
@@ -104,15 +111,18 @@ export default function About() {
             </div>
 
             <ul className="mt-3 divide-y divide-gb-600/30">
-              <StatRow label="NAME"            value="Luis E. Hernandez" />
-              <StatRow label="SCHOOL"          value="Fayetteville State University" />
-              <StatRow label="EDUCATION"       value="B.S. in Computer Science, Minor in Cybersecurity" />
+              <StatRow label="NAME" value="Luis E. Hernandez" />
+              <StatRow label="SCHOOL" value="Fayetteville State University" />
+              <StatRow
+                label="EDUCATION"
+                value="B.S. in Computer Science, Minor in Cybersecurity"
+              />
               <StatRow
                 label="TYPE"
                 value={<TypeBadge variant="orange">ASIAN</TypeBadge>}
               />
-              <StatRow label="HEIGHT"          value={`6'0"`} />
-              <StatRow label="CURRENT REGION"  value="Fayetteville, NC" />
+              <StatRow label="HEIGHT" value={`6'0"`} />
+              <StatRow label="CURRENT REGION" value="Fayetteville, NC" />
               <StatRow
                 label="INTERESTS"
                 value="AI/ML, Data Science, Computer Hardware/Software, Gaming, Anime, Sports, Working Out, Food"
@@ -125,20 +135,38 @@ export default function About() {
         <div className="mt-6 sm:mt-8 panel p-4 sm:p-5 md:p-6">
           <p className="text-gb-700 leading-relaxed text-[clamp(13px,1.05vw,16px)]">
             Born and raised in Saudi Arabia, Luis moved to the US back in 2022.
-            He entered Fayetteville State University as a freshman in Fall 2022 and earned his Bachelor's Degree in
-            Computer Science with a Minor in Cybersecurity as Suma Cum Laude in Spring 2025. Some highlights of his academic life include
-            being a 3-time Chancellor's List Honoree, having maintained a <strong className="font-semibold text-gb-900">3.96 GPA</strong> throughout his time in college, and a <strong className="font-semibold text-gb-900">Summer 2024 Internship with NASA Jet Propulsion Laboratory</strong>.
-            Known for his <strong className="font-semibold text-gb-900">hardworking and fast-learning nature</strong>, Luis usually stays indoors
-            and works on <strong className="font-semibold text-gb-900">AI/ML, Data Science, and Software Development projects</strong>. When outside, Luis can usually be spotted eating food or
-            playing basketball, a sport rumored to be his favorite. Other interests of Luis includes maintaining computer systems, having built
-            3 computers from parts, playing games, working out, and watching/reading his favorite animes.
+            He entered Fayetteville State University as a freshman in Fall 2022
+            and earned his Bachelor's Degree in Computer Science with a Minor in
+            Cybersecurity as Suma Cum Laude in Spring 2025. Some highlights of
+            his academic life include being a 3-time Chancellor's List Honoree,
+            having maintained a{" "}
+            <strong className="font-semibold text-gb-900">3.96 GPA</strong>{" "}
+            throughout his time in college, and a{" "}
+            <strong className="font-semibold text-gb-900">
+              Summer 2024 Internship with NASA Jet Propulsion Laboratory
+            </strong>
+            . Known for his{" "}
+            <strong className="font-semibold text-gb-900">
+              hardworking and fast-learning nature
+            </strong>
+            , Luis usually stays indoors and works on{" "}
+            <strong className="font-semibold text-gb-900">
+              AI/ML, Data Science, and Software Development projects
+            </strong>
+            . When outside, Luis can usually be spotted eating food or playing
+            basketball, a sport rumored to be his favorite. Other interests of
+            Luis includes maintaining computer systems, having built 3 computers
+            from parts, playing games, working out, and watching/reading his
+            favorite animes.
           </p>
         </div>
 
         {/* Bottom-left "Back to Home" tab */}
         <div className="mt-4">
           <Link to="/" className="panel inline-block px-4 py-2">
-            <span className="font-press tracking-wider text-[12px] sm:text-[13px]">Back to Home</span>
+            <span className="font-press tracking-wider text-[12px] sm:text-[13px]">
+              Back to Home
+            </span>
           </Link>
         </div>
 
