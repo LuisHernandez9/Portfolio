@@ -434,7 +434,7 @@ export default function Projects() {
                   })}
                 </div>
               </div>
-
+            </div>  
             {/* RIGHT: icon showcase */}
             <div className="panel relative">
               <div
