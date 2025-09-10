@@ -94,74 +94,66 @@ const COMPANIES = [
 ];
 
 const PROJECTS = [
-  {
-    title: "Image Segmentation Playground",
-    blurb:
-      "Experimented with UNet/Mask2Former pipelines; trained on custom dataset and built a small demo viewer.",
-  },
-  {
-    title: "Portfolio Website",
-    blurb:
-      "This site! Retro Pokémon UI with React + Vite + Tailwind; animated micro-interactions across pages.",
-  },
-  {
-    title: "Basketball Stat Tracker",
-    blurb:
-      "Lightweight tool to log games, compute per-game metrics, and visualize trends.",
-  },
+  { title: "Image Segmentation Playground", blurb: "Experimented with UNet/Mask2Former pipelines; trained on custom dataset and built a small demo viewer." },
+  { title: "Portfolio Website", blurb: "This site! Retro Pokémon UI with React + Vite + Tailwind; animated micro-interactions across pages." },
+  { title: "Basketball Stat Tracker", blurb: "Lightweight tool to log games, compute per-game metrics, and visualize trends." },
 ];
 
 /* --------------------------- Helpers --------------------------- */
-function getIconsForRole(openRoleIdx) {
-  // -1 = none selected
-  if (openRoleIdx === 0) {
-    // ISL Lead Student-Researcher
-    return ["fsu.png", "dod.png", "nasa.png", "isl.png"];
+// Decide which icons to show based on company + selected role.
+// - If no role is open: show fsu.png (global default per your spec).
+// - FSU roles:
+//    0 (ISL Lead Student-Researcher): fsu + dod + nasa + isl (diamond)
+//    1 (ISL Lab Technician): fsu + isl
+//    2 (Faculty Research Lead Student Researcher): fsu
+// - NASA company: always nasa only (for any selection)
+function iconsFor(companyKey, openRoleIdx) {
+  if (openRoleIdx === -1) return ["fsu.png"];
+  if (companyKey === "nasa") return ["nasa.png"];
+
+  if (companyKey === "fsu") {
+    if (openRoleIdx === 0) return ["fsu.png", "dod.png", "nasa.png", "isl.png"];
+    if (openRoleIdx === 1) return ["fsu.png", "isl.png"];
+    if (openRoleIdx === 2) return ["fsu.png"];
   }
-  if (openRoleIdx === 1) {
-    // ISL Lab Technician
-    return ["fsu.png", "isl.png"];
-  }
-  if (openRoleIdx === 2) {
-    // Faculty Research Lead Student Researcher
-    return ["fsu.png"];
-  }
-  // None selected
+  // Fallback to company logo if nothing matches
   return ["fsu.png"];
 }
 
 function RightIconShowcase({ icons }) {
-  // Arrange icons depending on count. All bob with stagger.
-  const sizeClasses = "h-[90px] w-[90px] md:h-[110px] md:w-[110px] object-contain";
-
-  if (!icons || icons.length === 0) return null;
-
+  // Stage keeps everything centered and within bounds.
+  // Bigger icons, tighter diamond, smooth fade-in.
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
-      {/* 1 icon: center */}
+    <div className="relative w-full h-[300px] md:h-[360px] flex items-center justify-center">
+      <style>{`
+        @keyframes bob { 0%{transform:translateY(0)} 50%{transform:translateY(-10px)} 100%{transform:translateY(0)} }
+        @keyframes appear { 0%{opacity:0; transform:scale(0.98)} 100%{opacity:1; transform:scale(1)} }
+      `}</style>
+
+      {/* Single icon (center) */}
       {icons.length === 1 && (
         <img
           src={`${BASE}${icons[0]}`}
           alt=""
-          className={`${sizeClasses}`}
-          style={{ animation: "bob 2.4s ease-in-out infinite" }}
+          className="h-28 w-28 md:h-32 md:w-32 object-contain"
+          style={{ animation: "appear .22s ease-out both, bob 2.4s ease-in-out infinite" }}
           draggable={false}
           decoding="async"
         />
       )}
 
-      {/* 2 icons: left/right */}
+      {/* Two icons (left/right, compact) */}
       {icons.length === 2 && (
         <>
           <img
             src={`${BASE}${icons[0]}`}
             alt=""
-            className={`absolute ${sizeClasses}`}
+            className="absolute h-28 w-28 md:h-32 md:w-32 object-contain"
             style={{
-              left: "16%",
+              left: "35%",
               top: "50%",
-              transform: "translate(-50%, -50%)",
-              animation: "bob 2.4s ease-in-out infinite",
+              transform: "translate(-50%,-50%)",
+              animation: "appear .22s ease-out both, bob 2.4s ease-in-out infinite",
               animationDelay: "0s",
             }}
             draggable={false}
@@ -170,13 +162,13 @@ function RightIconShowcase({ icons }) {
           <img
             src={`${BASE}${icons[1]}`}
             alt=""
-            className={`absolute ${sizeClasses}`}
+            className="absolute h-28 w-28 md:h-32 md:w-32 object-contain"
             style={{
-              left: "84%",
+              left: "65%",
               top: "50%",
-              transform: "translate(-50%, -50%)",
-              animation: "bob 2.4s ease-in-out infinite",
-              animationDelay: ".3s",
+              transform: "translate(-50%,-50%)",
+              animation: "appear .22s ease-out both, bob 2.4s ease-in-out infinite",
+              animationDelay: ".12s",
             }}
             draggable={false}
             decoding="async"
@@ -184,65 +176,61 @@ function RightIconShowcase({ icons }) {
         </>
       )}
 
-      {/* 4 icons: diamond */}
+      {/* Four icons (tight diamond within bounds) */}
       {icons.length === 4 && (
         <>
-          {/* top */}
           <img
             src={`${BASE}${icons[0]}`}
             alt=""
-            className={`absolute ${sizeClasses}`}
+            className="absolute h-24 w-24 md:h-28 md:w-28 object-contain"
             style={{
-              top: "16%",
+              top: "28%",
               left: "50%",
-              transform: "translate(-50%, -50%)",
-              animation: "bob 2.4s ease-in-out infinite",
+              transform: "translate(-50%,-50%)",
+              animation: "appear .22s ease-out both, bob 2.4s ease-in-out infinite",
               animationDelay: "0s",
             }}
             draggable={false}
             decoding="async"
           />
-          {/* right */}
           <img
             src={`${BASE}${icons[1]}`}
             alt=""
-            className={`absolute ${sizeClasses}`}
+            className="absolute h-24 w-24 md:h-28 md:w-28 object-contain"
             style={{
               top: "50%",
-              left: "84%",
-              transform: "translate(-50%, -50%)",
-              animation: "bob 2.4s ease-in-out infinite",
-              animationDelay: ".15s",
+              left: "72%",
+              transform: "translate(-50%,-50%)",
+              animation: "appear .22s ease-out both, bob 2.4s ease-in-out infinite",
+              animationDelay: ".08s",
             }}
             draggable={false}
             decoding="async"
           />
-          {/* bottom */}
           <img
             src={`${BASE}${icons[2]}`}
             alt=""
-            className={`absolute ${sizeClasses}`}
+            className="absolute h-24 w-24 md:h-28 md:w-28 object-contain"
             style={{
-              top: "84%",
+              top: "72%",
               left: "50%",
-              transform: "translate(-50%, -50%)",
-              animation: "bob 2.4s ease-in-out infinite",
-              animationDelay: ".3s",
+              transform: "translate(-50%,-50%)",
+              animation: "appear .22s ease-out both, bob 2.4s ease-in-out infinite",
+              animationDelay: ".16s",
             }}
             draggable={false}
             decoding="async"
           />
-          {/* left */}
           <img
             src={`${BASE}${icons[3]}`}
             alt=""
-            className={`absolute ${sizeClasses}`}
+            className="absolute h-24 w-24 md:h-28 md:w-28 object-contain"
             style={{
               top: "50%",
-              left: "16%",
-              transform: "translate(-50%, -50%)",
-              animation: "bob 2.4s ease-in-out infinite",
-              animationDelay: ".45s",
+              left: "28%",
+              transform: "translate(-50%,-50%)",
+              animation: "appear .22s ease-out both, bob 2.4s ease-in-out infinite",
+              animationDelay: ".24s",
             }}
             draggable={false}
             decoding="async"
@@ -257,38 +245,21 @@ function RightIconShowcase({ icons }) {
 export default function Projects() {
   const [mode, setMode] = React.useState("exp"); // "exp" | "proj"
   const [companyIdx, setCompanyIdx] = React.useState(0);
-  const [openRoleIdx, setOpenRoleIdx] = React.useState(0); // -1 means none selected
+  const [openRoleIdx, setOpenRoleIdx] = React.useState(-1); // -1 = none selected
 
   const company = COMPANIES[companyIdx];
 
   React.useEffect(() => {
-    setOpenRoleIdx(0);
+    setOpenRoleIdx(-1); // change company -> reset to "none selected"
   }, [companyIdx]);
 
-  const rightIcons = mode === "exp" ? getIconsForRole(openRoleIdx) : [];
+  const rightIcons = mode === "exp" ? iconsFor(company.key, openRoleIdx) : [];
 
   return (
-    <section
-      className="
-        mx-auto
-        max-w-[1200px] md:max-w-[1320px] lg:max-w-[1400px]
-        px-4 sm:px-6 lg:px-8
-      "
-    >
-      {/* local keyframes for bobbing */}
-      <style>{`
-        @keyframes bob { 0%{transform:translateY(0)} 50%{transform:translateY(-12px)} 100%{transform:translateY(0)} }
-      `}</style>
+    <section className="mx-auto max-w-[1200px] md:max-w-[1320px] lg:max-w-[1400px] px-4 sm:px-6 lg:px-8">
+      {/* local keyframes for bobbing declared inside components */}
 
-      <div
-        className="
-          panel
-          mt-6 sm:mt-10
-          p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14
-          min-h-[70vh] md:min-h-[75vh] lg:min-h-[80vh]
-          flex flex-col
-        "
-      >
+      <div className="panel mt-6 sm:mt-10 p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14 min-h-[70vh] md:min-h-[75vh] lg:min-h-[80vh] flex flex-col">
         {/* Header: Experience / Projects toggle */}
         <div className="mb-6 sm:mb-8 flex items-center justify-between">
           <h1 className="font-press leading-[1.1] text-[clamp(22px,3.2vw,44px)]">
@@ -310,28 +281,20 @@ export default function Projects() {
             {/* LEFT: Trainer card fields (company + roles) */}
             <div className="panel p-4 sm:p-5 md:p-6 relative overflow-hidden">
               <div className="flex items-center justify-between">
-                <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
-                  TRAINER CARD
-                </div>
+                <div className="font-press tracking-wide text-[14px] sm:text-[15px]">TRAINER CARD</div>
                 <div className="font-press text-[12px] opacity-80">ID No. 0209</div>
               </div>
               <div className="mt-1 h-[2px] bg-sky-700/60" />
 
               {/* NAME */}
               <div className="mt-4">
-                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-1">
-                  NAME
-                </div>
-                <div className="panel px-3 py-2 font-press text-[15px]">
-                  {company.name}
-                </div>
+                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-1">NAME</div>
+                <div className="panel px-3 py-2 font-press text-[15px]">{company.name}</div>
               </div>
 
               {/* POSITIONS */}
               <div className="mt-4">
-                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">
-                  POSITIONS
-                </div>
+                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">POSITIONS</div>
 
                 <ul className="space-y-2">
                   {company.roles.map((r, i) => {
@@ -340,37 +303,23 @@ export default function Projects() {
                       <li key={r.title} className="panel">
                         <button
                           type="button"
-                          onClick={() =>
-                            setOpenRoleIdx((idx) => (idx === i ? -1 : i))
-                          }
+                          onClick={() => setOpenRoleIdx((idx) => (idx === i ? -1 : i))}
                           className="w-full flex items-center justify-between gap-3 px-3 py-2 text-left"
                         >
-                          {/* Allow job titles to wrap */}
-                          <span className="font-press text-[13px]">
-                            {r.title}
-                          </span>
-                          {/* Force date to stay in one line */}
-                          <span className="font-press text-[11px] opacity-70 whitespace-nowrap">
-                            {r.period}
-                          </span>
+                          {/* Title can wrap; date never wraps */}
+                          <span className="font-press text-[13px]">{r.title}</span>
+                          <span className="font-press text-[11px] opacity-70 whitespace-nowrap">{r.period}</span>
                         </button>
 
                         <div
                           className="overflow-hidden transition-[max-height,opacity] duration-300"
-                          style={{
-                            maxHeight: open ? 300 : 0,
-                            opacity: open ? 1 : 0,
-                          }}
+                          style={{ maxHeight: open ? 300 : 0, opacity: open ? 1 : 0 }}
                         >
                           <div className="px-3 pb-3 pt-0">
                             {typeof r.desc === "string" ? (
-                              <p className="text-gb-800 text-[14px] leading-relaxed">
-                                {r.desc}
-                              </p>
+                              <p className="text-gb-800 text-[14px] leading-relaxed">{r.desc}</p>
                             ) : (
-                              <div className="text-gb-800 text-[14px] leading-relaxed">
-                                {r.desc}
-                              </div>
+                              <div className="text-gb-800 text-[14px] leading-relaxed">{r.desc}</div>
                             )}
                           </div>
                         </div>
@@ -382,9 +331,7 @@ export default function Projects() {
 
               {/* BADGES */}
               <div className="mt-5">
-                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">
-                  BADGES
-                </div>
+                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">BADGES</div>
                 <div className="grid grid-cols-3 gap-2">
                   {COMPANIES.map((c, i) => {
                     const active = i === companyIdx;
@@ -412,29 +359,26 @@ export default function Projects() {
               </div>
             </div>
 
-            {/* RIGHT: icon showcase (bobbing) */}
-            <div className="panel relative flex items-center justify-center min-h-[300px] md:min-h-[360px]">
+            {/* RIGHT: icon showcase */}
+            <div className="panel relative flex items-center justify-center">
               <div
                 className="absolute inset-0 opacity-[0.85] pointer-events-none rounded-[6px]"
                 style={{
                   background:
                     "repeating-linear-gradient(180deg,#6fd0cf 0 6px,#63c5c4 6px 12px)",
-                  maskImage:
-                    "linear-gradient(180deg,rgba(0,0,0,0.15),rgba(0,0,0,1))",
+                  maskImage: "linear-gradient(180deg,rgba(0,0,0,0.15),rgba(0,0,0,1))",
                   WebkitMaskImage:
                     "linear-gradient(180deg,rgba(0,0,0,0.15),rgba(0,0,0,1))",
                 }}
               />
-              <div className="relative z-10 w-full h-full">
+              <div className="relative z-10 w-full">
                 <RightIconShowcase icons={rightIcons} />
               </div>
             </div>
           </div>
         ) : (
           <div className="panel p-4 sm:p-5 md:p-6">
-            <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
-              PROJECT LIST
-            </div>
+            <div className="font-press tracking-wide text-[14px] sm:text-[15px]">PROJECT LIST</div>
             <div className="mt-1 h-[2px] bg-sky-700/60 mb-4" />
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -450,10 +394,7 @@ export default function Projects() {
 
         {/* Back to Home */}
         <div className="mt-6">
-          <Link
-            to="/"
-            className="panel inline-block px-4 py-2 font-press text-[12px] sm:text-[13px]"
-          >
+          <Link to="/" className="panel inline-block px-4 py-2 font-press text-[12px] sm:text-[13px]">
             Back to Home
           </Link>
         </div>
