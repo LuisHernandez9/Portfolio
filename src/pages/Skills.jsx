@@ -138,10 +138,8 @@ export default function Skills() {
             {/* header strip + number */}
             <div className="flex items-center justify-between mb-3">
               <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
-                TM LIST
+                SKILL LIST
               </div>
-              <div className="font-press text-[12px] opacity-80">No. 0209</div>
-            </div>
             <div className="h-[2px] bg-sky-700/60 mb-3" />
 
             {/* List — colored like the GBA TM menu */}
