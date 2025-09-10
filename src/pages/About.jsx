@@ -28,7 +28,7 @@ export default function About() {
             About Me
           </h1>
           <p className="mt-3 text-gb-700 leading-relaxed max-w-[75ch] text-[clamp(14px,1.2vw,18px)]">
-            A quick trainer profile—Pokédex style.
+            Learn more about me, where I'm from, and my interests.
           </p>
         </header>
 
@@ -54,26 +54,24 @@ export default function About() {
             <div className="font-press mb-3 tracking-wide text-[15px]">Trainer Stats</div>
 
             <ul className="divide-y divide-gb-600/30">
-              <StatRow label="Name" value="Your Name" />
-              <StatRow label="Title" value="Data Scientist / AI/ML / SWE" />
+              <StatRow label="Name" value="Luis E. Hernandez</StatRow>" />
+              <StatRow label="From" value="Philippines" />
               <StatRow
                 label="Type"
                 value={
                   <div className="flex flex-wrap gap-2">
-                    <TypeBadge>GRASS</TypeBadge>
-                    <TypeBadge>FIGHTING</TypeBadge>
+                    <TypeBadge>ASIAN</TypeBadge>
                   </div>
                 }
               />
-              <StatRow label="Height" value={`5'11"`} />
-              <StatRow label="Weight" value="~ 170 lbs" />
-              <StatRow label="Region" value="San Diego, CA" />
-              <StatRow label="Tools" value="Python, PyTorch, JS/TS, React, Postgres, AWS" />
+              <StatRow label="Height" value={`6'0"`} />
+              <StatRow label="Weight" value="~ 250 lbs" />
+              <StatRow label="Current Region" value="Fayetteville, NC" />
+              <StatRow label="Interests" value="AI/ML, Computer Hardware/Software, Gaming, Anime, Sports, Working Out, Food" />
             </ul>
 
             <div className="mt-5 flex flex-wrap gap-3">
               <Link to="/" className="btn-ghost">Back to Home</Link>
-              <Link to="/projects" className="btn-ghost">Projects</Link>
             </div>
           </div>
         </div>
