@@ -8,20 +8,65 @@ const BASE = import.meta.env.BASE_URL || "/";
 const COMPANIES = [
   {
     key: "fsu",
-    name: "Fayetteville State University",
+    name: "Fayetteville State University Intelligent Systems Laboratory",
     logo: `${BASE}fsu.png`,
     roles: [
       {
-        title: "Research Assistant",
-        period: "2023–2024",
-        desc:
-          "Assisted with data collection, cleaning, and modeling; built small tools, visualizations, and internal docs to support a faculty-led research effort.",
+        title: "ISL Lead Student-Researcher",
+        period: "April 2023–Present",
+        desc: (
+          <ul className="list-disc pl-5 space-y-2">
+            <li>
+              Led a project analyzing SAR imagery of Venus to predict and map
+              fault lines using ML. Built and tested pipelines for
+              pre-processing, training, and post-processing (UNet, Mask2Former,
+              Segformer). Funded by NASA JPL for the VERITAS mission.
+            </li>
+            <li>
+              Tested UNet pipelines for ship detection on satellite imagery,
+              including attempts to run on Snapdragon hardware. Funded by NASA
+              JPL.
+            </li>
+            <li>
+              Collected and annotated real/synthetic data to train models to
+              detect small/rare real-world objects (e.g., CCTV cameras, military
+              equipment). Funded by the DoD.
+            </li>
+          </ul>
+        ),
       },
       {
-        title: "Tutor / Lab Mentor",
-        period: "2023",
-        desc:
-          "Helped students with Python, data structures, and debugging workflows; wrote short guides and examples.",
+        title: "ISL Lab Technician",
+        period: "October 2024–June 2025",
+        desc: (
+          <ul className="list-disc pl-5 space-y-2">
+            <li>
+              Maintained and regularly updated the organization’s vector
+              computers. Helped onboard members who wanted to use the machines
+              for their respective projects. Represented the organization in
+              various school programs and activities.
+            </li>
+          </ul>
+        ),
+      },
+      {
+        title: "Faculty Research Lead Student Researcher",
+        period: "May 2023–June 2025",
+        desc: (
+          <ul className="list-disc pl-5 space-y-2">
+            <li>
+              Worked on efficient access-control schemes for implantable medical
+              devices under the mentorship of Dr. Longfei Wu. Addressed
+              compression/decompression of data transferred between devices.
+              Funded by the National Science Foundation.
+            </li>
+            <li>
+              Researched lightweight encryption under Dr. Longfei Wu; tested
+              encryption/decryption algorithms on ESP8266 microchips. Funded by
+              the National Science Foundation.
+            </li>
+          </ul>
+        ),
       },
     ],
   },
@@ -31,10 +76,18 @@ const COMPANIES = [
     logo: `${BASE}nasa.png`,
     roles: [
       {
-        title: "Summer Intern",
-        period: "2024",
-        desc:
-          "Contributed to AI/ML prototyping; iterated on experiments, evaluated model performance, and reported findings to the team.",
+        title: "Data Science/Machine Learning Intern",
+        period: "June 2024–August 2024",
+        desc: (
+          <ul className="list-disc pl-5 space-y-2">
+            <li>
+              Built tools to monitor phenology of tropical trees under the
+              mentorship of Dr. Gary Doran Jr.; tested and reported performance
+              of different ML models for detecting phenological events across
+              species.
+            </li>
+          </ul>
+        ),
       },
     ],
   },
@@ -135,7 +188,9 @@ export default function Projects() {
 
               {/* NAME */}
               <div className="mt-4">
-                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-1">NAME</div>
+                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-1">
+                  NAME
+                </div>
                 <div className="panel px-3 py-2 font-press text-[15px]">
                   {company.name}
                 </div>
@@ -143,7 +198,9 @@ export default function Projects() {
 
               {/* POSITIONS */}
               <div className="mt-4">
-                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">POSITIONS</div>
+                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">
+                  POSITIONS
+                </div>
 
                 <ul className="space-y-2">
                   {company.roles.map((r, i) => {
@@ -152,19 +209,34 @@ export default function Projects() {
                       <li key={r.title} className="panel">
                         <button
                           type="button"
-                          onClick={() => setOpenRoleIdx((idx) => (idx === i ? -1 : i))}
+                          onClick={() =>
+                            setOpenRoleIdx((idx) => (idx === i ? -1 : i))
+                          }
                           className="w-full flex items-center justify-between gap-3 px-3 py-2 text-left"
                         >
                           <span className="font-press text-[13px]">{r.title}</span>
-                          <span className="font-press text-[11px] opacity-70">{r.period}</span>
+                          <span className="font-press text-[11px] opacity-70">
+                            {r.period}
+                          </span>
                         </button>
 
                         <div
                           className="overflow-hidden transition-[max-height,opacity] duration-300"
-                          style={{ maxHeight: open ? 300 : 0, opacity: open ? 1 : 0 }}
+                          style={{
+                            maxHeight: open ? 300 : 0,
+                            opacity: open ? 1 : 0,
+                          }}
                         >
                           <div className="px-3 pb-3 pt-0">
-                            <p className="text-gb-800 text-[14px] leading-relaxed">{r.desc}</p>
+                            {typeof r.desc === "string" ? (
+                              <p className="text-gb-800 text-[14px] leading-relaxed">
+                                {r.desc}
+                              </p>
+                            ) : (
+                              <div className="text-gb-800 text-[14px] leading-relaxed">
+                                {r.desc}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </li>
@@ -175,7 +247,9 @@ export default function Projects() {
 
               {/* BADGES */}
               <div className="mt-5">
-                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">BADGES</div>
+                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">
+                  BADGES
+                </div>
                 <div className="grid grid-cols-3 gap-2">
                   {COMPANIES.map((c, i) => {
                     const active = i === companyIdx;
@@ -184,7 +258,9 @@ export default function Projects() {
                         key={c.key}
                         type="button"
                         onClick={() => setCompanyIdx(i)}
-                        className={`panel flex items-center justify-center p-2 transition ${active ? "ring-2 ring-sky-700" : "hover:scale-[1.02]"}`}
+                        className={`panel flex items-center justify-center p-2 transition ${
+                          active ? "ring-2 ring-sky-700" : "hover:scale-[1.02]"
+                        }`}
                         aria-label={`Select ${c.name}`}
                       >
                         <img
@@ -226,7 +302,9 @@ export default function Projects() {
           </div>
         ) : (
           <div className="panel p-4 sm:p-5 md:p-6">
-            <div className="font-press tracking-wide text-[14px] sm:text-[15px]">PROJECT LIST</div>
+            <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
+              PROJECT LIST
+            </div>
             <div className="mt-1 h-[2px] bg-sky-700/60 mb-4" />
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -242,7 +320,10 @@ export default function Projects() {
 
         {/* Back to Home */}
         <div className="mt-6">
-          <Link to="/" className="panel inline-block px-4 py-2 font-press text-[12px] sm:text-[13px]">
+          <Link
+            to="/"
+            className="panel inline-block px-4 py-2 font-press text-[12px] sm:text-[13px]"
+          >
             Back to Home
           </Link>
         </div>
