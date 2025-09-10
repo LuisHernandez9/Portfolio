@@ -8,12 +8,12 @@ export default function PokeTabs() {
   const [hovered, setHovered] = React.useState(null);
 
   // --- Tuning knobs ---
-  const POP = 1.14;         // tab scale when hovered
-  const SHRINK = 0.90;      // tab scale when other tabs are hovered
-  const BALL_MULT = 1.20;   // 1.0 = same height as tab; >1 bigger, <1 smaller
-  const GAP_REM = 5.0;      // distance between tab and ball (rem)
-  const MON_SIZE = 128; // pixels — increase to make the Pokémon bigger
-  const MON_OFFSET_PX = 100; // distance between Pokéball and Pokémon (px)
+  const POP = 1.14;           // tab scale when hovered
+  const SHRINK = 0.90;        // tab scale when other tabs are hovered
+  const BALL_MULT = 1.20;     // 1.0 = same height as tab; >1 bigger, <1 smaller
+  const GAP_REM = 5.0;        // distance between tab and Pokéball (rem)
+  const MON_MULT = 1.10;      // Pokémon size relative to Pokéball (1.1 = 110%)
+  const MON_GAP_MULT = 0.80;  // gap from Pokéball in terms of ball size
   // ---------------------
 
   // Refs to panels; we store their UN-SCALED base heights.
@@ -51,6 +51,10 @@ export default function PokeTabs() {
           const base = baseHeights[i] ?? 32;
           const ball = Math.round(base * scale * BALL_MULT);
 
+          // Pokémon dynamic size + offset
+          const monSize = Math.round(ball * MON_MULT);
+          const monRight = -(GAP_REM * 16 + Math.round(ball * MON_GAP_MULT)); // convert rem→px and add extra spacing
+
           return (
             <div
               key={t.to}
@@ -80,8 +84,6 @@ export default function PokeTabs() {
               <button
                 type="button"
                 aria-label={`Open ${t.label}`}
-                // IMPORTANT: do NOT keep any Tailwind `right-*` or `-right-*` class here,
-                // so the inline `right` below fully controls spacing.
                 className="poke-ball absolute top-1/2 -translate-y-1/2 aspect-square"
                 style={{
                   height: `${ball}px`,
@@ -102,17 +104,17 @@ export default function PokeTabs() {
                 />
               </button>
 
-              {/* Pokémon sprite (unchanged) */}
+              {/* Pokémon sprite — dynamic size & spacing */}
               <img
                 src={t.mon}
                 alt={t.monAlt}
                 className="poke-mon pixelated absolute top-1/2 -translate-y-1/2 opacity-0 pointer-events-none select-none pop-right"
                 style={{
                   ["--mon-ty"]: t.monOffsetY,
-                  right: `-${MON_OFFSET_PX}px`,   // ← spacing control
+                  right: `${monRight}px`,
                 }}
-                width={MON_SIZE}
-                height={MON_SIZE}
+                width={monSize}
+                height={monSize}
               />
             </div>
           );
