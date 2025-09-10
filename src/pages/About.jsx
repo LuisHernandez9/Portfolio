@@ -52,46 +52,45 @@ export default function About() {
         </header>
 
         {/* Pokédex body */}
-        <div className="grid w-full grid-cols-1 md:grid-cols-[340px,1fr] gap-6 sm:gap-8">
-          {/* LEFT: portrait “dex screen” */}
-          <div className="panel p-3 sm:p-4 flex flex-col items-center">
-            {/* image viewport */}
-            <div className="relative w-full aspect-[4/3] sm:aspect-square bg-[#cfeff0]/40 flex items-center justify-center">
-              <img
-                src={photos[photoIdx]}
-                alt="Trainer portrait"
-                className="pixelated max-h-full max-w-full object-contain"
-              />
-              {/* corner lights */}
-              <div className="absolute left-2 top-2 h-2 w-2 bg-red-500 shadow-[0_0_6px_#f00]" />
-              <div className="absolute right-2 top-2 h-2 w-2 bg-green-500 shadow-[0_0_6px_#0f0]" />
-            </div>
-
-            {/* arrows + counter */}
-            <div className="mt-3 flex items-center justify-between w-full">
-              <button
-                type="button"
-                aria-label="Previous photo"
-                onClick={prevPhoto}
-                className="panel px-3 py-1 font-press text-[12px] leading-none"
-              >
-                ◀
-              </button>
-
-              <div className="font-press text-[12px] opacity-80">
-                {photoIdx + 1}/{photos.length}
-              </div>
-
-              <button
-                type="button"
-                aria-label="Next photo"
-                onClick={nextPhoto}
-                className="panel px-3 py-1 font-press text-[12px] leading-none"
-              >
-                ▶
-              </button>
-            </div>
+        {/* LEFT: portrait “dex screen” */}
+        <div className="panel p-3 sm:p-4 flex flex-col items-center">
+          {/* fixed-size viewport, use aspect ratio of me.jpg */}
+          <div className="relative w-full aspect-[3/4] bg-[#cfeff0]/40 flex items-center justify-center">
+            <img
+              src={photos[photoIdx]} // <-- comes from your stateful photo array
+              alt="Trainer portrait"
+              className="max-h-full max-w-full object-contain" // removed pixelated
+            />
+            {/* corner lights */}
+            <div className="absolute left-2 top-2 h-2 w-2 bg-red-500 shadow-[0_0_6px_#f00]" />
+            <div className="absolute right-2 top-2 h-2 w-2 bg-green-500 shadow-[0_0_6px_#0f0]" />
           </div>
+        
+          {/* arrows + counter */}
+          <div className="mt-3 flex items-center justify-between w-full">
+            <button
+              type="button"
+              aria-label="Previous photo"
+              onClick={prevPhoto}
+              className="panel px-3 py-1 font-press text-[12px] leading-none"
+            >
+              ◀
+            </button>
+        
+            <div className="font-press text-[12px] opacity-80">
+              {photoIdx + 1}/{photos.length}
+            </div>
+        
+            <button
+              type="button"
+              aria-label="Next photo"
+              onClick={nextPhoto}
+              className="panel px-3 py-1 font-press text-[12px] leading-none"
+            >
+              ▶
+            </button>
+          </div>
+        </div>
 
           {/* RIGHT: stats */}
           <div className="panel p-4 sm:p-5 md:p-6 relative overflow-hidden">
