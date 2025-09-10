@@ -5,6 +5,25 @@ import { Link } from "react-router-dom";
 const BASE = import.meta.env.BASE_URL || "/";
 
 export default function About() {
+  // --- photos + simple carousel state ---
+  const photos = [
+    `${BASE}me.jpg`,
+    `${BASE}me2.jpg`,
+    `${BASE}me3.jpg`,
+    `${BASE}me4.jpg`,
+  ];
+  const [photoIdx, setPhotoIdx] = React.useState(0);
+  const prevPhoto = () => setPhotoIdx((i) => (i - 1 + photos.length) % photos.length);
+  const nextPhoto = () => setPhotoIdx((i) => (i + 1) % photos.length);
+
+  // (optional) preload for snappier switches
+  React.useEffect(() => {
+    photos.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <section
       className="
@@ -35,10 +54,11 @@ export default function About() {
         {/* Pokédex body */}
         <div className="grid w-full grid-cols-1 md:grid-cols-[340px,1fr] gap-6 sm:gap-8">
           {/* LEFT: portrait “dex screen” */}
-          <div className="panel p-3 sm:p-4 flex items-center justify-center">
+          <div className="panel p-3 sm:p-4 flex flex-col items-center">
+            {/* image viewport */}
             <div className="relative w-full aspect-[4/3] sm:aspect-square bg-[#cfeff0]/40 flex items-center justify-center">
               <img
-                src={`${BASE}me.jpg`}
+                src={photos[photoIdx]}
                 alt="Trainer portrait"
                 className="pixelated max-h-full max-w-full object-contain"
               />
@@ -46,13 +66,37 @@ export default function About() {
               <div className="absolute left-2 top-2 h-2 w-2 bg-red-500 shadow-[0_0_6px_#f00]" />
               <div className="absolute right-2 top-2 h-2 w-2 bg-green-500 shadow-[0_0_6px_#0f0]" />
             </div>
+
+            {/* arrows + counter */}
+            <div className="mt-3 flex items-center justify-between w-full">
+              <button
+                type="button"
+                aria-label="Previous photo"
+                onClick={prevPhoto}
+                className="panel px-3 py-1 font-press text-[12px] leading-none"
+              >
+                ◀
+              </button>
+
+              <div className="font-press text-[12px] opacity-80">
+                {photoIdx + 1}/{photos.length}
+              </div>
+
+              <button
+                type="button"
+                aria-label="Next photo"
+                onClick={nextPhoto}
+                className="panel px-3 py-1 font-press text-[12px] leading-none"
+              >
+                ▶
+              </button>
+            </div>
           </div>
 
           {/* RIGHT: stats */}
           <div className="panel p-4 sm:p-5 md:p-6 relative overflow-hidden">
             {/* glossy header + title */}
             <div className="relative">
-              {/* gloss strip */}
               <div className="absolute inset-x-0 -top-2 h-6 bg-gradient-to-b from-white/45 to-transparent rounded-sm pointer-events-none" />
               <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
                 Trainer Stats
@@ -77,7 +121,7 @@ export default function About() {
             </ul>
           </div>
         </div>
-        
+
         {/* Description strip */}
         <div className="mt-6 sm:mt-8 panel p-4 sm:p-5 md:p-6">
           <p className="text-gb-700 leading-relaxed text-[clamp(13px,1.05vw,16px)]">
@@ -91,7 +135,7 @@ export default function About() {
             3 computers from parts, playing games, working out, and watching/reading his favorite animes.
           </p>
         </div>
-        
+
         {/* Bottom-left "Back to Home" tab */}
         <div className="mt-4">
           <Link to="/" className="panel inline-block px-4 py-2">
@@ -105,6 +149,7 @@ export default function About() {
   );
 }
 
+/* Helpers */
 function StatRow({ label, value }) {
   return (
     <li
@@ -114,12 +159,9 @@ function StatRow({ label, value }) {
         items-start gap-x-6
       "
     >
-      {/* LABEL */}
       <span className="font-press uppercase font-bold tracking-widest text-gb-800 text-[11px] sm:text-[12px]">
         {label}
       </span>
-
-      {/* VALUE: block => takes full column width, so text-right works */}
       <span className="block w-full text-right font-press tracking-wide text-[12px] sm:text-[13px]">
         {value}
       </span>
