@@ -6,17 +6,10 @@ const BASE = import.meta.env.BASE_URL || "/";
 
 export default function About() {
   // --- photos + simple carousel state ---
-  const photos = [
-    `${BASE}me.jpg`,
-    `${BASE}me2.jpg`,
-    `${BASE}me3.jpg`,
-    `${BASE}me4.jpg`,
-  ];
+  const photos = [`${BASE}me.jpg`, `${BASE}me2.jpg`, `${BASE}me3.jpg`, `${BASE}me4.jpg`];
   const [photoIdx, setPhotoIdx] = React.useState(0);
-  const prevPhoto = () =>
-    setPhotoIdx((i) => (i - 1 + photos.length) % photos.length);
-  const nextPhoto = () =>
-    setPhotoIdx((i) => (i + 1) % photos.length);
+  const prevPhoto = () => setPhotoIdx((i) => (i - 1 + photos.length) % photos.length);
+  const nextPhoto = () => setPhotoIdx((i) => (i + 1) % photos.length);
 
   // (optional) preload for snappier switches
   React.useEffect(() => {
@@ -26,6 +19,18 @@ export default function About() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Interests rendered as badges
+  const interests = [
+    "AI/ML",
+    "Data Science",
+    "Computer HW/SW",
+    "Gaming",
+    "Anime",
+    "Sports",
+    "Working Out",
+    "Food",
+  ];
 
   return (
     <section
@@ -100,12 +105,22 @@ export default function About() {
           </div>
 
           {/* RIGHT: stats */}
-          <div className="panel p-4 sm:p-5 md:p-6 relative overflow-hidden">
-            {/* glossy header + title */}
+          <div
+            className="
+              panel p-4 sm:p-5 md:p-6 relative overflow-hidden
+              bg-gradient-to-b from-sky-200/45 via-sky-100/50 to-sky-50
+            "
+          >
+            {/* glossy header + title + dex number */}
             <div className="relative">
               <div className="absolute inset-x-0 -top-2 h-6 bg-gradient-to-b from-white/45 to-transparent rounded-sm pointer-events-none" />
-              <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
-                Trainer Stats
+              <div className="flex items-center justify-between">
+                <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
+                  Trainer Stats
+                </div>
+                <div className="font-press tracking-widest text-[11px] sm:text-[12px] opacity-80">
+                  No. 0209
+                </div>
               </div>
               <div className="mt-1 h-[2px] bg-sky-700/60" />
             </div>
@@ -117,15 +132,18 @@ export default function About() {
                 label="EDUCATION"
                 value="B.S. in Computer Science, Minor in Cybersecurity"
               />
-              <StatRow
-                label="TYPE"
-                value={<TypeBadge variant="orange">ASIAN</TypeBadge>}
-              />
+              <StatRow label="TYPE" value={<TypeBadge variant="orange">ASIAN</TypeBadge>} />
               <StatRow label="HEIGHT" value={`6'0"`} />
               <StatRow label="CURRENT REGION" value="Fayetteville, NC" />
               <StatRow
                 label="INTERESTS"
-                value="AI/ML, Data Science, Computer Hardware/Software, Gaming, Anime, Sports, Working Out, Food"
+                value={
+                  <div className="flex flex-wrap justify-end gap-2">
+                    {interests.map((i) => (
+                      <InterestBadge key={i}>{i}</InterestBadge>
+                    ))}
+                  </div>
+                }
               />
             </ul>
           </div>
@@ -209,6 +227,21 @@ function TypeBadge({ children, variant = "default" }) {
         font-press text-[12px] tracking-widest leading-none
         shadow-[inset_0_-2px_0_rgba(0,0,0,0.15)]
       `}
+    >
+      {children}
+    </span>
+  );
+}
+
+function InterestBadge({ children }) {
+  return (
+    <span
+      className="
+        inline-flex items-center
+        px-2 py-0.5 rounded-sm border border-sky-700/40 bg-sky-200/40
+        font-press text-[11px] leading-none tracking-widest
+        shadow-[inset_0_-2px_0_rgba(0,0,0,0.12)]
+      "
     >
       {children}
     </span>
