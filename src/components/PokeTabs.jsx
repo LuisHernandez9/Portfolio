@@ -41,7 +41,7 @@ export default function PokeTabs() {
 
   return (
     <div className="relative">
-      <div className="flex flex-col gap-16 sm:gap-20 mt-5 sm:mt-28">
+      <div className="flex flex-col gap-16 sm:gap-20 mt-5 sm:mt-10">
         {tabs.map((t, i) => {
           const isHover  = hovered === i;
           const anyHover = hovered !== null;
