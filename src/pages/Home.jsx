@@ -16,7 +16,7 @@ export default function Home() {
           panel
           mt-6 sm:mt-10
           p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14
-          min-h-[70vh] md:min-h-[75vh] lg:min-h-[80vh]  /* expand downward */
+          min-h-[70vh] md:min-h-[75vh] lg:min-h-[80vh]
           flex flex-col
         "
       >
@@ -27,7 +27,7 @@ export default function Home() {
               text-[clamp(22px,3.2vw,44px)]
             "
           >
-            Data Science,AI/ML,<br /> and Software Development
+            Data Science, AI/ML,<br /> and Software Development
           </h1>
 
           <p
@@ -42,12 +42,11 @@ export default function Home() {
           </p>
         </header>
 
-        {/* push tabs down a bit so the panel feels taller */}
-        <div className="mt-8 sm:mt-10 md:mt-12 lg:mt-14">
+        {/* Tabs region (keeps all animations; adds a11y label) */}
+        <div className="mt-8 sm:mt-10 md:mt-12 lg:mt-14" role="region" aria-label="Site sections">
           <PokeTabs />
         </div>
 
-        {/* optional spacer so the bottom border has air on short screens */}
         <div className="flex-1" />
       </div>
     </section>
