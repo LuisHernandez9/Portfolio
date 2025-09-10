@@ -184,6 +184,26 @@ const JOURNALS = [
 ];
 
 /* --------------------------- Helpers --------------------------- */
+// Brand-colored name renderer
+function CompanyName({ company }) {
+  if (company.key === "fsu") {
+    return (
+      <span className="text-[#0033A0]">
+        {company.name}
+      </span>
+    );
+  }
+  if (company.key === "nasa") {
+    return (
+      <span>
+        <span className="text-[#0B3D91]">NASA</span>
+        <span className="text-[#E03C31]"> Jet Propulsion Laboratory</span>
+      </span>
+    );
+  }
+  return <span>{company.name}</span>;
+}
+
 function iconsFor(companyKey, openRoleIdx) {
   if (openRoleIdx === -1) {
     return companyKey === "nasa" ? ["nasa.png"] : ["fsu.png"];
@@ -279,12 +299,6 @@ export default function Projects() {
 
   const rightIcons = mode === "exp" ? iconsFor(company.key, openRoleIdx) : [];
 
-  // counts for tab labels
-  const countFor = (id) =>
-    id === "all"
-      ? PROJECTS.length
-      : PROJECTS.filter((p) => p.type === id).length;
-
   // filtered projects for current tab
   const filteredProjects =
     projTab === "all"
@@ -342,7 +356,7 @@ export default function Projects() {
                   NAME
                 </div>
                 <div className="panel px-3 py-2 font-press text-[15px]">
-                  {company.name}
+                  <CompanyName company={company} />
                 </div>
               </div>
 
@@ -460,13 +474,7 @@ export default function Projects() {
 
               {/* Sub-tabs inside the Project List window */}
               <div role="tablist" aria-label="Project filters" className="mb-4 flex flex-wrap gap-2">
-                {[
-                  { id: "all", label: "All" },
-                  { id: "competition", label: "Competitions" },
-                  { id: "capstone", label: "Capstone" },
-                  { id: "coursework", label: "Coursework" },
-                  { id: "personal", label: "Personal" },
-                ].map((t) => (
+                {PROJECT_TABS.map((t) => (
                   <button
                     key={t.id}
                     role="tab"
