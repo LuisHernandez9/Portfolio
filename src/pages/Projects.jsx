@@ -93,22 +93,68 @@ const COMPANIES = [
   },
 ];
 
+/* ----------------------------- Projects & Journals ----------------------------- */
+// Add a `type` to each project so the Project List tabs can filter
 const PROJECTS = [
-  { title: "Image Segmentation Playground",
-    blurb: "Experimented with UNet/Mask2Former pipelines; trained on custom dataset and built a small demo viewer." },
-  { title: "Portfolio Website",
-    blurb: "This site! Retro Pokémon UI with React + Vite + Tailwind; animated micro-interactions across pages." },
-  { title: "Basketball Stat Tracker",
-    blurb: "Lightweight tool to log games, compute per-game metrics, and visualize trends." },
+  {
+    title: "NASA Minds Competition",
+    blurb:
+      "Created an inventory tracking system that utilizes RFID technology for ease of inventory management.",
+    type: "competition",
+  },
+  {
+    title: "EventPulse NC Competition",
+    blurb:
+      "Created an “all-in-one” calendar website that collects and categorizes all major events for all major universities within North Carolina.",
+    type: "competition",
+  },
+  {
+    title: "Senior Project",
+    blurb:
+      "Developed a multi-modal AI system designed to automate the documentation process of first aid application on an injured person via synchronized audio and video data",
+    type: "capstone",
+  },
+  {
+    title: "Software Development Project",
+    blurb:
+      "Developed a car rental system complete with multiple functionalities such as database management, maps, automatic pricing, car maintenance, etc.",
+    type: "coursework",
+  },
+  {
+    title: "Portfolio Website",
+    blurb: "I built this website, brick by brick.",
+    type: "personal",
+  },
+];
+
+// Sub-tabs shown inside the Project List window
+const PROJECT_TABS = [
+  { id: "all", label: "All" },
+  { id: "competition", label: "Competitions" },
+  { id: "capstone", label: "Capstone" },
+  { id: "coursework", label: "Coursework" },
+  { id: "personal", label: "Personal" },
 ];
 
 const JOURNALS = [
-  { title: "Week 1 — Lab Setup",
-    blurb: "Brought the vector machines online, created an onboarding checklist, and documented GPU provisioning." },
-  { title: "Week 2 — SAR Preprocessing",
-    blurb: "Benchmarked speckle filtering pipelines; noted parameter trade-offs for Venus SAR tiles." },
-  { title: "Week 3 — Model Experiments",
-    blurb: "Compared UNet vs. Mask2Former configs; tracked F1/IoU and failure cases around small faults." },
+  {
+    title:
+      "Real-Time Multimodal AI for Medical Intervention Understanding",
+    blurb:
+      "Wilkerson, M., Brown, T. J., Davis, G., White, T., Lockart, J., Hernandez, L., & Bhattacharya, S. (2025, August, accepted). Real-Time Multimodal AI for Medical Intervention Understanding. In 11th IEEE International Conference on Data Science and Systems 2025 (DSS-2025). IEEE.",
+  },
+  {
+    title:
+      "From tiles to tectonics: Stitching ML-segmented faults into a global Venus fault map",
+    blurb:
+      "Thuya, L., House, J., Hernandez, L., Hasnain, Z., Mendoza, S., Chou, E., Nakaya, S., & Smrekar, S. (2025, July, submitted). From tiles to tectonics: Stitching ML-segmented faults into a global Venus fault map. In Agu Fall Meeting 2025 (AGU25), American Geophysical Union.",
+  },
+  {
+    title:
+      "Automated mapping of wrinkle ridge faults on Venus using machine learning",
+    blurb:
+      "Chou, E., Hernandez, L., Hasnain, Z., Smrekar, S., Thuya, L., House, J., Nakaya, S., & Mendoza, S. (2025, July, submitted). Automated mapping of wrinkle ridge faults on Venus using machine learning. In AGU Fall Meeting 2025 (AGU25). American Geophysical Union.",
+  },
 ];
 
 /* --------------------------- Helpers --------------------------- */
@@ -198,6 +244,7 @@ export default function Projects() {
   const [mode, setMode] = React.useState("exp"); // "exp" | "proj"
   const [companyIdx, setCompanyIdx] = React.useState(0);
   const [openRoleIdx, setOpenRoleIdx] = React.useState(-1); // -1 = none selected
+  const [projTab, setProjTab] = React.useState("all"); // sub-tabs inside Project List
 
   const company = COMPANIES[companyIdx];
 
@@ -206,6 +253,18 @@ export default function Projects() {
   }, [companyIdx]);
 
   const rightIcons = mode === "exp" ? iconsFor(company.key, openRoleIdx) : [];
+
+  // counts for tab labels
+  const countFor = (id) =>
+    id === "all"
+      ? PROJECTS.length
+      : PROJECTS.filter((p) => p.type === id).length;
+
+  // filtered projects for current tab
+  const filteredProjects =
+    projTab === "all"
+      ? PROJECTS
+      : PROJECTS.filter((p) => p.type === projTab);
 
   return (
     <section
@@ -373,8 +432,28 @@ export default function Projects() {
                 PROJECT LIST
               </div>
               <div className="mt-1 h-[2px] bg-sky-700/60 mb-4" />
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {PROJECTS.map((p) => (
+
+              {/* Sub-tabs inside the Project List window */}
+              <div role="tablist" aria-label="Project filters" className="mb-4 flex flex-wrap gap-2">
+                {PROJECT_TABS.map((t) => (
+                  <button
+                    key={t.id}
+                    role="tab"
+                    aria-selected={projTab === t.id}
+                    aria-controls={`projlist-${t.id}`}
+                    tabIndex={projTab === t.id ? 0 : -1}
+                    onClick={() => setProjTab(t.id)}
+                    className={`panel px-3 py-2 font-press text-[12px] sm:text-[13px] transition
+                      ${projTab === t.id ? "ring-2 ring-sky-700" : "hover:scale-[1.02]"}`}
+                  >
+                    {t.label} ({countFor(t.id)})
+                  </button>
+                ))}
+              </div>
+
+              {/* Filtered grid */}
+              <div id={`projlist-${projTab}`} role="tabpanel" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredProjects.map((p) => (
                   <div key={p.title} className="panel p-4">
                     <h3 className="font-press text-base mb-2">{p.title}</h3>
                     <p className="text-sm text-gb-800 leading-relaxed">{p.blurb}</p>
@@ -383,10 +462,10 @@ export default function Projects() {
               </div>
             </div>
 
-            {/* JOURNALS window */}
+            {/* SCIENTIFIC JOURNALS window */}
             <div className="panel p-4 sm:p-5 md:p-6">
               <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
-                JOURNALS
+                SCIENTIFIC JOURNALS
               </div>
               <div className="mt-1 h-[2px] bg-sky-700/60 mb-4" />
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
