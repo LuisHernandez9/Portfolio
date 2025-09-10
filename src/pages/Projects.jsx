@@ -409,7 +409,7 @@ export default function Projects() {
                 <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">
                   BADGES
                 </div>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 gap-2"> {/* was grid-cols-3 */}
                   {COMPANIES.map((c, i) => {
                     const active = i === companyIdx;
                     return (
@@ -434,7 +434,6 @@ export default function Projects() {
                   })}
                 </div>
               </div>
-            </div>
 
             {/* RIGHT: icon showcase */}
             <div className="panel relative">
