@@ -55,7 +55,7 @@ export default function About() {
 
             <ul className="divide-y divide-gb-600/30">
               <StatRow label="Name" value="Luis E. Hernandez</StatRow>" />
-              <StatRow label="From" value="Philippines" />
+              <StatRow label="School" value="Fayetteville State University" />
               <StatRow
                 label="Type"
                 value={
