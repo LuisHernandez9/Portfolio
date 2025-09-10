@@ -66,11 +66,7 @@ export default function About() {
               <StatRow label="EDUCATION"       value="B.S. in Computer Science, Minor in Cybersecurity" />
               <StatRow
                 label="TYPE"
-                value={
-                  <div className="flex flex-wrap gap-2">
-                    <TypeBadge variant="orange">ASIAN</TypeBadge>
-                  </div>
-                }
+                value={<TypeBadge variant="orange">ASIAN</TypeBadge>}
               />
               <StatRow label="HEIGHT"          value={`6'0"`} />
               <StatRow label="CURRENT REGION"  value="Fayetteville, NC" />
