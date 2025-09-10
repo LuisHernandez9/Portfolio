@@ -11,20 +11,17 @@ export default function FloatingAvatar({
   email = "you@example.com",
   github = "yourhandle",
   linkedin = "yourhandle",
-  // optionally override sprite names
-  closedSrc = `${BASE}converted_2.png`,
-  openSrc = `${BASE}converted_2_open.png`, // put this image in /public
+  closedSrc = `${BASE}converted_2.png`,       // full body (mouth closed)
+  openSrc = `${BASE}converted_2_open.png`,    // full body (mouth open) — add this to /public
 }) {
-  const [open, setOpen] = React.useState(false);
+  const [bubbleOpen, setBubbleOpen] = React.useState(false);
+  const [mouthOn, setMouthOn] = React.useState(false);
   const [sbw, setSbw] = React.useState(0);
   const rootRef = React.useRef(null);
 
-  // measure scrollbar width (keeps position tight to the inside edge)
   React.useEffect(() => {
-    const calc = () => {
-      const width = window.innerWidth - document.documentElement.clientWidth;
-      setSbw(Math.max(0, width));
-    };
+    const calc = () =>
+      setSbw(Math.max(0, window.innerWidth - document.documentElement.clientWidth));
     calc();
     window.addEventListener("resize", calc);
     window.addEventListener("orientationchange", calc);
@@ -34,22 +31,21 @@ export default function FloatingAvatar({
     };
   }, []);
 
-  // close on outside / Esc
   React.useEffect(() => {
     const onDown = (e) => {
-      if (!open) return;
-      if (rootRef.current && !rootRef.current.contains(e.target)) setOpen(false);
+      if (!bubbleOpen) return;
+      if (rootRef.current && !rootRef.current.contains(e.target)) setBubbleOpen(false);
     };
-    const onEsc = (e) => e.key === "Escape" && setOpen(false);
+    const onEsc = (e) => e.key === "Escape" && setBubbleOpen(false);
     window.addEventListener("mousedown", onDown);
     window.addEventListener("keydown", onEsc);
     return () => {
       window.removeEventListener("mousedown", onDown);
       window.removeEventListener("keydown", onEsc);
     };
-  }, [open]);
+  }, [bubbleOpen]);
 
-  const avatarNode = (
+  return createPortal(
     <div
       ref={rootRef}
       className="fixed bottom-8 right-4 sm:right-6 z-[60] select-none"
@@ -61,13 +57,13 @@ export default function FloatingAvatar({
       `}</style>
 
       <div
-        className="group relative flex items-end gap-3"
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
+        className="relative flex items-end gap-3"
+        onMouseEnter={() => { setMouthOn(true); setBubbleOpen(true); }}
+        onMouseLeave={() => { setMouthOn(false); setBubbleOpen(false); }}
       >
-        {/* bubble (appears on hover) */}
+        {/* Contact bubble */}
         <AnimatePresence>
-          {open && (
+          {bubbleOpen && (
             <motion.div
               initial={{ opacity: 0, x: 16, y: 8 }}
               animate={{ opacity: 1, x: 0, y: 0 }}
@@ -104,17 +100,16 @@ export default function FloatingAvatar({
                   </a>
                 </li>
               </ul>
-              {/* tail */}
               <div className="absolute bottom-3 -right-2 w-0 h-0 border-y-8 border-y-transparent border-l-8 border-l-[color:var(--poke-panel)]" />
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* full avatar (always fully visible) */}
+        {/* Avatar button (always fully visible) */}
         <button
           type="button"
           aria-label="Contact avatar"
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => setBubbleOpen((v) => !v)}
           className="relative block cursor-pointer bg-transparent p-0 border-0"
           style={{ width: AVATAR_WIDTH }}
         >
@@ -126,19 +121,22 @@ export default function FloatingAvatar({
             draggable={false}
             decoding="async"
           />
-          {/* open-mouth frame overlaid; animate opacity on hover */}
+          {/* open-mouth overlay: opacity animates while hovered */}
           <img
             src={openSrc}
             alt=""
             aria-hidden
-            className="absolute inset-0 w-full h-auto drop-shadow pixelated pointer-events-none opacity-0 group-hover:[animation:chomp_.6s_steps(1,end)_infinite]"
+            className="absolute inset-0 w-full h-auto drop-shadow pixelated pointer-events-none"
+            style={{
+              opacity: mouthOn ? undefined : 0,                // hidden when not hovered
+              animation: mouthOn ? "chomp .55s steps(1,end) infinite" : "none",
+            }}
             draggable={false}
             decoding="async"
           />
         </button>
       </div>
-    </div>
+    </div>,
+    document.body
   );
-
-  return createPortal(avatarNode, document.body);
 }
