@@ -50,7 +50,7 @@ const COMPANIES = [
         ),
       },
       {
-        title: "Faculty Research Lead Student Researcher",
+        title: "Faculty Lead Student Researcher",
         period: "May 2023–June 2025",
         desc: (
           <ul className="list-disc pl-5 space-y-2">
@@ -76,7 +76,7 @@ const COMPANIES = [
     logo: `${BASE}nasa.png`,
     roles: [
       {
-        title: "Data Science/Machine Learning Intern",
+        title: "Data Science/ML Intern",
         period: "June 2024–August 2024",
         desc: (
           <ul className="list-disc pl-5 space-y-2">
