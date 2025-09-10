@@ -27,7 +27,7 @@ export default function Home() {
               text-[clamp(22px,3.2vw,44px)]
             "
           >
-            Data Science,<br /> AI/ML, and Software Dev.
+            Data Science, AI/ML,<br /> and Software Development
           </h1>
 
           <p
@@ -36,7 +36,7 @@ export default function Home() {
               text-[clamp(14px,1.2vw,18px)]
             "
           >
-            Welcome to my digital portfolio. Please feel free to explore
+            You name it, I've done it! Welcome to my digital portfolio. Please feel free to explore
             it to get to know me more ;)
           </p>
         </header>
