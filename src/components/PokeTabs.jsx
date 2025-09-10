@@ -12,7 +12,7 @@ export default function PokeTabs() {
   const SHRINK = 0.90;      // tab scale when other tabs are hovered
   const BALL_MULT = 1.20;   // 1.0 = same height as tab; >1 bigger, <1 smaller
   const GAP_REM = 5.0;      // distance between tab and ball (rem)
-  const MON_SIZE = 64; // pixels — increase to make the Pokémon bigger
+  const MON_SIZE = 128; // pixels — increase to make the Pokémon bigger
   // ---------------------
 
   // Refs to panels; we store their UN-SCALED base heights.
