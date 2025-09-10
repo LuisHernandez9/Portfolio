@@ -37,7 +37,6 @@ export default function About() {
           {/* LEFT: portrait “dex screen” */}
           <div className="panel p-3 sm:p-4 flex items-center justify-center">
             <div className="relative w-full aspect-[4/3] sm:aspect-square bg-[#cfeff0]/40 flex items-center justify-center">
-              {/* put me.jpg in /public (or adjust path) */}
               <img
                 src={`${BASE}me.jpg`}
                 alt="Trainer portrait"
@@ -54,25 +53,28 @@ export default function About() {
             <div className="font-press mb-3 tracking-wide text-[15px]">Trainer Stats</div>
 
             <ul className="divide-y divide-gb-600/30">
-              <StatRow label="Name" value="Luis E. Hernandez" />
-              <StatRow label="School" value="Fayetteville State University" />
-              <StatRow label="Education" value="B.S. in Computer Science, Minor in Cybersecurity" />
+              <StatRow label="NAME" value="Luis E. Hernandez" />
+              <StatRow label="SCHOOL" value="Fayetteville State University" />
               <StatRow
-                label="Type"
+                label="EDUCATION"
+                value="B.S. in Computer Science, Minor in Cybersecurity"
+              />
+              <StatRow
+                label="TYPE"
                 value={
                   <div className="flex flex-wrap gap-2">
-                    <TypeBadge>ASIAN</TypeBadge>
+                    {/* Orange-type badge (Dex-like) */}
+                    <TypeBadge variant="orange">ASIAN</TypeBadge>
                   </div>
                 }
               />
-              <StatRow label="Height" value={`6'0"`} />
-              <StatRow label="Current Region" value="Fayetteville, NC" />
-              <StatRow label="Interests" value="AI/ML, Data Science, Computer Hardware/Software, Gaming, Anime, Sports, Working Out, Food" />
+              <StatRow label="HEIGHT" value={`6'0"`} />
+              <StatRow label="CURRENT REGION" value="Fayetteville, NC" />
+              <StatRow
+                label="INTERESTS"
+                value="AI/ML, Data Science, Computer Hardware/Software, Gaming, Anime, Sports, Working Out, Food"
+              />
             </ul>
-
-            <div className="mt-5 flex flex-wrap gap-3">
-              <Link to="/" className="btn-ghost">Back to Home</Link>
-            </div>
           </div>
         </div>
 
@@ -83,11 +85,18 @@ export default function About() {
             He entered Fayetteville State University as a freshman in Fall 2022 and earned his Bachelor's Degree in
             Computer Science with a Minor in Cybersecurity as Suma Cum Laude in Spring 2025. Some highlights of his academic life include
             being a 3-time Chancellor's List Honoree, having maintained a 3.96 GPA throughout his time in college, and a Summer 2024
-            Internship with NASA Jet propulsion Laboratory. Known for his hardworking and fast-learning nature, Luis usually stays indoors
+            Internship with NASA Jet Propulsion Laboratory. Known for his hardworking and fast-learning nature, Luis usually stays indoors
             and works on AI/ML, Data Science, and Software Development projects. When outside, Luis can usually be spotted eating food or
             playing basketball, a sport rumored to be his favorite. Other interests of Luis includes maintaining computer systems, having built
             3 computers from parts, playing games, working out, and watching/reading his favorite animes.
           </p>
+        </div>
+
+        {/* Bottom-left "Back to Home" tab */}
+        <div className="mt-4">
+          <Link to="/" className="panel inline-block px-4 py-2">
+            <span className="font-press tracking-wider text-[13px]">Back to Home</span>
+          </Link>
         </div>
 
         <div className="flex-1" />
@@ -100,23 +109,34 @@ export default function About() {
 function StatRow({ label, value }) {
   return (
     <li className="py-2.5 sm:py-3 flex items-center justify-between gap-4">
-      <span className="text-gb-700">{label}</span>
-      <span className="font-press tracking-wide text-[14px] sm:text-[15px] text-right">
+      {/* LABEL: bold, caps, slightly smaller than value but high contrast */}
+      <span className="font-press uppercase font-bold tracking-widest text-gb-800 text-[12px] sm:text-[13px]">
+        {label}
+      </span>
+      {/* VALUE: reduced size so it doesn't overwhelm labels */}
+      <span className="font-press tracking-wide text-[13px] sm:text-[14px] text-right">
         {value}
       </span>
     </li>
   );
 }
 
-function TypeBadge({ children }) {
+function TypeBadge({ children, variant = "default" }) {
+  const styles =
+    variant === "orange"
+      ? // Orange-type badge (Dex-like)
+        "bg-orange-100/90 border-orange-600 text-orange-800"
+      : // Neutral
+        "bg-gb-100 border-gb-800/60 text-gb-900";
+
   return (
     <span
-      className="
+      className={`
         inline-flex items-center px-2.5 py-1
-        rounded-sm border border-gb-800/60 bg-gb-100
+        rounded-sm border ${styles}
         font-press text-[12px] tracking-widest
         shadow-[inset_0_-2px_0_rgba(0,0,0,0.15)]
-      "
+      `}
     >
       {children}
     </span>
