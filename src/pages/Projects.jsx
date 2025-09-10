@@ -53,7 +53,6 @@ const COMPANIES = [
   },
 ];
 
-/* Demo projects (edit freely) */
 const PROJECTS = [
   {
     title: "Image Segmentation Playground",
@@ -74,13 +73,12 @@ const PROJECTS = [
 
 /* --------------------------- Component -------------------------- */
 export default function Projects() {
-  const [mode, setMode] = React.useState<"exp" | "proj">("exp");
+  const [mode, setMode] = React.useState("exp"); // "exp" | "proj"
   const [companyIdx, setCompanyIdx] = React.useState(0);
   const [openRoleIdx, setOpenRoleIdx] = React.useState(0);
 
   const company = COMPANIES[companyIdx];
 
-  // simple bobbing toggle using CSS keyframes injected below
   React.useEffect(() => {
     setOpenRoleIdx(0);
   }, [companyIdx]);
@@ -95,11 +93,7 @@ export default function Projects() {
     >
       {/* local keyframes for bobbing */}
       <style>{`
-        @keyframes bob {
-          0%   { transform: translateY(0) }
-          50%  { transform: translateY(-6px) }
-          100% { transform: translateY(0) }
-        }
+        @keyframes bob { 0%{transform:translateY(0)} 50%{transform:translateY(-6px)} 100%{transform:translateY(0)} }
       `}</style>
 
       <div
@@ -131,32 +125,25 @@ export default function Projects() {
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr,0.9fr] gap-6 sm:gap-8">
             {/* LEFT: Trainer card fields (company + roles) */}
             <div className="panel p-4 sm:p-5 md:p-6 relative overflow-hidden">
-              {/* Title strip */}
               <div className="flex items-center justify-between">
                 <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
                   TRAINER CARD
                 </div>
-                <div className="font-press text-[12px] opacity-80">
-                  ID No. 0209
-                </div>
+                <div className="font-press text-[12px] opacity-80">ID No. 0209</div>
               </div>
               <div className="mt-1 h-[2px] bg-sky-700/60" />
 
-              {/* NAME row */}
+              {/* NAME */}
               <div className="mt-4">
-                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-1">
-                  NAME
-                </div>
+                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-1">NAME</div>
                 <div className="panel px-3 py-2 font-press text-[15px]">
                   {company.name}
                 </div>
               </div>
 
-              {/* POSITIONS / ROLES */}
+              {/* POSITIONS */}
               <div className="mt-4">
-                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">
-                  POSITIONS
-                </div>
+                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">POSITIONS</div>
 
                 <ul className="space-y-2">
                   {company.roles.map((r, i) => {
@@ -165,34 +152,19 @@ export default function Projects() {
                       <li key={r.title} className="panel">
                         <button
                           type="button"
-                          onClick={() =>
-                            setOpenRoleIdx((idx) => (idx === i ? -1 : i))
-                          }
-                          className="
-                            w-full flex items-center justify-between gap-3
-                            px-3 py-2 text-left
-                          "
+                          onClick={() => setOpenRoleIdx((idx) => (idx === i ? -1 : i)))
+                          className="w-full flex items-center justify-between gap-3 px-3 py-2 text-left"
                         >
-                          <span className="font-press text-[13px]">
-                            {r.title}
-                          </span>
-                          <span className="font-press text-[11px] opacity-70">
-                            {r.period}
-                          </span>
+                          <span className="font-press text-[13px]">{r.title}</span>
+                          <span className="font-press text-[11px] opacity-70">{r.period}</span>
                         </button>
 
-                        {/* collapsible body */}
                         <div
                           className="overflow-hidden transition-[max-height,opacity] duration-300"
-                          style={{
-                            maxHeight: open ? 300 : 0,
-                            opacity: open ? 1 : 0,
-                          }}
+                          style={{ maxHeight: open ? 300 : 0, opacity: open ? 1 : 0 }}
                         >
                           <div className="px-3 pb-3 pt-0">
-                            <p className="text-gb-800 text-[14px] leading-relaxed">
-                              {r.desc}
-                            </p>
+                            <p className="text-gb-800 text-[14px] leading-relaxed">{r.desc}</p>
                           </div>
                         </div>
                       </li>
@@ -201,11 +173,9 @@ export default function Projects() {
                 </ul>
               </div>
 
-              {/* BADGES (company icons) */}
+              {/* BADGES */}
               <div className="mt-5">
-                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">
-                  BADGES
-                </div>
+                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">BADGES</div>
                 <div className="grid grid-cols-3 gap-2">
                   {COMPANIES.map((c, i) => {
                     const active = i === companyIdx;
@@ -214,11 +184,7 @@ export default function Projects() {
                         key={c.key}
                         type="button"
                         onClick={() => setCompanyIdx(i)}
-                        className={`
-                          panel flex items-center justify-center p-2
-                          transition
-                          ${active ? "ring-2 ring-sky-700" : "hover:scale-[1.02]"}
-                        `}
+                        className={`panel flex items-center justify-center p-2 transition ${active ? "ring-2 ring-sky-700" : "hover:scale-[1.02]"}`}
                         aria-label={`Select ${c.name}`}
                       >
                         <img
@@ -235,9 +201,8 @@ export default function Projects() {
               </div>
             </div>
 
-            {/* RIGHT: Big company icon (bobbing) */}
+            {/* RIGHT: big bobbing logo */}
             <div className="panel relative flex items-center justify-center">
-              {/* retro teal background stripes */}
               <div
                 className="absolute inset-0 opacity-[0.85] pointer-events-none rounded-[6px]"
                 style={{
@@ -260,20 +225,15 @@ export default function Projects() {
             </div>
           </div>
         ) : (
-          /* --------------------------- Projects mode --------------------------- */
           <div className="panel p-4 sm:p-5 md:p-6">
-            <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
-              PROJECT LIST
-            </div>
+            <div className="font-press tracking-wide text-[14px] sm:text-[15px]">PROJECT LIST</div>
             <div className="mt-1 h-[2px] bg-sky-700/60 mb-4" />
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {PROJECTS.map((p) => (
                 <div key={p.title} className="panel p-4">
                   <h3 className="font-press text-base mb-2">{p.title}</h3>
-                  <p className="text-sm text-gb-800 leading-relaxed">
-                    {p.blurb}
-                  </p>
+                  <p className="text-sm text-gb-800 leading-relaxed">{p.blurb}</p>
                 </div>
               ))}
             </div>
@@ -282,10 +242,7 @@ export default function Projects() {
 
         {/* Back to Home */}
         <div className="mt-6">
-          <Link
-            to="/"
-            className="panel inline-block px-4 py-2 font-press text-[12px] sm:text-[13px]"
-          >
+          <Link to="/" className="panel inline-block px-4 py-2 font-press text-[12px] sm:text-[13px]">
             Back to Home
           </Link>
         </div>
