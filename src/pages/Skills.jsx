@@ -5,21 +5,25 @@ import { Link } from "react-router-dom";
 const BASE = import.meta.env.BASE_URL || "/";
 
 const TECH_SKILLS = [
-  { name: "JavaScript / TypeScript", desc: "Modern ESNext, strong typing with TS, modules, tooling, and patterns (FP-lite, composition over inheritance)." },
-  { name: "React / Vite",           desc: "Hooks, context, suspense, performant rendering, code-splitting, and DX with Vite + SWC/ESBuild." },
-  { name: "Tailwind / CSS",         desc: "Utility-first styling, responsive design, custom themes, and accessible component patterns." },
-  { name: "Python / ML",            desc: "NumPy, Pandas, scikit-learn, Matplotlib; data prep, modeling, and quick visualization." },
-  { name: "Node / APIs",            desc: "Express/Fastify, REST patterns, auth, validation, and structured logging." },
-  { name: "SQL / Data",             desc: "PostgreSQL basics, schema design, aggregate queries, and query optimization 101." },
+  { name: "AI / Machine Learning", desc: "Have knowledge in how an AI/ML is developed and maintained. Knows the ins and outs of training AI models.", tags: ["Scikit-learn", "Pytorch"] },
+  { name: "Data Science",           desc: "Have knowledge on tools that can help dive deep into data.", tags: ["Matplotlib", "NumPy", "Pandas"] },
+  { name: "CLI Proficiency",         desc: "Have the knowledge to use Linux/Unix commands in a command line environment.", tags: ["Linux/Unix"] },
+  { name: "Software Development",            desc: "Have the knowledge in a software development pipeline, from initial planning up to tests and debugging." },
+  { name: "Front-end Development",            desc: "Is able to use tools to make appealing front-end to a software or website.", tags: ["HTML", "JavaScript", "React", "Tailwind CSS"] },
+  { name: "Back-end Development",             desc: "Is able to use tools to make a functional back-end environment for a software or website.", tags: ["Python", "C#"] },
+  { name: "Database Management",             desc: "Have knowledge on using SQL to manage a database in conjunction with other software.", tags: ["SQL"] },
+  { name: "Convolutional Neural Networks",             desc: "Have used and trained Convolutional Neural Networks for various tasks.", tags: ["UNet", "YOLO"] },
+  { name: "Transformer-Based Models",             desc: "Have used and trained Transformer-Based Models for various tasks.", tags: ["Mask2Former", "Maskformer", "Segformer"] },
+  { name: "High Performance Computing",             desc: "Have utilized and ran tasks on a HPC cluster.", tags: ["GPU", "CPU"] },
 ];
 
 const SOFT_SKILLS = [
-  { name: "Communication",   desc: "Clear async updates, concise documentation, and audience-aware presentations." },
-  { name: "Teamwork",        desc: "Pairing, code reviews that enable, and respectful disagreement + resolution." },
-  { name: "Ownership",       desc: "Drive tasks from spec to ship; follow-through, testing, and post-ship care." },
-  { name: "Problem Solving", desc: "Decompose, prioritize, and iterate with tight feedback loops." },
-  { name: "Leadership",      desc: "Mentoring, setting quality bars, and unblocking teammates." },
-  { name: "Time Management", desc: "Plan, estimate, and protect focus with healthy defaults." },
+  { name: "Communication",   desc: "Can communicate project updates or needs effectively, either verbally, electronically, or having to present to an audience or to a team. Can also properly document workflows." },
+  { name: "Teamwork",        desc: "Can work efficiently and cohesively with a team. Can take and give proper critique and code reviews." },
+  { name: "Hard-Working",       desc: "Can and will work done. Is willing to go 'above and beyond' and does not shy away from responsibilities or challenges." },
+  { name: "Problem Solving", desc: "Can use critical thinking to solve blockers or to create efficient solutions/workflows to a project." },
+  { name: "Leadership",      desc: "Can effectively lead a team towards a common goal. Can properly allocate tasks and is able to 'take the reigns' when things go wrong." },
+  { name: "Time Management", desc: "Can plan, manage, and execute multiple tasks or projects in a timely manner." },
 ];
 
 export default function Skills() {
@@ -175,19 +179,16 @@ export default function Skills() {
               </div>
 
               {/* Badges (only for Technical to de-wordify) */}
-              {mode === "tech" && (
+              {skills[activeIdx]?.tags && (
                 <div className="mb-2 flex flex-wrap gap-2">
-                  {skills[activeIdx]?.name
-                    .split("/")
-                    .map((t) => t.trim())
-                    .map((tag) => (
-                      <span
-                        key={tag}
-                        className="inline-flex items-center px-2.5 py-0.5 rounded-sm border border-[#bfae7a] bg-[#fff6d5] font-press text-[11px] tracking-widest shadow-[inset_0_-1px_0_rgba(0,0,0,0.12)]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                  {skills[activeIdx].tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-sm border border-gb-800/60 bg-gb-100 font-press text-[11px] tracking-widest"
+                    >
+                      {tag}
+                    </span>
+                  ))}
                 </div>
               )}
 
