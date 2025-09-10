@@ -94,21 +94,35 @@ const COMPANIES = [
 ];
 
 const PROJECTS = [
-  { title: "Image Segmentation Playground", blurb: "Experimented with UNet/Mask2Former pipelines; trained on custom dataset and built a small demo viewer." },
-  { title: "Portfolio Website", blurb: "This site! Retro Pokémon UI with React + Vite + Tailwind; animated micro-interactions across pages." },
-  { title: "Basketball Stat Tracker", blurb: "Lightweight tool to log games, compute per-game metrics, and visualize trends." },
+  {
+    title: "Image Segmentation Playground",
+    blurb:
+      "Experimented with UNet/Mask2Former pipelines; trained on custom dataset and built a small demo viewer.",
+  },
+  {
+    title: "Portfolio Website",
+    blurb:
+      "This site! Retro Pokémon UI with React + Vite + Tailwind; animated micro-interactions across pages.",
+  },
+  {
+    title: "Basketball Stat Tracker",
+    blurb:
+      "Lightweight tool to log games, compute per-game metrics, and visualize trends.",
+  },
 ];
 
 /* --------------------------- Helpers --------------------------- */
-// Decide which icons to show based on company + selected role.
-// - If no role is open: show fsu.png (global default per your spec).
+// Icons to show based on selected company and which role is open.
+// - No role open: show company logo (FSU → fsu.png, NASA → nasa.png)
 // - FSU roles:
 //    0 (ISL Lead Student-Researcher): fsu + dod + nasa + isl (diamond)
 //    1 (ISL Lab Technician): fsu + isl
 //    2 (Faculty Research Lead Student Researcher): fsu
-// - NASA company: always nasa only (for any selection)
+// - NASA company: always just nasa.png (for any selection)
 function iconsFor(companyKey, openRoleIdx) {
-  if (openRoleIdx === -1) return ["fsu.png"];
+  if (openRoleIdx === -1) {
+    return companyKey === "nasa" ? ["nasa.png"] : ["fsu.png"];
+  }
   if (companyKey === "nasa") return ["nasa.png"];
 
   if (companyKey === "fsu") {
@@ -116,125 +130,150 @@ function iconsFor(companyKey, openRoleIdx) {
     if (openRoleIdx === 1) return ["fsu.png", "isl.png"];
     if (openRoleIdx === 2) return ["fsu.png"];
   }
-  // Fallback to company logo if nothing matches
   return ["fsu.png"];
 }
 
+// Centered stage + nested bobbing wrapper to avoid transform conflicts.
 function RightIconShowcase({ icons }) {
-  // Stage keeps everything centered and within bounds.
-  // Bigger icons, tighter diamond, smooth fade-in.
+  // sizes
+  const one = "h-32 w-32 md:h-36 md:w-36";
+  const two = "h-28 w-28 md:h-32 md:w-32";
+  const four = "h-24 w-24 md:h-28 md:w-28";
+
+  // distances from center (px)
+  const R2 = 110; // for two
+  const R4 = 95;  // for four
+
   return (
-    <div className="relative w-full h-[300px] md:h-[360px] flex items-center justify-center">
+    <div className="relative w-full h-[clamp(280px,45vh,440px)]">
       <style>{`
-        @keyframes bob { 0%{transform:translateY(0)} 50%{transform:translateY(-10px)} 100%{transform:translateY(0)} }
-        @keyframes appear { 0%{opacity:0; transform:scale(0.98)} 100%{opacity:1; transform:scale(1)} }
+        @keyframes bobY { 0%{transform:translateY(0)} 50%{transform:translateY(-8px)} 100%{transform:translateY(0)} }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
       `}</style>
 
-      {/* Single icon (center) */}
+      {/* 1 icon: center */}
       {icons.length === 1 && (
-        <img
-          src={`${BASE}${icons[0]}`}
-          alt=""
-          className="h-28 w-28 md:h-32 md:w-32 object-contain"
-          style={{ animation: "appear .22s ease-out both, bob 2.4s ease-in-out infinite" }}
-          draggable={false}
-          decoding="async"
-        />
+        <div
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-[fadeIn_.18s_ease-out_both]"
+          aria-hidden
+        >
+          <div className="animate-[bobY_2.4s_ease-in-out_infinite]">
+            <img
+              src={`${BASE}${icons[0]}`}
+              alt=""
+              className={`${one} object-contain pointer-events-none select-none`}
+              draggable={false}
+              decoding="async"
+            />
+          </div>
+        </div>
       )}
 
-      {/* Two icons (left/right, compact) */}
+      {/* 2 icons: left/right of center */}
       {icons.length === 2 && (
         <>
-          <img
-            src={`${BASE}${icons[0]}`}
-            alt=""
-            className="absolute h-28 w-28 md:h-32 md:w-32 object-contain"
-            style={{
-              left: "35%",
-              top: "50%",
-              transform: "translate(-50%,-50%)",
-              animation: "appear .22s ease-out both, bob 2.4s ease-in-out infinite",
-              animationDelay: "0s",
-            }}
-            draggable={false}
-            decoding="async"
-          />
-          <img
-            src={`${BASE}${icons[1]}`}
-            alt=""
-            className="absolute h-28 w-28 md:h-32 md:w-32 object-contain"
-            style={{
-              left: "65%",
-              top: "50%",
-              transform: "translate(-50%,-50%)",
-              animation: "appear .22s ease-out both, bob 2.4s ease-in-out infinite",
-              animationDelay: ".12s",
-            }}
-            draggable={false}
-            decoding="async"
-          />
+          {/* left */}
+          <div
+            className="absolute left-1/2 top-1/2 animate-[fadeIn_.18s_ease-out_both]"
+            style={{ transform: `translate(calc(-50% - ${R2}px), -50%)` }}
+            aria-hidden
+          >
+            <div className="animate-[bobY_2.4s_ease-in-out_infinite]">
+              <img
+                src={`${BASE}${icons[0]}`}
+                alt=""
+                className={`${two} object-contain pointer-events-none select-none`}
+                draggable={false}
+                decoding="async"
+              />
+            </div>
+          </div>
+          {/* right */}
+          <div
+            className="absolute left-1/2 top-1/2 animate-[fadeIn_.18s_ease-out_.06s_both]"
+            style={{ transform: `translate(calc(-50% + ${R2}px), -50%)` }}
+            aria-hidden
+          >
+            <div className="animate-[bobY_2.4s_ease-in-out_infinite]">
+              <img
+                src={`${BASE}${icons[1]}`}
+                alt=""
+                className={`${two} object-contain pointer-events-none select-none`}
+                draggable={false}
+                decoding="async"
+              />
+            </div>
+          </div>
         </>
       )}
 
-      {/* Four icons (tight diamond within bounds) */}
+      {/* 4 icons: tight diamond around center */}
       {icons.length === 4 && (
         <>
-          <img
-            src={`${BASE}${icons[0]}`}
-            alt=""
-            className="absolute h-24 w-24 md:h-28 md:w-28 object-contain"
-            style={{
-              top: "28%",
-              left: "50%",
-              transform: "translate(-50%,-50%)",
-              animation: "appear .22s ease-out both, bob 2.4s ease-in-out infinite",
-              animationDelay: "0s",
-            }}
-            draggable={false}
-            decoding="async"
-          />
-          <img
-            src={`${BASE}${icons[1]}`}
-            alt=""
-            className="absolute h-24 w-24 md:h-28 md:w-28 object-contain"
-            style={{
-              top: "50%",
-              left: "72%",
-              transform: "translate(-50%,-50%)",
-              animation: "appear .22s ease-out both, bob 2.4s ease-in-out infinite",
-              animationDelay: ".08s",
-            }}
-            draggable={false}
-            decoding="async"
-          />
-          <img
-            src={`${BASE}${icons[2]}`}
-            alt=""
-            className="absolute h-24 w-24 md:h-28 md:w-28 object-contain"
-            style={{
-              top: "72%",
-              left: "50%",
-              transform: "translate(-50%,-50%)",
-              animation: "appear .22s ease-out both, bob 2.4s ease-in-out infinite",
-              animationDelay: ".16s",
-            }}
-            draggable={false}
-            decoding="async"
-          />
-          <img
-            src={`${BASE}${icons[3]}`}
-            alt=""
-            className="absolute h-24 w-24 md:h-28 md:w-28 object-contain"
-            style={{
-              top: "50%",
-              left: "28%",
-              transform: "translate(-50%,-50%)",
-              animation: "appear .22s ease-out both, bob 2.4s ease-in-out infinite",
-              animationDelay: ".24s",
-            }}
-            draggable={false}
-            decoding="async"
-          />
+          {/* top */}
+          <div
+            className="absolute left-1/2 top-1/2 animate-[fadeIn_.18s_ease-out_both]"
+            style={{ transform: `translate(-50%, calc(-50% - ${R4}px))` }}
+            aria-hidden
+          >
+            <div className="animate-[bobY_2.4s_ease-in-out_infinite]">
+              <img
+                src={`${BASE}${icons[0]}`}
+                alt=""
+                className={`${four} object-contain pointer-events-none select-none`}
+                draggable={false}
+                decoding="async"
+              />
+            </div>
+          </div>
+          {/* right */}
+          <div
+            className="absolute left-1/2 top-1/2 animate-[fadeIn_.18s_ease-out_.04s_both]"
+            style={{ transform: `translate(calc(-50% + ${R4}px), -50%)` }}
+            aria-hidden
+          >
+            <div className="animate-[bobY_2.4s_ease-in-out_infinite]">
+              <img
+                src={`${BASE}${icons[1]}`}
+                alt=""
+                className={`${four} object-contain pointer-events-none select-none`}
+                draggable={false}
+                decoding="async"
+              />
+            </div>
+          </div>
+          {/* bottom */}
+          <div
+            className="absolute left-1/2 top-1/2 animate-[fadeIn_.18s_ease-out_.08s_both]"
+            style={{ transform: `translate(-50%, calc(-50% + ${R4}px))` }}
+            aria-hidden
+          >
+            <div className="animate-[bobY_2.4s_ease-in-out_infinite]">
+              <img
+                src={`${BASE}${icons[2]}`}
+                alt=""
+                className={`${four} object-contain pointer-events-none select-none`}
+                draggable={false}
+                decoding="async"
+              />
+            </div>
+          </div>
+          {/* left */}
+          <div
+            className="absolute left-1/2 top-1/2 animate-[fadeIn_.18s_ease-out_.12s_both]"
+            style={{ transform: `translate(calc(-50% - ${R4}px), -50%)` }}
+            aria-hidden
+          >
+            <div className="animate-[bobY_2.4s_ease-in-out_infinite]">
+              <img
+                src={`${BASE}${icons[3]}`}
+                alt=""
+                className={`${four} object-contain pointer-events-none select-none`}
+                draggable={false}
+                decoding="async"
+              />
+            </div>
+          </div>
         </>
       )}
     </div>
@@ -253,13 +292,26 @@ export default function Projects() {
     setOpenRoleIdx(-1); // change company -> reset to "none selected"
   }, [companyIdx]);
 
-  const rightIcons = mode === "exp" ? iconsFor(company.key, openRoleIdx) : [];
+  const rightIcons =
+    mode === "exp" ? iconsFor(company.key, openRoleIdx) : [];
 
   return (
-    <section className="mx-auto max-w-[1200px] md:max-w-[1320px] lg:max-w-[1400px] px-4 sm:px-6 lg:px-8">
-      {/* local keyframes for bobbing declared inside components */}
-
-      <div className="panel mt-6 sm:mt-10 p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14 min-h-[70vh] md:min-h-[75vh] lg:min-h-[80vh] flex flex-col">
+    <section
+      className="
+        mx-auto
+        max-w-[1200px] md:max-w-[1320px] lg:max-w-[1400px]
+        px-4 sm:px-6 lg:px-8
+      "
+    >
+      <div
+        className="
+          panel
+          mt-6 sm:mt-10
+          p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14
+          min-h-[70vh] md:min-h-[75vh] lg:min-h-[80vh]
+          flex flex-col
+        "
+      >
         {/* Header: Experience / Projects toggle */}
         <div className="mb-6 sm:mb-8 flex items-center justify-between">
           <h1 className="font-press leading-[1.1] text-[clamp(22px,3.2vw,44px)]">
@@ -281,20 +333,30 @@ export default function Projects() {
             {/* LEFT: Trainer card fields (company + roles) */}
             <div className="panel p-4 sm:p-5 md:p-6 relative overflow-hidden">
               <div className="flex items-center justify-between">
-                <div className="font-press tracking-wide text-[14px] sm:text-[15px]">TRAINER CARD</div>
-                <div className="font-press text-[12px] opacity-80">ID No. 0209</div>
+                <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
+                  TRAINER CARD
+                </div>
+                <div className="font-press text-[12px] opacity-80">
+                  ID No. 0209
+                </div>
               </div>
               <div className="mt-1 h-[2px] bg-sky-700/60" />
 
               {/* NAME */}
               <div className="mt-4">
-                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-1">NAME</div>
-                <div className="panel px-3 py-2 font-press text-[15px]">{company.name}</div>
+                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-1">
+                  NAME
+                </div>
+                <div className="panel px-3 py-2 font-press text-[15px]">
+                  {company.name}
+                </div>
               </div>
 
               {/* POSITIONS */}
               <div className="mt-4">
-                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">POSITIONS</div>
+                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">
+                  POSITIONS
+                </div>
 
                 <ul className="space-y-2">
                   {company.roles.map((r, i) => {
@@ -303,23 +365,36 @@ export default function Projects() {
                       <li key={r.title} className="panel">
                         <button
                           type="button"
-                          onClick={() => setOpenRoleIdx((idx) => (idx === i ? -1 : i))}
+                          onClick={() =>
+                            setOpenRoleIdx((idx) => (idx === i ? -1 : i))
+                          }
                           className="w-full flex items-center justify-between gap-3 px-3 py-2 text-left"
                         >
-                          {/* Title can wrap; date never wraps */}
-                          <span className="font-press text-[13px]">{r.title}</span>
-                          <span className="font-press text-[11px] opacity-70 whitespace-nowrap">{r.period}</span>
+                          {/* Job titles wrap; dates don't */}
+                          <span className="font-press text-[13px]">
+                            {r.title}
+                          </span>
+                          <span className="font-press text-[11px] opacity-70 whitespace-nowrap">
+                            {r.period}
+                          </span>
                         </button>
 
                         <div
                           className="overflow-hidden transition-[max-height,opacity] duration-300"
-                          style={{ maxHeight: open ? 300 : 0, opacity: open ? 1 : 0 }}
+                          style={{
+                            maxHeight: open ? 300 : 0,
+                            opacity: open ? 1 : 0,
+                          }}
                         >
                           <div className="px-3 pb-3 pt-0">
                             {typeof r.desc === "string" ? (
-                              <p className="text-gb-800 text-[14px] leading-relaxed">{r.desc}</p>
+                              <p className="text-gb-800 text-[14px] leading-relaxed">
+                                {r.desc}
+                              </p>
                             ) : (
-                              <div className="text-gb-800 text-[14px] leading-relaxed">{r.desc}</div>
+                              <div className="text-gb-800 text-[14px] leading-relaxed">
+                                {r.desc}
+                              </div>
                             )}
                           </div>
                         </div>
@@ -331,7 +406,9 @@ export default function Projects() {
 
               {/* BADGES */}
               <div className="mt-5">
-                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">BADGES</div>
+                <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">
+                  BADGES
+                </div>
                 <div className="grid grid-cols-3 gap-2">
                   {COMPANIES.map((c, i) => {
                     const active = i === companyIdx;
@@ -360,32 +437,37 @@ export default function Projects() {
             </div>
 
             {/* RIGHT: icon showcase */}
-            <div className="panel relative flex items-center justify-center">
+            <div className="panel relative">
               <div
                 className="absolute inset-0 opacity-[0.85] pointer-events-none rounded-[6px]"
                 style={{
                   background:
                     "repeating-linear-gradient(180deg,#6fd0cf 0 6px,#63c5c4 6px 12px)",
-                  maskImage: "linear-gradient(180deg,rgba(0,0,0,0.15),rgba(0,0,0,1))",
+                  maskImage:
+                    "linear-gradient(180deg,rgba(0,0,0,0.15),rgba(0,0,0,1))",
                   WebkitMaskImage:
                     "linear-gradient(180deg,rgba(0,0,0,0.15),rgba(0,0,0,1))",
                 }}
               />
-              <div className="relative z-10 w-full">
+              <div className="relative z-10 w-full h-full flex items-center justify-center">
                 <RightIconShowcase icons={rightIcons} />
               </div>
             </div>
           </div>
         ) : (
           <div className="panel p-4 sm:p-5 md:p-6">
-            <div className="font-press tracking-wide text-[14px] sm:text-[15px]">PROJECT LIST</div>
+            <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
+              PROJECT LIST
+            </div>
             <div className="mt-1 h-[2px] bg-sky-700/60 mb-4" />
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {PROJECTS.map((p) => (
                 <div key={p.title} className="panel p-4">
                   <h3 className="font-press text-base mb-2">{p.title}</h3>
-                  <p className="text-sm text-gb-800 leading-relaxed">{p.blurb}</p>
+                  <p className="text-sm text-gb-800 leading-relaxed">
+                    {p.blurb}
+                  </p>
                 </div>
               ))}
             </div>
@@ -394,7 +476,10 @@ export default function Projects() {
 
         {/* Back to Home */}
         <div className="mt-6">
-          <Link to="/" className="panel inline-block px-4 py-2 font-press text-[12px] sm:text-[13px]">
+          <Link
+            to="/"
+            className="panel inline-block px-4 py-2 font-press text-[12px] sm:text-[13px]"
+          >
             Back to Home
           </Link>
         </div>
