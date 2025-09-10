@@ -1,19 +1,139 @@
+// src/pages/About.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 
+const BASE = import.meta.env.BASE_URL || "/";
+
 export default function About() {
   return (
-    <div className="mx-auto max-w-6xl px-4 pt-24">
-      <div className="panel p-6">
-        <h1 className="h1-poke mb-4">About Me</h1>
-        <p className="text-sm text-gb-700">
-          Put your bio here. Keep it short and delightful—like a Pokédex entry.
-        </p>
+    <section
+      className="
+        mx-auto
+        max-w-[1200px] md:max-w-[1320px] lg:max-w-[1400px]
+        px-4 sm:px-6 lg:px-8
+      "
+    >
+      <div
+        className="
+          panel
+          mt-6 sm:mt-10
+          p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14
+          min-h-[70vh] md:min-h-[75vh] lg:min-h-[80vh]
+          flex flex-col
+        "
+      >
+        {/* Header */}
+        <header className="mb-6 sm:mb-8">
+          <h1 className="font-press leading-[1.1] text-[clamp(22px,3.2vw,44px)]">
+            About Me
+          </h1>
+          <p className="mt-3 text-gb-700 leading-relaxed max-w-[75ch] text-[clamp(14px,1.2vw,18px)]">
+            A quick trainer profile—Pokédex style.
+          </p>
+        </header>
 
-        <div className="mt-6">
-          <Link to="/" className="btn-ghost">Back to Home</Link>
+        {/* Pokédex body */}
+        <div
+          className="
+            grid w-full
+            grid-cols-1 md:grid-cols-[340px,1fr]
+            gap-6 sm:gap-8
+          "
+        >
+          {/* LEFT: portrait “dex screen” */}
+          <div className="panel p-3 sm:p-4 flex items-center justify-center">
+            <div
+              className="
+                relative w-full
+                aspect-[4/3] sm:aspect-square
+                bg-[#cfeff0]/40
+                flex items-center justify-center
+              "
+            >
+              <img
+                src={`${BASE}me.jpg`}          {/* put me.png in /public (or adjust path) */}
+                alt="Trainer portrait"
+                className="pixelated max-h-full max-w-full object-contain"
+              />
+              {/* corner “sensor lights” vibe */}
+              <div className="absolute left-2 top-2 h-2 w-2 bg-red-500 shadow-[0_0_6px_#f00]" />
+              <div className="absolute right-2 top-2 h-2 w-2 bg-green-500 shadow-[0_0_6px_#0f0]" />
+            </div>
+          </div>
+
+          {/* RIGHT: stats list */}
+          <div className="panel p-4 sm:p-5 md:p-6">
+            <div className="font-press mb-3 tracking-wide text-[15px]">Trainer Stats</div>
+
+            <ul className="divide-y divide-gb-600/30">
+              <StatRow label="Name" value="Your Name" />
+              <StatRow label="Title" value="Data Scientist / AI/ML / SWE" />
+              <StatRow
+                label="Type"
+                value={
+                  <div className="flex flex-wrap gap-2">
+                    <TypeBadge>GRASS</TypeBadge>
+                    <TypeBadge>FIGHTING</TypeBadge>
+                    {/* replace with your “types” */}
+                  </div>
+                }
+              />
+              <StatRow label="Height" value={`5'11"`} />
+              <StatRow label="Weight" value="~ 170 lbs" />
+              <StatRow label="Region" value="San Diego, CA" />
+              <StatRow
+                label="Tools"
+                value="Python, PyTorch, JS/TS, React, Postgres, AWS"
+              />
+            </ul>
+
+            {/* quick links row */}
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link to="/" className="btn-ghost">Back to Home</Link>
+              <Link to="/projects" className="btn-ghost">Projects</Link>
+            </div>
+          </div>
         </div>
+
+        {/* Description strip (bottom) */}
+        <div className="mt-6 sm:mt-8 panel p-4 sm:p-5 md:p-6">
+          <p className="text-gb-700 leading-relaxed text-[clamp(14px,1.1vw,17px)]">
+            When focused, they deploy clean code and practical design with a splash of fun.
+            Known for production-ready tooling, ML tinkering, and sturdy engineering under pressure.
+            Loves data puzzles, UI polish, and shipping.
+          </p>
+        </div>
+
+        <div className="flex-1" />
       </div>
-    </div>
+    </section>
+  );
+}
+
+/* --- tiny helpers that keep the JSX clean --- */
+
+function StatRow({ label, value }) {
+  return (
+    <li className="py-2.5 sm:py-3 flex items-center justify-between gap-4">
+      <span className="text-gb-700">{label}</span>
+      <span className="font-press tracking-wide text-[14px] sm:text-[15px] text-right">
+        {value}
+      </span>
+    </li>
+  );
+}
+
+function TypeBadge({ children }) {
+  return (
+    <span
+      className="
+        inline-flex items-center px-2.5 py-1
+        rounded-sm border border-gb-800/60 bg-gb-100
+        font-press text-[12px] tracking-widest
+        shadow-[inset_0_-2px_0_rgba(0,0,0,0.15)]
+      "
+    >
+      {children}
+    </span>
   );
 }
