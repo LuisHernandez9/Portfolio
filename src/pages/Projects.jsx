@@ -201,16 +201,16 @@ export default function Projects() {
                           }
                           className="w-full flex items-center justify-between gap-3 px-3 py-2 text-left"
                         >
-                          {/* Make long titles truncate so the date stays on one line */}
-                          <span className="font-press text-[13px] truncate min-w-0">
+                          {/* Allow job titles to wrap */}
+                          <span className="font-press text-[13px]">
                             {r.title}
                           </span>
-                          {/* Prevent date from wrapping to a new line */}
+                          {/* Force date to stay in one line */}
                           <span className="font-press text-[11px] opacity-70 whitespace-nowrap">
                             {r.period}
                           </span>
                         </button>
-
+                
                         <div
                           className="overflow-hidden transition-[max-height,opacity] duration-300"
                           style={{
