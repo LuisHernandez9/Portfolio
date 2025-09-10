@@ -79,9 +79,14 @@ export default function About() {
         {/* Description strip */}
         <div className="mt-6 sm:mt-8 panel p-4 sm:p-5 md:p-6">
           <p className="text-gb-700 leading-relaxed text-[clamp(14px,1.1vw,17px)]">
-            When focused, they deploy clean code and practical design with a splash of fun.
-            Known for production-ready tooling, ML tinkering, and sturdy engineering under pressure.
-            Loves data puzzles, UI polish, and shipping.
+            Born and raised in Saudi Arabia, Luis moved to the US back in 2022.
+            He entered Fayetteville State University as a freshman in Fall 2022 and earned his Bachelor's Degree in
+            Computer Science with a Minor in Cybersecurity as Suma Cum Laude in Spring 2025. Some highlights of his academic life include
+            being a 3-time Chancellor's List Honoree, having maintained a 3.96 GPA throughout his time in college, and a Summer 2024
+            Internship with NASA Jet propulsion Laboratory. Known for his hardworking and fast-learning nature, Luis usually stays indoors
+            and works on AI/ML, Data Science, and Software Development projects. When outside, Luis can usually be spotted eating food or
+            playing basketball, a sport rumored to be his favorite. Other interests of Luis includes maintaining computer systems, having built
+            3 computers from parts, playing games, working out, and watching/reading his favorite animes.
           </p>
         </div>
 
