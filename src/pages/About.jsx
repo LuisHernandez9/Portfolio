@@ -81,19 +81,21 @@ export default function About() {
             </ul>
           </div>
         </div>
-
+        
         {/* Description strip */}
-        <p className="text-gb-700 leading-relaxed text-[clamp(13px,1.05vw,16px)]">
-          Born and raised in Saudi Arabia, Luis moved to the US back in 2022.
-          He entered Fayetteville State University as a freshman in Fall 2022 and earned his Bachelor's Degree in
-          Computer Science with a Minor in Cybersecurity as Suma Cum Laude in Spring 2025. Some highlights of his academic life include
-          being a 3-time Chancellor's List Honoree, having maintained a <strong className="font-semibold text-gb-900">3.96 GPA</strong> throughout his time in college, and a <strong className="font-semibold text-gb-900">Summer 2024 Internship with NASA Jet Propulsion Laboratory</strong>.
-          Known for his <strong className="font-semibold text-gb-900">hardworking and fast-learning nature</strong>, Luis usually stays indoors
-          and works on <strong className="font-semibold text-gb-900">AI/ML, Data Science, and Software Development projects</strong>. When outside, Luis can usually be spotted eating food or
-          playing basketball, a sport rumored to be his favorite. Other interests of Luis includes maintaining computer systems, having built
-          3 computers from parts, playing games, working out, and watching/reading his favorite animes.
-        </p>
-
+        <div className="mt-6 sm:mt-8 panel p-4 sm:p-5 md:p-6">
+          <p className="text-gb-700 leading-relaxed text-[clamp(13px,1.05vw,16px)]">
+            Born and raised in Saudi Arabia, Luis moved to the US back in 2022.
+            He entered Fayetteville State University as a freshman in Fall 2022 and earned his Bachelor's Degree in
+            Computer Science with a Minor in Cybersecurity as Suma Cum Laude in Spring 2025. Some highlights of his academic life include
+            being a 3-time Chancellor's List Honoree, having maintained a <strong className="font-semibold text-gb-900">3.96 GPA</strong> throughout his time in college, and a <strong className="font-semibold text-gb-900">Summer 2024 Internship with NASA Jet Propulsion Laboratory</strong>.
+            Known for his <strong className="font-semibold text-gb-900">hardworking and fast-learning nature</strong>, Luis usually stays indoors
+            and works on <strong className="font-semibold text-gb-900">AI/ML, Data Science, and Software Development projects</strong>. When outside, Luis can usually be spotted eating food or
+            playing basketball, a sport rumored to be his favorite. Other interests of Luis includes maintaining computer systems, having built
+            3 computers from parts, playing games, working out, and watching/reading his favorite animes.
+          </p>
+        </div>
+        
         {/* Bottom-left "Back to Home" tab */}
         <div className="mt-4">
           <Link to="/" className="panel inline-block px-4 py-2">
@@ -114,7 +116,7 @@ function StatRow({ label, value }) {
       className="
         py-2 sm:py-2.5
         grid grid-cols-[160px,1fr] sm:grid-cols-[200px,1fr]
-        items-baseline gap-x-6
+        items-start gap-x-6
       "
     >
       {/* LABEL: bold, caps, compact size */}
@@ -122,7 +124,7 @@ function StatRow({ label, value }) {
         {label}
       </span>
 
-      {/* VALUE: a touch smaller; right-aligned like the Dex */}
+      {/* VALUE: right-aligned consistently like text */}
       <span className="font-press tracking-wide text-[12px] sm:text-[13px] text-right">
         {value}
       </span>
@@ -138,9 +140,9 @@ function TypeBadge({ children, variant = "default" }) {
   return (
     <span
       className={`
-        inline-flex items-center px-2.5 py-1
+        inline-block px-2.5 py-1
         rounded-sm border ${styles}
-        font-press text-[12px] tracking-widest
+        font-press text-[12px] tracking-widest leading-none
         shadow-[inset_0_-2px_0_rgba(0,0,0,0.15)]
       `}
     >
