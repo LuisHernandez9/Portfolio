@@ -27,7 +27,7 @@ export default function Home() {
               text-[clamp(22px,3.2vw,44px)]
             "
           >
-            Building reliable,<br /> delightful software.
+            Data Science,<br /> AI/ML, and Software Dev.
           </h1>
 
           <p
@@ -36,8 +36,8 @@ export default function Home() {
               text-[clamp(14px,1.2vw,18px)]
             "
           >
-            I love turning ideas into production-ready tools—clean code, practical
-            design, and a splash of fun.
+            Welcome to my digital portfolio. Please feel free to explore
+            it to get to know me more ;)
           </p>
         </header>
 
