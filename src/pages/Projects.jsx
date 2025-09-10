@@ -111,6 +111,24 @@ const PROJECTS = [
   },
 ];
 
+const JOURNALS = [
+  {
+    title: "Week 1 — Lab Setup",
+    blurb:
+      "Brought the vector machines online, created an onboarding checklist, and documented GPU provisioning.",
+  },
+  {
+    title: "Week 2 — SAR Preprocessing",
+    blurb:
+      "Benchmarked speckle filtering pipelines; noted parameter trade-offs for Venus SAR tiles.",
+  },
+  {
+    title: "Week 3 — Model Experiments",
+    blurb:
+      "Compared UNet vs. Mask2Former configs; tracked F1/IoU and failure cases around small faults.",
+  },
+];
+
 /* --------------------------- Helpers --------------------------- */
 // Icons to show based on selected company and which role is open.
 // - No role open: show company logo (FSU → fsu.png, NASA → nasa.png)
@@ -142,7 +160,7 @@ function RightIconShowcase({ icons }) {
 
   // distances from center (px)
   const R2 = 140; // for two
-  const R4 = 100;  // for four
+  const R4 = 100; // for four
 
   return (
     <div className="relative w-full h-[clamp(280px,45vh,440px)]">
@@ -282,7 +300,7 @@ function RightIconShowcase({ icons }) {
 
 /* --------------------------- Component -------------------------- */
 export default function Projects() {
-  const [mode, setMode] = React.useState("exp"); // "exp" | "proj"
+  const [mode, setMode] = React.useState("exp"); // "exp" | "proj" | "journals"
   const [companyIdx, setCompanyIdx] = React.useState(0);
   const [openRoleIdx, setOpenRoleIdx] = React.useState(-1); // -1 = none selected
 
@@ -292,8 +310,7 @@ export default function Projects() {
     setOpenRoleIdx(-1); // change company -> reset to "none selected"
   }, [companyIdx]);
 
-  const rightIcons =
-    mode === "exp" ? iconsFor(company.key, openRoleIdx) : [];
+  const rightIcons = mode === "exp" ? iconsFor(company.key, openRoleIdx) : [];
 
   return (
     <section
@@ -303,6 +320,7 @@ export default function Projects() {
         px-4 sm:px-6 lg:px-8
       "
     >
+      {/* local keyframes for the original bob are defined inside RightIconShowcase */}
       <div
         className="
           panel
@@ -312,19 +330,41 @@ export default function Projects() {
           flex flex-col
         "
       >
-        {/* Header: Experience / Projects toggle */}
+        {/* Header: tabs */}
         <div className="mb-6 sm:mb-8 flex items-center justify-between">
           <h1 className="font-press leading-[1.1] text-[clamp(22px,3.2vw,44px)]">
-            {mode === "exp" ? "Experience" : "Projects"}
+            {mode === "exp" ? "Experience" : mode === "proj" ? "Projects" : "Journals"}
           </h1>
 
-          <button
-            type="button"
-            onClick={() => setMode((m) => (m === "exp" ? "proj" : "exp"))}
-            className="panel px-3 py-2 font-press text-[12px] sm:text-[13px] hover:scale-[1.02] active:scale-[0.98] transition-transform"
-          >
-            {mode === "exp" ? "▶ Projects" : "◀ Experience"}
-          </button>
+          <div className="flex items-center gap-2">
+            {mode !== "exp" && (
+              <button
+                type="button"
+                onClick={() => setMode("exp")}
+                className="panel px-3 py-2 font-press text-[12px] sm:text-[13px] hover:scale-[1.02] active:scale-[0.98] transition-transform"
+              >
+                ◀ Experience
+              </button>
+            )}
+            {mode !== "proj" && (
+              <button
+                type="button"
+                onClick={() => setMode("proj")}
+                className="panel px-3 py-2 font-press text-[12px] sm:text-[13px] hover:scale-[1.02] active:scale-[0.98] transition-transform"
+              >
+                {mode === "exp" ? "▶ Projects" : "Projects"}
+              </button>
+            )}
+            {mode !== "journals" && (
+              <button
+                type="button"
+                onClick={() => setMode("journals")}
+                className="panel px-3 py-2 font-press text-[12px] sm:text-[13px] hover:scale-[1.02] active:scale-[0.98] transition-transform"
+              >
+                {mode === "exp" ? "▶ Journals" : "Journals"}
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Body */}
@@ -336,9 +376,7 @@ export default function Projects() {
                 <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
                   TRAINER CARD
                 </div>
-                <div className="font-press text-[12px] opacity-80">
-                  ID No. 0209
-                </div>
+                <div className="font-press text-[12px] opacity-80">ID No. 0209</div>
               </div>
               <div className="mt-1 h-[2px] bg-sky-700/60" />
 
@@ -409,7 +447,7 @@ export default function Projects() {
                 <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">
                   BADGES
                 </div>
-                <div className="grid grid-cols-2 gap-2"> {/* was grid-cols-3 */}
+                <div className="grid grid-cols-2 gap-2">
                   {COMPANIES.map((c, i) => {
                     const active = i === companyIdx;
                     return (
@@ -434,7 +472,8 @@ export default function Projects() {
                   })}
                 </div>
               </div>
-            </div>  
+            </div>
+
             {/* RIGHT: icon showcase */}
             <div className="panel relative">
               <div
@@ -453,7 +492,7 @@ export default function Projects() {
               </div>
             </div>
           </div>
-        ) : (
+        ) : mode === "proj" ? (
           <div className="panel p-4 sm:p-5 md:p-6">
             <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
               PROJECT LIST
@@ -466,6 +505,25 @@ export default function Projects() {
                   <h3 className="font-press text-base mb-2">{p.title}</h3>
                   <p className="text-sm text-gb-800 leading-relaxed">
                     {p.blurb}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          /* ----------- JOURNALS ----------- */
+          <div className="panel p-4 sm:p-5 md:p-6">
+            <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
+              JOURNAL ENTRIES
+            </div>
+            <div className="mt-1 h-[2px] bg-sky-700/60 mb-4" />
+
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {JOURNALS.map((j) => (
+                <div key={j.title} className="panel p-4">
+                  <h3 className="font-press text-base mb-2">{j.title}</h3>
+                  <p className="text-sm text-gb-800 leading-relaxed">
+                    {j.blurb}
                   </p>
                 </div>
               ))}
