@@ -154,11 +154,13 @@ export default function About() {
           <p className="text-gb-700 leading-relaxed text-[clamp(13px,1.05vw,16px)]">
             Born and raised in Saudi Arabia, Luis moved to the US back in 2022.
             He entered Fayetteville State University as a freshman in Fall 2022
-            and earned his Bachelor's Degree in Computer Science with a Minor in
-            Cybersecurity as Suma Cum Laude in Spring 2025. Some highlights of
-            his academic life include being a 3-time Chancellor's List Honoree,
+            and earned his <strong className="font-semibold text-gb-900">
+            Bachelor's Degree in Computer Science with a Minor in 
+            Cybersecurity as Suma Cum Laude </strong>in Spring 2025. Some highlights of
+            his academic life include being a <strong className="font-semibold text-gb-900">
+            3-time Chancellor's List Honoree,
             having maintained a{" "}
-            <strong className="font-semibold text-gb-900">3.96 GPA</strong>{" "}
+            3.96 GPA</strong>{" "}
             throughout his time in college, and a{" "}
             <strong className="font-semibold text-gb-900">
               Summer 2024 Internship with NASA Jet Propulsion Laboratory
