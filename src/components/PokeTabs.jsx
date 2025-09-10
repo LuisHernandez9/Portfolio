@@ -13,7 +13,7 @@ export default function PokeTabs() {
   const BALL_MULT = 1.35;     // 1.0 = same height as tab; >1 bigger, <1 smaller
   const GAP_REM = 5.0;        // distance between tab and Pokéball (rem)
   const MON_MULT = 5.0;      // Pokémon size relative to Pokéball (1.1 = 110%)
-  const MON_GAP_MULT = 4.0;  // gap from Pokéball in terms of ball size
+  const MON_GAP_MULT = 3.7;  // gap from Pokéball in terms of ball size
   // ---------------------
 
   // Refs to panels; we store their UN-SCALED base heights.
