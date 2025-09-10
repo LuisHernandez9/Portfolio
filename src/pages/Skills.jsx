@@ -1,7 +1,10 @@
+// src/pages/Skills.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 
-const BASE = import.meta.env.BASE_URL || "/";
+// ✅ import the actual filenames from /public
+import tmOpenImg from "/tmcase_open.png";
+import tmClosedImg from "/tmcase_closed.png";
 
 const TECH_SKILLS = [
   { name: "JavaScript / TypeScript", desc: "Modern ESNext, strong typing with TS, modules, tooling, and patterns (FP-lite, composition over inheritance)." },
@@ -86,22 +89,16 @@ export default function Skills() {
           <div className="panel relative p-4 flex items-center justify-center">
             <div className="relative w-[240px] h-[240px] sm:w-[280px] sm:h-[280px]">
               <img
-                src={`${BASE}tm_open.png`}
+                src={tmOpenImg}
                 alt=""
-                className={`
-                  absolute inset-0 w-full h-full object-contain select-none pointer-events-none
-                  transition-opacity duration-150 ${tmOpen ? "opacity-100" : "opacity-0"}
-                `}
+                className={`absolute inset-0 w-full h-full object-contain select-none pointer-events-none transition-opacity duration-150 ${tmOpen ? "opacity-100" : "opacity-0"}`}
                 draggable={false}
                 decoding="async"
               />
               <img
-                src={`${BASE}tm_closed.png`}
+                src={tmClosedImg}
                 alt="TM case"
-                className={`
-                  absolute inset-0 w-full h-full object-contain select-none pointer-events-none
-                  transition-opacity duration-120 ${tmOpen ? "opacity-0" : "opacity-100"}
-                `}
+                className={`absolute inset-0 w-full h-full object-contain select-none pointer-events-none transition-opacity duration-120 ${tmOpen ? "opacity-0" : "opacity-100"}`}
                 draggable={false}
                 decoding="async"
               />
