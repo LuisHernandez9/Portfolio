@@ -47,7 +47,7 @@ export default function App() {
         </motion.main>
       </AnimatePresence>
 
-      <FloatingAvatar email="you@example.com" github="yourhandle" linkedin="yourhandle" />
+      <FloatingAvatar email="hernandez.luis.e.2004@gmail.com" github="https://github.com/LuisHernandez9" linkedin="www.linkedin.com/in/luis-hernandez-lh0209" />
 
       {/* scanlines overlay */}
       <div
