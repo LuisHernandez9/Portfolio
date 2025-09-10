@@ -141,6 +141,7 @@ export default function Skills() {
                 SKILL LIST
               </div>
             <div className="h-[2px] bg-sky-700/60 mb-3" />
+            </div>
 
             {/* List — colored like the GBA TM menu */}
             <ul className="grid md:grid-cols-2 gap-3">
