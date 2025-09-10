@@ -83,18 +83,16 @@ export default function About() {
         </div>
 
         {/* Description strip */}
-        <div className="mt-6 sm:mt-8 panel p-4 sm:p-5 md:p-6">
-          <p className="text-gb-700 leading-relaxed text-[clamp(13px,1.05vw,16px)]">
-            Born and raised in Saudi Arabia, Luis moved to the US back in 2022.
-            He entered Fayetteville State University as a freshman in Fall 2022 and earned his Bachelor's Degree in
-            Computer Science with a Minor in Cybersecurity as Suma Cum Laude in Spring 2025. Some highlights of his academic life include
-            being a 3-time Chancellor's List Honoree, having maintained a <strong className="font-press font-bold">3.96 GPA</strong> throughout his time in college, and a <strong className="font-press font-bold">Summer 2024 Internship with NASA Jet Propulsion Laboratory</strong>.
-            Known for his <strong className="font-press font-bold">hardworking and fast-learning nature</strong>, Luis usually stays indoors
-            and works on <strong className="font-press font-bold">AI/ML, Data Science, and Software Development projects</strong>. When outside, Luis can usually be spotted eating food or
-            playing basketball, a sport rumored to be his favorite. Other interests of Luis includes maintaining computer systems, having built
-            3 computers from parts, playing games, working out, and watching/reading his favorite animes.
-          </p>
-        </div>
+        <p className="text-gb-700 leading-relaxed text-[clamp(13px,1.05vw,16px)]">
+          Born and raised in Saudi Arabia, Luis moved to the US back in 2022.
+          He entered Fayetteville State University as a freshman in Fall 2022 and earned his Bachelor's Degree in
+          Computer Science with a Minor in Cybersecurity as Suma Cum Laude in Spring 2025. Some highlights of his academic life include
+          being a 3-time Chancellor's List Honoree, having maintained a <strong className="font-semibold text-gb-900">3.96 GPA</strong> throughout his time in college, and a <strong className="font-semibold text-gb-900">Summer 2024 Internship with NASA Jet Propulsion Laboratory</strong>.
+          Known for his <strong className="font-semibold text-gb-900">hardworking and fast-learning nature</strong>, Luis usually stays indoors
+          and works on <strong className="font-semibold text-gb-900">AI/ML, Data Science, and Software Development projects</strong>. When outside, Luis can usually be spotted eating food or
+          playing basketball, a sport rumored to be his favorite. Other interests of Luis includes maintaining computer systems, having built
+          3 computers from parts, playing games, working out, and watching/reading his favorite animes.
+        </p>
 
         {/* Bottom-left "Back to Home" tab */}
         <div className="mt-4">
@@ -112,12 +110,19 @@ export default function About() {
 /* Helpers */
 function StatRow({ label, value }) {
   return (
-    <li className="py-2 sm:py-2.5 flex items-center justify-between gap-4">
-      {/* LABEL: bold, caps, smaller */}
+    <li
+      className="
+        py-2 sm:py-2.5
+        grid grid-cols-[160px,1fr] sm:grid-cols-[200px,1fr]
+        items-baseline gap-x-6
+      "
+    >
+      {/* LABEL: bold, caps, compact size */}
       <span className="font-press uppercase font-bold tracking-widest text-gb-800 text-[11px] sm:text-[12px]">
         {label}
       </span>
-      {/* VALUE: a bit smaller than before */}
+
+      {/* VALUE: a touch smaller; right-aligned like the Dex */}
       <span className="font-press tracking-wide text-[12px] sm:text-[13px] text-right">
         {value}
       </span>
@@ -130,7 +135,6 @@ function TypeBadge({ children, variant = "default" }) {
     variant === "orange"
       ? "bg-orange-500 border-orange-700 text-white"
       : "bg-gb-100 border-gb-800/60 text-gb-900";
-
   return (
     <span
       className={`
