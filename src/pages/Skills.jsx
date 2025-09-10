@@ -1,4 +1,3 @@
-// src/pages/Skills.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -23,7 +22,7 @@ const SOFT_SKILLS = [
 ];
 
 export default function Skills() {
-  const [mode, setMode] = React.useState<"tech" | "soft">("tech");
+  const [mode, setMode] = React.useState("tech"); // "tech" | "soft"
   const skills = mode === "tech" ? TECH_SKILLS : SOFT_SKILLS;
 
   const [activeIdx, setActiveIdx] = React.useState(0);
@@ -32,16 +31,14 @@ export default function Skills() {
   const [tmOpen, setTmOpen] = React.useState(true);
   const blinkTM = React.useCallback(() => {
     setTmOpen(false);
-    // quick close-open pulse (tweak 180–260ms)
     setTimeout(() => setTmOpen(true), 220);
   }, []);
 
-  const selectSkill = (i: number) => {
+  const selectSkill = (i) => {
     setActiveIdx(i);
     blinkTM();
   };
 
-  // also blink when switching tabs
   React.useEffect(() => {
     setActiveIdx(0);
     blinkTM();
@@ -88,7 +85,6 @@ export default function Skills() {
           {/* LEFT: Animated TM Case */}
           <div className="panel relative p-4 flex items-center justify-center">
             <div className="relative w-[240px] h-[240px] sm:w-[280px] sm:h-[280px]">
-              {/* OPEN sprite */}
               <img
                 src={`${BASE}tm_open.png`}
                 alt=""
@@ -99,7 +95,6 @@ export default function Skills() {
                 draggable={false}
                 decoding="async"
               />
-              {/* CLOSED sprite */}
               <img
                 src={`${BASE}tm_closed.png`}
                 alt="TM case"
@@ -111,8 +106,6 @@ export default function Skills() {
                 decoding="async"
               />
             </div>
-
-            {/* decorative little shelf lights */}
             <div className="absolute left-3 top-3 h-2 w-2 bg-red-500 shadow-[0_0_6px_#f00]" />
             <div className="absolute right-3 top-3 h-2 w-2 bg-green-500 shadow-[0_0_6px_#0f0]" />
           </div>
@@ -124,6 +117,15 @@ export default function Skills() {
               bg-gradient-to-b from-sky-200/45 via-sky-100/50 to-sky-50
             "
           >
+            {/* Pokedex-style header strip with number */}
+            <div className="flex items-center justify-between mb-3">
+              <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
+                TM LIST
+              </div>
+              <div className="font-press text-[12px] opacity-80">No. 0209</div>
+            </div>
+            <div className="h-[2px] bg-sky-700/60 mb-3" />
+
             {/* List */}
             <ul className="grid md:grid-cols-2 gap-3">
               {skills.map((s, i) => {
@@ -148,14 +150,31 @@ export default function Skills() {
               })}
             </ul>
 
-            {/* Divider */}
             <div className="my-4 h-[2px] bg-sky-700/60" />
 
             {/* Description */}
-            <div className="min-h-[84px]">
-              <div className="font-press text-[12px] tracking-widest text-gb-800 mb-1">
+            <div className="min-h-[92px]">
+              <div className="font-press text-[12px] tracking-widest text-gb-800 mb-2">
                 MOVE DESCRIPTION
               </div>
+
+              {/* Interest badges only when in Technical (to de-wordify) */}
+              {mode === "tech" && (
+                <div className="mb-2 flex flex-wrap gap-2">
+                  {skills[activeIdx]?.name
+                    .split("/")
+                    .map((t) => t.trim())
+                    .map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center px-2.5 py-0.5 rounded-sm border border-gb-800/60 bg-gb-100 font-press text-[11px] tracking-widest"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                </div>
+              )}
+
               <p className="text-gb-800 leading-relaxed text-[clamp(13px,1.05vw,16px)]">
                 {skills[activeIdx]?.desc}
               </p>
@@ -163,7 +182,6 @@ export default function Skills() {
           </div>
         </div>
 
-        {/* Footer actions */}
         <div className="mt-6">
           <Link to="/" className="btn-ghost">Back to Home</Link>
         </div>
