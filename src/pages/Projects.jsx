@@ -152,7 +152,7 @@ export default function Projects() {
                       <li key={r.title} className="panel">
                         <button
                           type="button"
-                          onClick={() => setOpenRoleIdx((idx) => (idx === i ? -1 : i)))
+                          onClick={() => setOpenRoleIdx((idx) => (idx === i ? -1 : i))}
                           className="w-full flex items-center justify-between gap-3 px-3 py-2 text-left"
                         >
                           <span className="font-press text-[13px]">{r.title}</span>
