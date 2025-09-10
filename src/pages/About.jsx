@@ -33,35 +33,23 @@ export default function About() {
         </header>
 
         {/* Pokédex body */}
-        <div
-          className="
-            grid w-full
-            grid-cols-1 md:grid-cols-[340px,1fr]
-            gap-6 sm:gap-8
-          "
-        >
+        <div className="grid w-full grid-cols-1 md:grid-cols-[340px,1fr] gap-6 sm:gap-8">
           {/* LEFT: portrait “dex screen” */}
           <div className="panel p-3 sm:p-4 flex items-center justify-center">
-            <div
-              className="
-                relative w-full
-                aspect-[4/3] sm:aspect-square
-                bg-[#cfeff0]/40
-                flex items-center justify-center
-              "
-            >
+            <div className="relative w-full aspect-[4/3] sm:aspect-square bg-[#cfeff0]/40 flex items-center justify-center">
+              {/* put me.jpg in /public (or adjust path) */}
               <img
-                src={`${BASE}me.jpg`}          {/* put me.png in /public (or adjust path) */}
+                src={`${BASE}me.jpg`}
                 alt="Trainer portrait"
                 className="pixelated max-h-full max-w-full object-contain"
               />
-              {/* corner “sensor lights” vibe */}
+              {/* corner lights */}
               <div className="absolute left-2 top-2 h-2 w-2 bg-red-500 shadow-[0_0_6px_#f00]" />
               <div className="absolute right-2 top-2 h-2 w-2 bg-green-500 shadow-[0_0_6px_#0f0]" />
             </div>
           </div>
 
-          {/* RIGHT: stats list */}
+          {/* RIGHT: stats */}
           <div className="panel p-4 sm:p-5 md:p-6">
             <div className="font-press mb-3 tracking-wide text-[15px]">Trainer Stats</div>
 
@@ -74,20 +62,15 @@ export default function About() {
                   <div className="flex flex-wrap gap-2">
                     <TypeBadge>GRASS</TypeBadge>
                     <TypeBadge>FIGHTING</TypeBadge>
-                    {/* replace with your “types” */}
                   </div>
                 }
               />
               <StatRow label="Height" value={`5'11"`} />
               <StatRow label="Weight" value="~ 170 lbs" />
               <StatRow label="Region" value="San Diego, CA" />
-              <StatRow
-                label="Tools"
-                value="Python, PyTorch, JS/TS, React, Postgres, AWS"
-              />
+              <StatRow label="Tools" value="Python, PyTorch, JS/TS, React, Postgres, AWS" />
             </ul>
 
-            {/* quick links row */}
             <div className="mt-5 flex flex-wrap gap-3">
               <Link to="/" className="btn-ghost">Back to Home</Link>
               <Link to="/projects" className="btn-ghost">Projects</Link>
@@ -95,7 +78,7 @@ export default function About() {
           </div>
         </div>
 
-        {/* Description strip (bottom) */}
+        {/* Description strip */}
         <div className="mt-6 sm:mt-8 panel p-4 sm:p-5 md:p-6">
           <p className="text-gb-700 leading-relaxed text-[clamp(14px,1.1vw,17px)]">
             When focused, they deploy clean code and practical design with a splash of fun.
@@ -110,8 +93,7 @@ export default function About() {
   );
 }
 
-/* --- tiny helpers that keep the JSX clean --- */
-
+/* Helpers */
 function StatRow({ label, value }) {
   return (
     <li className="py-2.5 sm:py-3 flex items-center justify-between gap-4">
