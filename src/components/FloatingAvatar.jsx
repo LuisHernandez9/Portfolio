@@ -4,101 +4,66 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Github, Linkedin } from "lucide-react";
 
-const BASE = import.meta.env.BASE_URL || "/";
-const AVATAR_WIDTH = 120;
+const BASE = import.meta.env.BASE_URL;
 
 export default function FloatingAvatar({
   email = "you@example.com",
   github = "yourhandle",
   linkedin = "yourhandle",
-  // 👇 filenames you said you’re using
-  closedSrc = `${BASE}converted_1.png`,   // mouth CLOSED (base frame)
-  openSrc   = `${BASE}converted_2.png`,   // mouth OPEN (overlay)
+  // full body frames: closed / open
+  closedSrc = `${BASE}converted_1.png`,
+  openSrc   = `${BASE}converted_2.png`,
 }) {
   const [bubbleOpen, setBubbleOpen] = React.useState(false);
   const [mouthOn, setMouthOn] = React.useState(false);
-  const [sbw, setSbw] = React.useState(0);
-  const rootRef = React.useRef(null);
 
-  React.useEffect(() => {
-    const calc = () =>
-      setSbw(Math.max(0, window.innerWidth - document.documentElement.clientWidth));
-    calc();
-    window.addEventListener("resize", calc);
-    window.addEventListener("orientationchange", calc);
-    return () => {
-      window.removeEventListener("resize", calc);
-      window.removeEventListener("orientationchange", calc);
-    };
-  }, []);
-
-  React.useEffect(() => {
-    const onDown = (e) => {
-      if (!bubbleOpen) return;
-      if (rootRef.current && !rootRef.current.contains(e.target)) setBubbleOpen(false);
-    };
-    const onEsc = (e) => e.key === "Escape" && setBubbleOpen(false);
-    window.addEventListener("mousedown", onDown);
-    window.addEventListener("keydown", onEsc);
-    return () => {
-      window.removeEventListener("mousedown", onDown);
-      window.removeEventListener("keydown", onEsc);
-    };
-  }, [bubbleOpen]);
+  // keyframes live here so they ship with the component
+  const KF = `
+    @keyframes chomp { 0%{opacity:0} 50%{opacity:1} 100%{opacity:0} }
+  `;
 
   return createPortal(
     <div
-      ref={rootRef}
-      className="fixed bottom-8 right-4 sm:right-6 z-[60] select-none"
-      style={{ right: `calc(${sbw}px + 1rem)` }}
+      className="fixed z-[60] select-none"
+      style={{
+        // hugs the right + respects notches and on-screen bars
+        right: 'max(12px, calc(env(safe-area-inset-right, 0px) + 12px))',
+        bottom: 'max(14px, calc(env(safe-area-inset-bottom, 0px) + 14px))',
+      }}
     >
-      {/* keyframes for the mouth swap */}
-      <style>{`
-        @keyframes chomp { 0%{opacity:0} 50%{opacity:1} 100%{opacity:0} }
-      `}</style>
+      <style>{KF}</style>
 
       <div
         className="relative flex items-end gap-3"
         onMouseEnter={() => { setMouthOn(true); setBubbleOpen(true); }}
         onMouseLeave={() => { setMouthOn(false); setBubbleOpen(false); }}
       >
-        {/* Contact bubble */}
+        {/* Contact bubble – clamps to viewport on small screens */}
         <AnimatePresence>
           {bubbleOpen && (
             <motion.div
-              initial={{ opacity: 0, x: 16, y: 8 }}
+              initial={{ opacity: 0, x: 14, y: 6 }}
               animate={{ opacity: 1, x: 0, y: 0 }}
-              exit={{ opacity: 0, x: 10, y: 6 }}
+              exit={{ opacity: 0, x: 8, y: 4 }}
               transition={{ type: "spring", stiffness: 250, damping: 20 }}
-              className="relative -translate-y-6 max-w-[300px] panel p-4"
+              className="relative -translate-y-6 panel p-4"
+              style={{
+                maxWidth: "min(300px, calc(100vw - 140px))", // never overflow
+              }}
             >
               <div className="text-[11px] font-press">Let’s connect</div>
               <ul className="mt-3 space-y-2 text-[12px] text-gb-800">
                 <li className="flex items-center gap-2">
                   <Mail className="w-4 h-4" />
-                  <a className="hover:underline" href={`mailto:${email}`}>Email</a>
+                  <a className="hover:underline" href={`mailto:${email}`} aria-label="Email">Email</a>
                 </li>
                 <li className="flex items-center gap-2">
                   <Linkedin className="w-4 h-4" />
-                  <a
-                    className="hover:underline"
-                    href={`https://www.linkedin.com/in/${linkedin}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    LinkedIn
-                  </a>
+                  <a className="hover:underline" href={`https://www.linkedin.com/in/${linkedin}`} target="_blank" rel="noreferrer" aria-label="LinkedIn">LinkedIn</a>
                 </li>
                 <li className="flex items-center gap-2">
                   <Github className="w-4 h-4" />
-                  <a
-                    className="hover:underline"
-                    href={`https://github.com/${github}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    GitHub
-                  </a>
+                  <a className="hover:underline" href={`https://github.com/${github}`} target="_blank" rel="noreferrer" aria-label="GitHub">GitHub</a>
                 </li>
               </ul>
               <div className="absolute bottom-3 -right-2 w-0 h-0 border-y-8 border-y-transparent border-l-8 border-l-[color:var(--poke-panel)]" />
@@ -106,35 +71,26 @@ export default function FloatingAvatar({
           )}
         </AnimatePresence>
 
-        {/* Avatar button (full body always visible) */}
+        {/* Full-body avatar button */}
         <button
           type="button"
           aria-label="Contact avatar"
-          onClick={() => setBubbleOpen((v) => !v)}
+          onClick={() => setBubbleOpen(v => !v)}
           className="relative block cursor-pointer bg-transparent p-0 border-0"
-          style={{ width: AVATAR_WIDTH }}
+          style={{ width: "clamp(92px, 14vw, 120px)" }}  // fluid but capped
         >
-          {/* base: CLOSED mouth */}
-          <img
-            src={closedSrc}
-            alt="Avatar"
-            className="w-full h-auto drop-shadow pixelated pointer-events-none"
-            draggable={false}
-            decoding="async"
-          />
-          {/* overlay: OPEN mouth (animates while hovered) */}
+          {/* closed frame */}
+          <img src={closedSrc} alt="" className="w-full h-auto drop-shadow pixelated pointer-events-none" />
+          {/* open-mouth overlay */}
           <img
             src={openSrc}
             alt=""
             aria-hidden
-            onError={() => console.warn("[FloatingAvatar] open mouth image not found:", openSrc)}
             className="absolute inset-0 w-full h-auto drop-shadow pixelated pointer-events-none"
             style={{
-              animation: mouthOn ? "chomp .55s steps(2,end) infinite" : "none",
-              willChange: "opacity",
+              opacity: mouthOn ? undefined : 0,
+              animation: mouthOn ? "chomp .55s steps(1,end) infinite" : "none",
             }}
-            draggable={false}
-            decoding="async"
           />
         </button>
       </div>
