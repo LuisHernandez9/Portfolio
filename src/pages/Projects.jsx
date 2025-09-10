@@ -94,7 +94,7 @@ const COMPANIES = [
 ];
 
 /* ----------------------------- Projects & Journals ----------------------------- */
-// Add a `type` to each project so the Project List tabs can filter
+// Add a `type` so the Project List “tabs” can filter.
 const PROJECTS = [
   {
     title: "NASA Minds Competition",
@@ -104,8 +104,21 @@ const PROJECTS = [
   },
   {
     title: "EventPulse NC Competition",
-    blurb:
-      "Created an “all-in-one” calendar website that collects and categorizes all major events for all major universities within North Carolina.",
+    blurb: (
+      <>
+        Created an “all-in-one” calendar website that collects and categorizes
+        all major events for all major universities within North Carolina. See the{" "}
+        <a
+          href="https://luishernandez9.github.io/EventPulse_NC/" /* TODO: replace with real URL */
+          target="_blank"
+          rel="noreferrer"
+          className="underline hover:opacity-80"
+        >
+          website
+        </a>
+        .
+      </>
+    ),
     type: "competition",
   },
   {
@@ -116,8 +129,21 @@ const PROJECTS = [
   },
   {
     title: "Software Development Project",
-    blurb:
-      "Developed a car rental system complete with multiple functionalities such as database management, maps, automatic pricing, car maintenance, etc.",
+    blurb: (
+      <>
+        Developed a car rental{" "}
+        <a
+          href="https://github.com/TaylorBrown96/Car-Rental.git" /* TODO: replace with real repo */
+          target="_blank"
+          rel="noreferrer"
+          className="underline hover:opacity-80"
+        >
+          system
+        </a>{" "}
+        complete with multiple functionalities such as database management, maps,
+        automatic pricing, car maintenance, etc.
+      </>
+    ),
     type: "coursework",
   },
   {
@@ -158,7 +184,6 @@ const JOURNALS = [
 ];
 
 /* --------------------------- Helpers --------------------------- */
-// Icon sets for the right panel
 function iconsFor(companyKey, openRoleIdx) {
   if (openRoleIdx === -1) {
     return companyKey === "nasa" ? ["nasa.png"] : ["fsu.png"];
@@ -435,7 +460,13 @@ export default function Projects() {
 
               {/* Sub-tabs inside the Project List window */}
               <div role="tablist" aria-label="Project filters" className="mb-4 flex flex-wrap gap-2">
-                {PROJECT_TABS.map((t) => (
+                {[
+                  { id: "all", label: "All" },
+                  { id: "competition", label: "Competitions" },
+                  { id: "capstone", label: "Capstone" },
+                  { id: "coursework", label: "Coursework" },
+                  { id: "personal", label: "Personal" },
+                ].map((t) => (
                   <button
                     key={t.id}
                     role="tab"
@@ -446,7 +477,11 @@ export default function Projects() {
                     className={`panel px-3 py-2 font-press text-[12px] sm:text-[13px] transition
                       ${projTab === t.id ? "ring-2 ring-sky-700" : "hover:scale-[1.02]"}`}
                   >
-                    {t.label} ({countFor(t.id)})
+                    {t.label} (
+                    {t.id === "all"
+                      ? PROJECTS.length
+                      : PROJECTS.filter((p) => p.type === t.id).length}
+                    )
                   </button>
                 ))}
               </div>
@@ -456,7 +491,11 @@ export default function Projects() {
                 {filteredProjects.map((p) => (
                   <div key={p.title} className="panel p-4">
                     <h3 className="font-press text-base mb-2">{p.title}</h3>
-                    <p className="text-sm text-gb-800 leading-relaxed">{p.blurb}</p>
+                    {typeof p.blurb === "string" ? (
+                      <p className="text-sm text-gb-800 leading-relaxed">{p.blurb}</p>
+                    ) : (
+                      <div className="text-sm text-gb-800 leading-relaxed">{p.blurb}</div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -480,11 +519,22 @@ export default function Projects() {
           </div>
         )}
 
-        {/* Back to Home */}
-        <div className="mt-6">
-          <Link to="/" className="panel inline-block px-4 py-2 font-press text-[12px] sm:text-[13px]">
+        {/* Bottom actions */}
+        <div className="mt-6 flex items-center justify-between">
+          <Link
+            to="/"
+            className="panel inline-block px-4 py-2 font-press text-[12px] sm:text-[13px]"
+          >
             Back to Home
           </Link>
+
+          <a
+            href={`${BASE}LuisHernandez_Resume.pdf`}
+            download
+            className="panel inline-block px-4 py-2 font-press text-[12px] sm:text-[13px] hover:scale-[1.02] active:scale-[0.98] transition-transform"
+          >
+            Resume
+          </a>
         </div>
 
         <div className="flex-1" />
