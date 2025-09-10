@@ -50,7 +50,7 @@ const COMPANIES = [
         ),
       },
       {
-        title: "Faculty Lead Student Researcher",
+        title: "Faculty Research Lead Student Researcher",
         period: "May 2023–June 2025",
         desc: (
           <ul className="list-disc pl-5 space-y-2">
@@ -76,7 +76,7 @@ const COMPANIES = [
     logo: `${BASE}nasa.png`,
     roles: [
       {
-        title: "Data Science/ML Intern",
+        title: "Data Science/Machine Learning Intern",
         period: "June 2024–August 2024",
         desc: (
           <ul className="list-disc pl-5 space-y-2">
@@ -88,19 +88,6 @@ const COMPANIES = [
             </li>
           </ul>
         ),
-      },
-    ],
-  },
-  {
-    key: "dod",
-    name: "Department of Defense",
-    logo: `${BASE}dod.png`,
-    roles: [
-      {
-        title: "Software/ML Intern",
-        period: "2025",
-        desc:
-          "Worked on internal tooling and APIs; collaborated on performance improvements and basic automation.",
       },
     ],
   },
@@ -214,8 +201,12 @@ export default function Projects() {
                           }
                           className="w-full flex items-center justify-between gap-3 px-3 py-2 text-left"
                         >
-                          <span className="font-press text-[13px]">{r.title}</span>
-                          <span className="font-press text-[11px] opacity-70">
+                          {/* Make long titles truncate so the date stays on one line */}
+                          <span className="font-press text-[13px] truncate min-w-0">
+                            {r.title}
+                          </span>
+                          {/* Prevent date from wrapping to a new line */}
+                          <span className="font-press text-[11px] opacity-70 whitespace-nowrap">
                             {r.period}
                           </span>
                         </button>
