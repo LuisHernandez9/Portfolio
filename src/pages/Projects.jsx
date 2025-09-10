@@ -136,9 +136,9 @@ function iconsFor(companyKey, openRoleIdx) {
 // Centered stage + nested bobbing wrapper to avoid transform conflicts.
 function RightIconShowcase({ icons }) {
   // sizes
-  const one = "h-32 w-32 md:h-36 md:w-36";
-  const two = "h-28 w-28 md:h-32 md:w-32";
-  const four = "h-24 w-24 md:h-28 md:w-28";
+  const one = "h-40 w-40 md:h-44 md:w-44";
+  const two = "h-36 w-36 md:h-40 md:w-40";
+  const four = "h-32 w-32 md:h-36 md:w-36";
 
   // distances from center (px)
   const R2 = 110; // for two
