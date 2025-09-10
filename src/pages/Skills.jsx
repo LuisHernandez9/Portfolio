@@ -157,7 +157,7 @@ export default function Skills() {
               <div className="font-press tracking-wide text-[14px] sm:text-[15px]">
                 SKILL LIST
               </div>
-              <div className="font-press text-[12px] opacity-80">No. 0209</div>
+              <div className="font-press text-[12px] opacity-80">No. 1006</div>
             </div>
             <div className="h-[2px] bg-sky-700/60 mb-3" />
 
@@ -169,13 +169,13 @@ export default function Skills() {
             
                 return (
                   <li key={s.name} className="relative">
-                    {/* GBA cursor ▶ */}
+                    {/* GBA cursor ▶/◀ */}
                     {active && (
                       <span
-                        className={`absolute top-1/2 -translate-y-1/2 font-press text-[14px]
-                          ${rightCol ? "right-[-18px]" : "-left-4"}`}
+                        className={`absolute top-1/2 -translate-y-1/2 font-press text-[14px]`}
+                        style={rightCol ? { right: "-18px" } : { left: "-18px" }}
                       >
-                        ▶
+                        {rightCol ? "◀" : "▶"}
                       </span>
                     )}
                     <button
