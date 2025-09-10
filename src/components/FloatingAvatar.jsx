@@ -4,15 +4,16 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Github, Linkedin } from "lucide-react";
 
-const BASE = import.meta.env.BASE_URL;
+const BASE = import.meta.env.BASE_URL || "/";
 const AVATAR_WIDTH = 120;
 
 export default function FloatingAvatar({
   email = "you@example.com",
   github = "yourhandle",
   linkedin = "yourhandle",
-  closedSrc = `${BASE}converted_2.png`,       // full body (mouth closed)
-  openSrc = `${BASE}converted_2_open.png`,    // full body (mouth open) — add this to /public
+  // 👇 filenames you said you’re using
+  closedSrc = `${BASE}converted_1.png`,   // mouth CLOSED (base frame)
+  openSrc   = `${BASE}converted_2.png`,   // mouth OPEN (overlay)
 }) {
   const [bubbleOpen, setBubbleOpen] = React.useState(false);
   const [mouthOn, setMouthOn] = React.useState(false);
@@ -105,7 +106,7 @@ export default function FloatingAvatar({
           )}
         </AnimatePresence>
 
-        {/* Avatar button (always fully visible) */}
+        {/* Avatar button (full body always visible) */}
         <button
           type="button"
           aria-label="Contact avatar"
@@ -113,7 +114,7 @@ export default function FloatingAvatar({
           className="relative block cursor-pointer bg-transparent p-0 border-0"
           style={{ width: AVATAR_WIDTH }}
         >
-          {/* closed frame */}
+          {/* base: CLOSED mouth */}
           <img
             src={closedSrc}
             alt="Avatar"
@@ -121,15 +122,16 @@ export default function FloatingAvatar({
             draggable={false}
             decoding="async"
           />
-          {/* open-mouth overlay: opacity animates while hovered */}
+          {/* overlay: OPEN mouth (animates while hovered) */}
           <img
             src={openSrc}
             alt=""
             aria-hidden
+            onError={() => console.warn("[FloatingAvatar] open mouth image not found:", openSrc)}
             className="absolute inset-0 w-full h-auto drop-shadow pixelated pointer-events-none"
             style={{
-              opacity: mouthOn ? undefined : 0,                // hidden when not hovered
-              animation: mouthOn ? "chomp .55s steps(1,end) infinite" : "none",
+              animation: mouthOn ? "chomp .55s steps(2,end) infinite" : "none",
+              willChange: "opacity",
             }}
             draggable={false}
             decoding="async"
