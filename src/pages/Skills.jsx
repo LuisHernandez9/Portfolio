@@ -20,7 +20,7 @@ const TECH_SKILLS = [
 const SOFT_SKILLS = [
   { name: "Communication",   desc: "Can communicate project updates or needs effectively, either verbally, electronically, or having to present to an audience or to a team. Can also properly document workflows." },
   { name: "Teamwork",        desc: "Can work efficiently and cohesively with a team. Can take and give proper critique and code reviews." },
-  { name: "Hard-Working",    desc: "Can and will work done. Is willing to go 'above and beyond' and does not shy away from responsibilities or challenges." },
+  { name: "Hard-Working",    desc: "Can and will get work done. Is willing to go 'above and beyond' and does not shy away from responsibilities or challenges." },
   { name: "Problem Solving", desc: "Can use critical thinking to solve blockers or to create efficient solutions/workflows to a project." },
   { name: "Leadership",      desc: "Can effectively lead a team towards a common goal. Can properly allocate tasks and is able to 'take the reigns' when things go wrong." },
   { name: "Time Management", desc: "Can plan, manage, and execute multiple tasks or projects in a timely manner." },
